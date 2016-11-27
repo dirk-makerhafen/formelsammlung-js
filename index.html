@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    
+    <script src="lib/jquery.easyPaginate.js"></script>
+    <script src="lib/math.js"></script>
+    <script src="lib/mustache.js"></script>
+    <script src="lib/markdown.min.js"></script>
+
+    <script src="helpers.js"></script>
+    
+    <script src="Quantitys.js"></script>
+    <script src="Naturalconstants.js"></script>
+    <script src="Materials.js"></script>
+    <script src="Equations.js"></script>
+    <script src="Stack.js"></script>
+    
+    <style type="text/css">
+    .easyPaginateNav a {padding:5px;}
+    .easyPaginateNav a.current {font-weight:bold;text-decoration:underline;}
+    
+    .limitedbox {
+        min-height:250px;
+    }
+    
+    .searchbox {
+        margin: 5px;
+        padding: 5px;
+        border-bottom: 2px solid lightgray;
+    }
+    
+        
+    .box {
+        margin: 6px;
+        padding: 4px;
+        border-style: solid;
+        background-color: #fff;
+        border-color: #ddd;
+        border-width: 2px;
+        border-radius: 4px 4px 0 0;
+        -webkit-box-shadow: none;
+                box-shadow: none;
+    }
+    
+    .variableNameInput {
+        background-color:#ececec; 
+        border:0;
+        width:100%;
+        margin:4px;
+        text-align:center;
+        border-radius:2px;
+    }
+    
+    .valueInput {
+        width:100%;
+        margin: 2px;
+        text-align:center;
+        border-radius: 2px;
+        border-style: groove;
+    }
+    .converterOutput {
+        width:100%;
+        margin: 2px;
+        text-align:center;
+        border: none;
+        background-color: #ececec;
+        border-radius: 2px;
+    }
+    .unitOutput {
+        margin: 4px;
+    }
+    
+    .updowndeleteGlyph  {
+        float: left;
+        margin:5px;
+    }
+    .scapeTransformGlyph  {
+        float: left;
+        margin:5px;
+    }
+    .iostuff {
+        float:left;
+        padding: 5px;
+    }
+    .iostuffselect {
+        width:100%
+    }
+    
+    .StackEquationIoWarn {
+        border-color: red;
+    }
+    .StackEquationIoGreen {
+        border-color: green;
+    }    
+    .seachInput {
+        margin-right : 10px;
+    }
+    
+</style>
+                    
+
+<script type="x-tmpl-mustache" id="QuantityTemplate">
+    <div class="box">
+        <span style="font-size:0.9em;float:right;display:{{displayTranslateMe}};"> {{displayTranslateMe}}Translate me to your language! </span>
+        <span style="color:green;" class="glyphicon glyphicon-plus" onclick="Stack.add(Quantities.get('{{name}}'))">use</span>
+        <b>{{name_translation}}</b>,{{aliasnames_translation}} - {{shortname_translation}},{{aliasshortnames_translation}} - {{unit}}
+        <br>
+        {{{renderDescription}}}
+    </div>
+</script>
+
+<script type="x-tmpl-mustache" id="EquationTemplate">
+    <div class="box">
+        <span style="font-size:0.9em;float:right;display:{{displayTranslateMe}};"> {{displayTranslateMe}}Translate me to your language! </span>
+        <span style="color:{{color}}" class="glyphicon glyphicon-plus" onclick="Stack.add(Equations.get('{{name}}'))">use</span>
+        <b>{{name_translation}}</b>  -  {{nrOfMappableIos}}/{{io.length}} - 
+        <span style="display:no{{outputName}}ne;">Could calculate: </span><b>{{outputName}}</b>
+        <br>
+        {{{renderDescription}}}
+    </div>
+</script>
+
+<script type="x-tmpl-mustache" id="MaterialTemplate">
+    <div class="box">
+        <span style="font-size:0.9em;float:right;display:{{displayTranslateMe}};"> {{displayTranslateMe}}Translate me to your language! </span>
+        <span style="color:green" class="glyphicon glyphicon-plus" onclick="Stack.add(Materials.get('{{name}}'))">use</span>
+        <b>{{name_translation}}</b><br>
+        {{{renderDescription}}}
+    </div>
+</script>
+
+<script type="x-tmpl-mustache" id="NaturalConstantTemplate">
+    <b>{{item.name}}</b> - {{item.description}} - <button onclick="Stack.add(NatualConstants.get('{{item.name}}'))">use</button><br>
+</script>
+
+
+<script type="x-tmpl-mustache" id="QuantitiesTemplate" >
+    <div id="QuantitiesPagination" class="limitedbox">
+    {{#filteredquantities}}
+        {{{render}}}
+    {{/filteredquantities}}
+    </div>
+</script>
+
+<script type="x-tmpl-mustache" id="EquationsTemplate">
+    <div id="EquationsPagination" class="limitedbox">
+    {{#filteredequations}}
+        {{{render}}}
+    {{/filteredequations}}
+    </div>
+</script>
+
+<script type="x-tmpl-mustache" id="MaterialsTemplate">
+    <div  id="MaterialsPagination"  class="limitedbox">
+    {{#filteredmaterials}}
+        {{{render}}}
+    {{/filteredmaterials}}
+    </div>
+</script>
+
+<script id="NaturalConstantsTemplate" type="x-tmpl-mustache">
+    <div class="limitedbox">
+    {{#filterednaturalconstants}}}}
+        {{{render}}}
+    {{/filterednaturalconstants}}
+    </div>
+</script>
+
+
+<script type="x-tmpl-mustache" id="StackQuantityTemplate" >
+    <div id="{{id}}" class="col-md-offset-1">
+        <div class="row">
+            <div class="col-md-2" >
+                <input class="variableNameInput" value="{{name}}" onKeyUp="Stack.get('{{id}}').setName(this.value)" 
+                onclick='flashMappedInputHelper("StackEquationIo_{{id}}");'></input>
+            </div>
+            <div class="col-md-3"> 
+                <div class="row">
+                    <div class="col-md-8">
+                        <input value="{{value}}" onKeyUp="Stack.get('{{id}}').setValue(this.value)" class="valueInput"></input>
+                    </div>
+                    <div class="col-md-3 unitOutput">
+                        {{quantity.name}}
+                    </div>
+                </div>
+                <div id="Converter_{{id}}" style="display:{{showConverter}}">
+                    {{{renderConverter}}}
+                </div>
+            </div>
+            <div class="col-md-1 scapeTransformGlyph">
+                <span style="display:{{displayScaleUp}}" class="glyphicon glyphicon-arrow-up" onclick="Stack.get('{{id}}').scaleUp();"></span>
+                <span style="display:{{displayScaleDown}}" class="glyphicon glyphicon-arrow-down" onclick="Stack.get('{{id}}').scaleDown();"></span>
+                <span style="display:{{displayShowConvert}}"  class="glyphicon glyphicon-random" onclick="Stack.get('{{id}}').toggleShowConverter();"></span>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="x-tmpl-mustache" id="StackQuantityConverterTemplate" >
+    <div class="row">
+        <div class="col-md-8" >
+            <input class="converterOutput" value="{{value}}" readonly></input>
+        </div>
+        <div class="col-md-3 unitOutput">{{quantity.name}}</div>
+     </div>   
+</script>
+
+
+<script type="x-tmpl-mustache" id="StackEquationTemplate" >
+    <div id="{{id}}" class="col-md-offset-1">
+        <div class="row">
+            <div class="col-md-2">        
+                <input class="variableNameInput" value="{{name}}" onKeyUp="Stack.get('{{id}}').setName(this.value)" 
+                onclick='flashMappedInputHelper("StackEquationIo_{{id}}");'></input>
+            </div>
+            <div class="col-md-3"> 
+                <div class="row">
+                    <div class="col-md-8">
+                        <input readonly value="{{resultValue}}"  class="valueInput"></input>
+                    </div>
+                    <div class="col-md-3 unitOutput">
+                        {{#resultQuantity}}{{name}}{{/resultQuantity}}
+
+                    </div>
+                </div>
+                <div id="Converter_{{id}}" style="display:{{showConverter}}">
+                    {{{renderConverter}}}
+                </div>
+            </div>
+            <div class="col-md-1 scapeTransformGlyph">
+                <span style="display:{{displayScaleUp}}" class="glyphicon glyphicon-arrow-up" onclick="Stack.get('{{id}}').scaleUp();"></span>
+                <span style="display:{{displayScaleDown}}" class="glyphicon glyphicon-arrow-down" onclick="Stack.get('{{id}}').scaleDown();"></span>
+                <span style="display:{{displayShowConvert}}"  class="glyphicon glyphicon-random" onclick="Stack.get('{{id}}').toggleShowConverter();"></span>
+            </div>
+            <div class="col-md-3">
+                {{#io}}
+                    {{{render}}}
+                {{/io}}
+            </div>
+            
+        </div>
+    </div>
+    
+    <div style="display:none;" id="{{id}}_details">
+        {{#equation}}
+            {{{renderDescription}}}
+        {{/equation}}
+    </div>
+
+</script>
+
+
+
+
+<script type="x-tmpl-mustache" id="StackEquationIoTemplate" >
+    <div class="row" style="padding: 2px;">
+        <div style="width:50%">
+            <select class="iostuff iostuffselect {{selectableDivClass}}" onchange="Stack.get('{{parentStackEquation.id}}').getIO('{{id}}').setMappedTo(this.value)">
+                <option value="OUTPUT">Output</option>
+                {{#mapableStackElements}}
+                    <option {{selected}} class="selected_{{name}} StackEquationIo_{{id}}" value="{{id}}">{{name}}</option>
+                {{/mapableStackElements}}                
+            </select>
+        </div>
+        <div class="iostuff" style="width:15%;">
+            <b>{{equationio.symbol}}</b> 
+        </div>
+        <div class="iostuff" style="width:25%;">
+            <i>{{equationio.quantity.name}} </i>
+        </div>
+    </div>
+
+</script>
+
+
+<script type="x-tmpl-mustache" id="StackMaterialTemplate" >
+    <div id="{{id}}" class="col-md-offset-1">
+
+        <div class="row">
+            <div class="col-md-2">        
+                <input class="variableNameInput" value="{{name}}" onKeyUp="Stack.get('{{id}}').setName(this.value)"
+                 onclick='flashMappedInputHelper("StackEquationIo_{{id}}");'></input>
+            </div>
+            <div class="col-md-3"> 
+                <div class="row">
+                    {{#material.properties}}
+                        <div class="col-md-8">
+                            <input readonly value="{{value}}"  class="valueInput"></input>
+                        </div>
+                        <div class="col-md-3 unitOutput">
+                            {{quantity.name}}
+                        </div>
+                    {{/material.properties}}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</script>
+
+
+<script type="x-tmpl-mustache" id="MaterialPropertyTemplate">
+    {{quantity.name}}
+    {{value}}
+</script>
+
+<script type="x-tmpl-mustache" id="StackTemplate">
+    {{#elements}}
+        <div class="box">
+            <div style="padding-left:5px"><b>{{material.name}}</b></div>   
+            <div style="padding-left:5px;display:No{{equation.name}}ne"><b>{{equation.name}}</b>
+                <a id="{{id}}_more" onclick='jQuery("#{{id}}_details").toggle("show");jQuery("#{{id}}_more").hide();jQuery("#{{id}}_less").show();'>Details</a>
+                    <a style="display:none;" id="{{id}}_less" onclick='jQuery("#{{id}}_details").toggle("show");jQuery("#{{id}}_less").hide();jQuery("#{{id}}_more").show();'>Hide Details</a>
+            
+             </div>         
+            <div class="updowndeleteGlyph">
+                <span class="glyphicon glyphicon-arrow-up" onclick="Stack.moveUp('{{id}}')"></span>
+                <span class="glyphicon glyphicon-arrow-down" onclick="Stack.moveDown('{{id}}')"></span>
+                <span class="glyphicon glyphicon-remove-circle" onclick="Stack.remove('{{id}}')"></span>
+            </div>
+            {{{render}}}
+        </div>
+    {{/elements}}
+</script>
+  
+<script>
+    
+var LANGUAGE = "EN" 
+
+setLanguage = function(lang){
+    LANGUAGE = lang;
+    Stack.render();
+    Quantities.render();
+    Equations.render();
+    Materials.render();
+}    
+    
+
+function loadMarkdown(){
+    var markdowns = document.getElementById("Markdowns");
+    for(i = 0; i < markdowns.childNodes.length; i++){
+        if(markdowns.childNodes[i].nodeName == 'IFRAME'){
+            if(markdowns.childNodes[i].id.indexOf("MarkdownQuantities") == 0){
+                Quantities.loadMarkdown(markdowns.childNodes[i].id)
+            }
+            if(markdowns.childNodes[i].id.indexOf("MarkdownEquations") == 0){
+                Equations.loadMarkdown(markdowns.childNodes[i].id)
+            }
+        }
+    }
+    var markdowns_int = document.getElementById("Markdowns_INT");
+    for(i = 0; i < markdowns_int.childNodes.length; i++){
+        if(markdowns_int.childNodes[i].nodeName == 'IFRAME'){
+            if(markdowns_int.childNodes[i].id.indexOf("MarkdownQuantities") == 0){
+                Quantities.loadTranslationMarkdown(markdowns_int.childNodes[i].id)
+            }
+            if(markdowns_int.childNodes[i].id.indexOf("MarkdownEquations") == 0){
+                Equations.loadTranslationMarkdown(markdowns_int.childNodes[i].id)
+            }
+        }
+    }
+   
+}
+
+function init(){
+    loadMarkdown();
+    Quantities.init();
+
+    Materials.add(new Material(
+        "Kufer",
+        "default kupfer",
+        [ 
+            new MaterialProperty( Quantities.get("Specific Resistance"), 0.017 ),
+        ]));
+    Stack = new Stack();
+        
+        
+    Quantities.setFilter("");
+    Equations.setFilter("");
+    Materials.setFilter("");
+
+}
+
+</script>
+
+</head>
+<body onload="init()">
+    <div id="Markdowns" style="display:none;">
+        <iframe id="MarkdownQuantities"            src="markdown/quantities.md"></iframe>
+        <iframe id="MarkdownQuantitiesArea"        src="markdown/quantitiesArea.md"></iframe>
+        <iframe id="MarkdownQuantitiesElectric"    src="markdown/quantitiesElectric.md"></iframe>
+        <iframe id="MarkdownQuantitiesLength"      src="markdown/quantitiesLength.md"></iframe>
+        <iframe id="MarkdownQuantitiesMass"        src="markdown/quantitiesMass.md"></iframe>
+        <iframe id="MarkdownQuantitiesTemperature" src="markdown/quantitiesTemperature.md"></iframe>
+        <iframe id="MarkdownQuantitiesTime"        src="markdown/quantitiesTime.md"></iframe>
+        <iframe id="MarkdownQuantitiesVolume"      src="markdown/quantitiesVolume.md"></iframe>
+        <iframe id="MarkdownQuantitiesPower"       src="markdown/quantitiesPower.md"></iframe>
+        <iframe id="MarkdownQuantitiesPressure"    src="markdown/quantitiesPressure.md"></iframe>
+        
+        <iframe id="MarkdownEquations"         src="markdown/equations.md"></iframe>
+    </div>
+    <div id="Markdowns_INT" style="display:none;">
+        <iframe id="MarkdownQuantities_DE"        src="markdown/quantities_DE.md"></iframe>
+    </div>
+    
+    
+    <div class="container">
+        <div class="box">
+            <select class="" onchange="setLanguage(this.value);">
+                <option value="EN">English</option>
+                <option value="DE">German</option>
+            </select>
+        </div>
+        
+        <div class="box"> 
+            <div id="Stack"> </div>
+        </div>
+        
+        <div class="box">
+            <div class="searchbox">
+                <input class="seachInput" onKeyUp="Quantities.setFilter(this.value)" placeholder="Search Quantities"></input><br>
+            </div>
+            <div id="QuantitiesList"></div>
+        </div>
+        
+        <div class="box">
+            <div class="searchbox">
+                <input class="seachInput"  onKeyUp="Equations.setFilter(this.value)" placeholder="Search Equations"></input><br>
+            </div>
+            <div id="EquationsList"></div>
+        </div>
+        
+        <div class="box">
+            <div class="searchbox">
+                <input class="seachInput"  onKeyUp="Materials.setFilter(this.value)" placeholder="Search Materials"></input><br>
+            </div>
+            <div id="MaterialsList"></div>
+        </div>
+    </div>
+    
+  </body>
+</html>
