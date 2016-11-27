@@ -17,7 +17,7 @@ Description
 
 ---------
 | parent name | translated name(s) | translated shortname(s) | 
-|-|-|-|-|
+|-|-|-|
 
 translated description
 
