@@ -9,8 +9,7 @@ detusche bescheibung
 __IO__:
 
 * __U__ 
-Input voltagesadsad as foobar  
-sdsdsd blah
+Input voltagesadsad in german
 * __R__ 
 Input ohm1
 * __I__ 
