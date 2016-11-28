@@ -95,14 +95,14 @@ function Quantities(){
             var parts = oFrame.contentWindow.document.body.childNodes[0].innerHTML.split("-------------");
         }catch(err){return;}    
         for (var partsIndex = 1; partsIndex < parts.length; partsIndex++) {
-            if(parts[partsIndex].indexOf("|-|-|-|-|-|-|") == -1){continue;}
+            if(parts[partsIndex].indexOf("|---|---|---|---|---|---|") == -1){continue;}
             parseableString = parts[partsIndex];
             
-            data = parseableString.split("|-|")[0].split("|")
+            data = parseableString.split("|---|")[0].split("|")
             names = stripArray(data[1]);
             shortnames = stripArray(data[2]);
             unitstring = data[3].trim();
-            description = parseableString.split("|-|-|-|-|-|-|")[1].split("-------------")[0];
+            description = parseableString.split("|---|---|---|---|---|---|")[1].split("-------------")[0];
             
             if(isNaN(unitstring.split(" ")[0])){
                 unit = math.unit(unitstring);
@@ -135,14 +135,14 @@ function Quantities(){
             return;
         }    
         for (var partsIndex = 1; partsIndex < parts.length; partsIndex++) {
-            if(parts[partsIndex].indexOf("|-|-|-|-|") == -1){continue;}
+            if(parts[partsIndex].indexOf("|---|---|---|---|") == -1){continue;}
             parseableString = parts[partsIndex];
-            data = parseableString.split("|-|")[0].split("|")
+            data = parseableString.split("|---|")[0].split("|")
             
             parentname =  stripArray(data[1]);
             names = stripArray(data[2]);
             shortnames = stripArray(data[3]);
-            description = parseableString.split("|-|-|-|-|")[1].split("---------")[0];
+            description = parseableString.split("|---|---|---|---|")[1].split("---------")[0];
             var q=this.get(parentname) 
             if(q.translations == undefined){
                 q.translations = {}
