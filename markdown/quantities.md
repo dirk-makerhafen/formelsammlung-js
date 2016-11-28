@@ -29,4 +29,13 @@ RPS
 Torque in newton meter
 
 -------------
+| Hertz | | Hz | |  |  | 
+|---|---|---|---|---|---|
+
+frequency in hz.
+
+-------------
+
+
+
 

@@ -12,12 +12,12 @@ R * I - U = 0
 
 __IO__:
 
-* __U__ [ _Volt_ ] | R*I  
+* __U__ [ _Volt_ ] | R * I  
 Input voltagesadsad as foobar  
 sdsdsd blah
-* __R__ [ _Ohm_ ] | U/I  
+* __R__ [ _Ohm_ ] | U / I  
 Input ohm1
-* __I__ [ _Ampere_ ] | U/R  
+* __I__ [ _Ampere_ ] | U / R  
 Input sd
 
 --------
@@ -35,17 +35,17 @@ U * I - P = 0
 
 __IO__:
 
-* __P__ [ _Watt_ ] | U*I  
+* __P__ [ _Watt_ ] | U * I  
 Power
-* __U__ [ _Volt_ ] | P/I  
+* __U__ [ _Volt_ ] | P / I  
 Input voltagesadsad as foobar  
 sdsdsd blah
-* __I__ [ _Ampere_ ] | P/U  
+* __I__ [ _Ampere_ ] | P / U  
 Input sd
 
 --------
 
-__Name__: Motor Torque/RPM/Watt Formula
+__Name__: Torque/RPM/Power
 
 
 __Description__:
@@ -67,12 +67,12 @@ Input sd
 
 --------
 
-__Name__: Widerstand_Draht
+__Name__: Wire resistance
 
 
 __Description__:
 
-todo
+Relation of wire length, wire area, specific material resistance and total wire resistance. 
 
 __Equation__:
 
@@ -81,17 +81,17 @@ __Equation__:
 __IO__:
 
 * __Rs__ [ _Specific Resistance_ ] | (R * A) / L   
-asdads
+Wire materials specific resistance
 * __R__ [ _Ohm_ ] | Rs * L  / A   
-BLAH
+Wire resistance
 * __L__ [ _Meter_ ] | (R * A) / Rs  
-Input sd
+Wire length
 * __A__ [ _Square Millimeter_ ] | Rs * L / R  
-Input sd
+Wire area
 
 --------
 
-__Name__: TEST
+__Name__: Square Area
 
 
 __Description__:
@@ -104,31 +104,74 @@ TEST
 
 __IO__:
 
-* __C__ [ _Meter_ ] | math.sqrt(F)
-Power
-* __F__ [ _Square Meter_ ] | C * C
-Input voltagesadsad as foobar  
-sdsdsd blah
-
+* __C__ [ _Meter_ ] | math.sqrt(F)  
+Length
+* __F__ [ _Square Meter_ ] | C * C  
+Area
 --------
 
-__Name__: power/flow/pressure guestimation
+__Name__: Power/Flow/Pressure guestimation
 
 
 __Description__:
 
-Some hydraulic power/flow/pressure guestimation
+Some hydraulic Power/Flow/Pressure guestimation
 
 __Equation__:
 
-(Watt * 0.6 / Bar) - Flow
+(Power * 0.6 / Pressure) - Flow
 __IO__:
 
-* __Watt__ [ _Watt_ ] | (Flow * Bar) / 0.6
-    foo
-* __Bar__ [ _Bar_ ] |  (Watt * 0.6) / Flow
-    bar
-* __Flow__ [ _Liter per minute_ ] | (Watt * 0.6) / Bar
-    blub
+* __Power__ [ _Watt_ ] | (Flow * Pressure) / 0.6  
+Power in watt
+* __Pressure__ [ _Bar_ ] |  (Power * 0.6) / Flow 
+Pressure in Bar
+* __Flow__ [ _Liter per minute_ ] | (Power * 0.6) / Pressure  
+Low in Liter per minute
 
 --------
+
+__Name__: RC time constant TAO
+
+
+__Description__:
+
+It is the time required to charge the capacitor, through the resistor, by ≈ 63.2 percent of the difference between the initial value and final value or discharge the capacitor to ≈36.8 percent.
+
+__Equation__:
+
+R * C - TAO = 0
+
+__IO__:
+
+* __TAO__ [ _Second_ ] | R * C  
+time constant
+* __R__ [ _Ohm_ ] | TAO / C  
+Resistor
+* __C__ [ _Farad_ ] | TAO / R  
+cap
+
+--------
+
+__Name__: RC Cut-off frequency
+
+
+__Description__:
+
+In physics and electrical engineering, a cutoff frequency, corner frequency, or break frequency is a boundary in a system's frequency response at which energy flowing through the system begins to be reduced (attenuated or reflected) rather than passing through.
+
+__Equation__:
+
+(1 / (2 * math.pi * R * C)) - F = 0
+
+__IO__:
+
+* __F__ [ _Hertz_ ] | 1 / (2 * math.pi * R * C)   
+frequency
+* __R__ [ _Ohm_ ] |  1 / (2 * math.pi * C * F)
+Resistor
+* __C__ [ _Farad_ ] | 1 / (2 * math.pi * R * F)
+cap
+
+--------
+

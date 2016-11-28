@@ -83,6 +83,54 @@ function Materials(){
         }        
         this.render();
     }
+    
+       
+    this.loadMarkdown = function(markdownId){
+        var oFrame = document.getElementById(markdownId);
+        try {
+            var parts = oFrame.contentWindow.document.body.childNodes[0].innerHTML.split("-------------");
+        }catch(err){return;}    
+        for (var partsIndex = 1; partsIndex < parts.length; partsIndex++) {
+            if(parts[partsIndex].indexOf("* ") == -1){continue;}
+            parseableString = parts[partsIndex];
+            name = parseableString.split("\n")[1].split("__")[1];
+            description = parseableString.split("__"+name+"__")[1].split("\n* ")[0].trim();
+            values = parseableString.split("__"+name+"__")[1].split("\n* ");
+            name = name.trim();
+            properties = []
+            for (var valueindex = 1; valueindex < values.length; valueindex++) {
+                var quantityname = values[valueindex].split(":")[0].trim();
+                var quantityvalue = values[valueindex].split(":")[1].trim();
+                var materialproperty = new MaterialProperty(Quantities.get(quantityname),quantityvalue)
+                properties.push(materialproperty)
+            }
+            this.add(new Material(name,description,properties));
+        }
+    }  
+    
+    this.loadTranslationMarkdown = function(markdownId){
+        var language = markdownId.split("_")[1].trim();
+        var oFrame = document.getElementById(markdownId);
+        try{
+            var parts = oFrame.contentWindow.document.body.childNodes[0].innerHTML.split("-------------");
+        }catch(err){
+            return;
+        }    
+        for (var partsIndex = 1; partsIndex < parts.length; partsIndex++) {
+            if(parts[partsIndex].indexOf("__") == -1){continue;}
+            parseableString = parts[partsIndex];
+            parentname = parseableString.split("\n")[1].split("__")[1].trim();
+            name = parseableString.split("\n")[2].split("__")[1].trim();
+            description = parseableString.split("__"+name+"__")[1].split("\n* ")[0].trim();
+            
+            var m=this.get(parentname) 
+            if(m.translations == undefined){ m.translations = {} }
+            if(m.translations[language] == undefined){ m.translations[language] = {} }
+            m.translations[language].name = name
+            m.translations[language].description = description
+        }
+    }  
+    
 
     this.render = function(){
         var r = Mustache.render($('#MaterialsTemplate').html(), this);

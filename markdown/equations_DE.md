@@ -4,15 +4,15 @@ __Name__: URIdeutsch
 
 __Description__:
 
-detusche bescheibung
+Deutsche Beschreibung todo.
 
 __IO__:
 
 * __U__ 
-Input voltagesadsad in german
+Spannung
 * __R__ 
-Input ohm1
+Widerstand
 * __I__ 
-Input sd
+Strom
 
 --------
