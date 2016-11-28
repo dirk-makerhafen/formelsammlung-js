@@ -7,8 +7,8 @@ Interaktive Formelsammlung
 
 ### How to add stuff
 
-Take a look at the files in markdown/. 
-Format is:
+Take a look at the files in markdown/ 
+
 
 #### Quantities:
 
@@ -59,7 +59,7 @@ Description of value
 #### Equation translation example:
 
 --------
-__ParentName__: A unique name
+__ParentName__: A unique name  
 __Name__: Ein eindeutiger Name
 
 __Description__:
