@@ -1,7 +1,5 @@
 # formelsammlung-js
 
-Interaktive Formelsammlung
-
 ## [Interaktive Formelsammlung Online Demo](https://dirk-attraktor.github.io/formelsammlung-js/index.html)
 
 
