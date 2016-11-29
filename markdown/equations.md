@@ -1,7 +1,6 @@
 --------
 __Name__: URI
 
-
 __Description__:
 
 Relation of **Voltage**, **Current** and **Resistance** ![Image of URI](http://www.elektronik-kompendium.de/sites/grd/schalt/15050611.gif)
@@ -24,7 +23,6 @@ Input sd
 
 __Name__: PUI
 
-
 __Description__:
 
 Relation of **Voltage**, **Current** and **POWER** 
@@ -39,14 +37,13 @@ __IO__:
 Power
 * __U__ [ _Volt_ ] | P / I  
 Input voltagesadsad as foobar  
-sdsdsd blah
+sdsdsd blah  
 * __I__ [ _Ampere_ ] | P / U  
 Input sd
 
 --------
 
 __Name__: Torque/RPM/Power
-
 
 __Description__:
 
@@ -58,7 +55,7 @@ __Equation__:
 
 __IO__:
 
-* __P__ [ _Watt_ ] | T /  9.5488 * RPM   
+* __P__ [ _Watt_ ] | T /  9.5488 * RPM  
 Power
 * __RPM__ [ _Rotations per minute_ ] | 9.5488 * P / T  
 BLAH
@@ -68,7 +65,6 @@ Input sd
 --------
 
 __Name__: Wire resistance
-
 
 __Description__:
 
@@ -93,14 +89,13 @@ Wire area
 
 __Name__: Square Area
 
-
 __Description__:
 
-TEST
+Add me
 
 __Equation__:
 
-TEST
+C * C - F = 0
 
 __IO__:
 
@@ -108,10 +103,10 @@ __IO__:
 Length
 * __F__ [ _Square Meter_ ] | C * C  
 Area
+
 --------
 
 __Name__: Power/Flow/Pressure guestimation
-
 
 __Description__:
 
@@ -120,11 +115,12 @@ Some hydraulic Power/Flow/Pressure guestimation
 __Equation__:
 
 (Power * 0.6 / Pressure) - Flow
+
 __IO__:
 
 * __Power__ [ _Watt_ ] | (Flow * Pressure) / 0.6  
 Power in watt
-* __Pressure__ [ _Bar_ ] |  (Power * 0.6) / Flow 
+* __Pressure__ [ _Bar_ ] |  (Power * 0.6) / Flow  
 Pressure in Bar
 * __Flow__ [ _Liter per minute_ ] | (Power * 0.6) / Pressure  
 Low in Liter per minute
@@ -132,7 +128,6 @@ Low in Liter per minute
 --------
 
 __Name__: RC time constant TAO
-
 
 __Description__:
 
@@ -155,7 +150,6 @@ cap
 
 __Name__: RC Cut-off frequency
 
-
 __Description__:
 
 In physics and electrical engineering, a cutoff frequency, corner frequency, or break frequency is a boundary in a system's frequency response at which energy flowing through the system begins to be reduced (attenuated or reflected) rather than passing through.
@@ -166,12 +160,35 @@ __Equation__:
 
 __IO__:
 
-* __F__ [ _Hertz_ ] | 1 / (2 * math.pi * R * C)   
+* __F__ [ _Hertz_ ] | 1 / (2 * math.pi * R * C)  
 frequency
-* __R__ [ _Ohm_ ] |  1 / (2 * math.pi * C * F)
+* __R__ [ _Ohm_ ] |  1 / (2 * math.pi * C * F)  
 Resistor
-* __C__ [ _Farad_ ] | 1 / (2 * math.pi * R * F)
+* __C__ [ _Farad_ ] | 1 / (2 * math.pi * R * F)  
 cap
 
 --------
+
+__Name__: Flächenträgheitsmoment (translate me)
+
+__Description__:
+
+http://www.maschinenbau-wissen.de/skript3/mechanik/balken-biegung/209-biegung-berechnen
+
+__Equation__:
+
+b * h**3 - I = 0
+
+__IO__:
+
+* __b__ [ _Meter_ ] | i / h**3  
+Breite
+* __h__ [ _Meter_ ] |  12**(1/3) * (i/b)**(1/3)  
+Height
+* __I__ [ _Flächenträgheitsmoment_ ] | ( b * h**3 ) / 12  
+Flächenträgheitsmoment
+
+--------
+
+
 
