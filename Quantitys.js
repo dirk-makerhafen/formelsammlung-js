@@ -78,8 +78,6 @@ function Quantity(name,description,unit){
         var r = Mustache.render($('#QuantityTemplate').html(),this);
         return r;
     }
-
-    
 }
 
 function Quantities(){
@@ -144,12 +142,8 @@ function Quantities(){
             shortnames = stripArray(data[3]);
             description = parseableString.split("|---|---|---|---|")[1].split("---------")[0];
             var q=this.get(parentname) 
-            if(q.translations == undefined){
-                q.translations = {}
-            }
-            if(q.translations[language] == undefined){
-                q.translations[language] = {}
-            }
+            if(q.translations == undefined){ q.translations = {} }
+            if(q.translations[language] == undefined){ q.translations[language] = {} }
             
             q.translations[language].name = names.splice(0, 1)[0]
             q.translations[language].aliasnames = names;
@@ -173,8 +167,6 @@ function Quantities(){
         return undefined;
     }
     
-    
-    
     this.setFilter = function(filter){
         this.filter = filter;
         this.filteredquantities = []
@@ -188,7 +180,7 @@ function Quantities(){
         }
         // TODO: Better, faster, non stupid.
         var keys = ["unit","shortname_translation","name_translation","description_translation"]
-        if(LANGUAGE!= "EN"){
+        if(LANGUAGE != "EN"){
             keys.push("shortname");
             keys.push("name");
             keys.push("description");

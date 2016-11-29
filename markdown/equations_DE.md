@@ -1,18 +1,18 @@
 --------
-__ParentName__: URI
-__Name__: URIdeutsch
+__ParentName__: URI  
+__Name__: URIdeutsch  
 
 __Description__:
 
-detusche bescheibung
+Deutsche Beschreibung todo.
 
 __IO__:
 
-* __U__ 
-Input voltagesadsad in german
-* __R__ 
-Input ohm1
-* __I__ 
-Input sd
+* __U__  
+Spannung
+* __R__  
+Widerstand
+* __I__  
+Strom
 
 --------

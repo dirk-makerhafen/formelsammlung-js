@@ -7,9 +7,11 @@ function getUniqNumber(){
 flashMappedInputHelper = function(divname){
     var items = $("."+divname);
     for(var i =0;i<items.length;++i){
-        items[i].parentElement.style.backgroundColor = "lightgray";
-        var tf = '$(".'+divname+'")['+i+'].parentElement.style.backgroundColor = "";';
-        setTimeout( tf, 100);
+        if(items[i].selected == true){
+            items[i].parentElement.style.backgroundColor = "lightgray";
+            var tf = '$(".'+divname+'")['+i+'].parentElement.style.backgroundColor = "";';
+            setTimeout( tf, 100);
+        }
     }
 }
 

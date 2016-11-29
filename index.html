@@ -225,8 +225,10 @@
                         <input readonly value="{{resultValue}}"  class="valueInput"></input>
                     </div>
                     <div class="col-md-3 unitOutput">
-                        {{#resultQuantity}}{{name}}{{/resultQuantity}}
-
+                        {{#resultQuantity}}
+                            {{name_translation}}<br>
+                            {{unit}}
+                        {{/resultQuantity}}
                     </div>
                 </div>
                 <div id="Converter_{{id}}" style="display:{{showConverter}}">
@@ -238,7 +240,7 @@
                 <span style="display:{{displayScaleDown}}" class="glyphicon glyphicon-arrow-down" onclick="Stack.get('{{id}}').scaleDown();"></span>
                 <span style="display:{{displayShowConvert}}"  class="glyphicon glyphicon-random" onclick="Stack.get('{{id}}').toggleShowConverter();"></span>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-5">
                 {{#io}}
                     {{{render}}}
                 {{/io}}
@@ -260,7 +262,7 @@
 
 <script type="x-tmpl-mustache" id="StackEquationIoTemplate" >
     <div class="row" style="padding: 2px;">
-        <div style="width:50%">
+        <div style="width:34%">
             <select class="iostuff iostuffselect {{selectableDivClass}}" onchange="Stack.get('{{parentStackEquation.id}}').getIO('{{id}}').setMappedTo(this.value)">
                 <option value="OUTPUT">Output</option>
                 {{#mapableStackElements}}
@@ -271,8 +273,15 @@
         <div class="iostuff" style="width:15%;">
             <b>{{equationio.symbol}}</b> 
         </div>
-        <div class="iostuff" style="width:25%;">
-            <i>{{equationio.quantity.name}} </i>
+        <div class="iostuff" style="width:50%;">
+            {{#equationio}}
+                {{description_translation}}<br>
+                {{#quantity}}
+                    <i>{{name_translation}} </i>
+                {{/quantity}}
+            {{/equationio}}
+
+            
         </div>
     </div>
 
@@ -294,7 +303,8 @@
                             <input readonly value="{{value}}"  class="valueInput"></input>
                         </div>
                         <div class="col-md-3 unitOutput">
-                            {{quantity.name}}
+                            {{quantity.name}}<br>
+                            {{quantity.unit}}<br>
                         </div>
                     {{/material.properties}}
                 </div>
@@ -352,6 +362,9 @@ function loadMarkdown(){
             if(markdowns.childNodes[i].id.indexOf("MarkdownEquations") == 0){
                 Equations.loadMarkdown(markdowns.childNodes[i].id)
             }
+            if(markdowns.childNodes[i].id.indexOf("MarkdownMaterials") == 0){
+                Materials.loadMarkdown(markdowns.childNodes[i].id)
+            }
         }
     }
     var markdowns_int = document.getElementById("Markdowns_INT");
@@ -363,24 +376,19 @@ function loadMarkdown(){
             if(markdowns_int.childNodes[i].id.indexOf("MarkdownEquations") == 0){
                 Equations.loadTranslationMarkdown(markdowns_int.childNodes[i].id)
             }
+            if(markdowns_int.childNodes[i].id.indexOf("MarkdownMaterials") == 0){
+                Materials.loadTranslationMarkdown(markdowns_int.childNodes[i].id)
+            }
         }
     }
-   
 }
 
 function init(){
     loadMarkdown();
     Quantities.init();
 
-    Materials.add(new Material(
-        "Kufer",
-        "default kupfer",
-        [ 
-            new MaterialProperty( Quantities.get("Specific Resistance"), 0.017 ),
-        ]));
     Stack = new Stack();
-        
-        
+
     Quantities.setFilter("");
     Equations.setFilter("");
     Materials.setFilter("");
@@ -404,9 +412,14 @@ function init(){
         <iframe id="MarkdownQuantitiesPressure"    src="markdown/quantitiesPressure.md"></iframe>
         
         <iframe id="MarkdownEquations"         src="markdown/equations.md"></iframe>
+        
+        <iframe id="MarkdownMaterials"         src="markdown/materials.md"></iframe>
     </div>
     <div id="Markdowns_INT" style="display:none;">
         <iframe id="MarkdownQuantities_DE"        src="markdown/quantities_DE.md"></iframe>
+        <iframe id="MarkdownEquations_DE"        src="markdown/equations_DE.md"></iframe>
+        <iframe id="MarkdownMaterials_DE"        src="markdown/materials_DE.md"></iframe>
+
     </div>
     
     

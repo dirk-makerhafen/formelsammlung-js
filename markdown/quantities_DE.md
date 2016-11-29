@@ -2,6 +2,6 @@
 | Volt | Voltschland | Voltschlandfoobar | 
 |---|---|---|---|
 
-Voltschlandtranslated description
+Voltschland translated description
 
 ---------

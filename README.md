@@ -1,8 +1,6 @@
 # formelsammlung-js
 
-Interaktive Formelsammlung
-
-
+## [Interaktive Formelsammlung Online Demo](https://dirk-attraktor.github.io/formelsammlung-js/index.html)
 
 
 ### How to add stuff
@@ -88,3 +86,15 @@ This is the default lorem ipsum you will find in most electric wires
 * Another Quantity: 23
 
 -------------
+
+#### Material Translation
+
+-------------
+__Copper__ 
+__Kupfer__
+
+Normales Kupfer, wie in Stromkabeln.
+
+-------------
+
+

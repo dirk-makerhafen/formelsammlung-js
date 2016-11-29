@@ -5,7 +5,7 @@
 Flow in liter per minute
 
 -------------
-| Specific Resistance | | (ohm * mm^2) / m |  |  |  | 
+| Specific Resistance |  | (ohm * mm^2) / m |  |  |  | 
 |---|---|---|---|---|---|
 
 spezifischer widerstand eines materials
@@ -23,10 +23,24 @@ RPM
 RPS
 
 -------------
-| Newton Meter | | N * m | |  |  | 
+| Newton Meter | | N * m |  |  |  | 
 |---|---|---|---|---|---|
 
 Torque in newton meter
 
 -------------
+| Hertz | | Hz |  |  |  | 
+|---|---|---|---|---|---|
+
+Frequency in hz.
+
+-------------
+| Flächenträgheitsmoment | | m^4 |  |  |  | 
+|---|---|---|---|---|---|
+
+Flächenträgheitsmoment
+
+-------------
+ 
+
 

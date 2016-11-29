@@ -61,6 +61,15 @@ function Equation(name,description,equationstring,io){
         return 100.0 /  this.io.length * this.nrOfMappableIos();            
     }    
     
+    this.getIoBySymbol = function(symbol){
+        for(var i =0;i<this.io.length;++i){ // search unmatched io, aka output
+            if(this.io[i].symbol == symbol){
+                return this.io[i];
+            }
+        }
+        return undefined;
+    }
+    
     this.color = function(){
         if(this.outputName()!=""){
             return "green";            
@@ -155,8 +164,6 @@ function Equations(){
             if(parts[partsIndex].indexOf("__Name__:") == -1){continue;}
             parseableString = parts[partsIndex];
 
-            
-            
             name = markdown_extractValue(parseableString,"__Name__:");
             description = markdown_extractValue(parseableString,"__Description__:");
             
@@ -181,7 +188,45 @@ function Equations(){
             this.add(new Equation(name,description,equation,ios));
         }
     }    
+
+    
+    this.loadTranslationMarkdown = function(markdownId){
+        var language = markdownId.split("_")[1].trim();
+        var oFrame = document.getElementById(markdownId);
+        var strRawContents = oFrame.contentWindow.document.body.childNodes[0].innerHTML;
         
+        extractValue = function(string,key){
+            return string.split(key)[1].split("\n__")[0].trim();;
+        }
+        var parts = strRawContents.split("--------");
+        for (var partsIndex = 1; partsIndex < parts.length; partsIndex++) {
+            if(parts[partsIndex].indexOf("__Name__:") == -1){continue;}
+            parseableString = parts[partsIndex];
+
+            parentname = markdown_extractValue(parseableString,"__ParentName__:");
+            name = markdown_extractValue(parseableString,"__Name__:");
+            description = markdown_extractValue(parseableString,"__Description__:");
+            
+            var e = this.get(parentname);            
+            if(e.translations == undefined){ e.translations = {} }
+            if(e.translations[language] == undefined){ e.translations[language] = {} }
+            
+            e.translations[language].name = name
+            e.translations[language].description = description            
+            ioparts = parts[partsIndex].split("__IO__:")[1].split("--------")[0].trim().split("* __");
+            ios = []
+            for(var i=0;i<ioparts.length;++i){
+                if(ioparts[i].indexOf("__") == -1){continue;}
+                letter = ioparts[i].split("__")[0].trim();
+                iodescription=  ioparts[i].split("__")[1].split("\n")[1].trim();
+                io = e.getIoBySymbol(letter)
+                if(io.translations == undefined){ io.translations = {} }
+                if(io.translations[language] == undefined){ io.translations[language] = {} }
+                io.translations[language].description = iodescription            
+            }
+        }
+    }  
+    
     this.add = function(equation){
         this.allequations.push(equation);
     }
