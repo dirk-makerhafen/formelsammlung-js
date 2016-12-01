@@ -140,11 +140,11 @@ R * C - TAO = 0
 __IO__:
 
 * __TAO__ [ _Second_ ] | R * C  
-time constant
+Time constant
 * __R__ [ _Ohm_ ] | TAO / C  
 Resistor
 * __C__ [ _Farad_ ] | TAO / R  
-cap
+Capacitance
 
 --------
 
@@ -161,11 +161,11 @@ __Equation__:
 __IO__:
 
 * __F__ [ _Hertz_ ] | 1 / (2 * math.pi * R * C)  
-frequency
+Frequency
 * __R__ [ _Ohm_ ] |  1 / (2 * math.pi * C * F)  
 Resistor
 * __C__ [ _Farad_ ] | 1 / (2 * math.pi * R * F)  
-cap
+Capacitance
 
 --------
 
@@ -190,5 +190,21 @@ Flächenträgheitsmoment
 
 --------
 
+__Name__: Wavelength
 
+__Description__:
 
+Frequency to wavelength
+
+__Equation__:
+
+299792458 / F = L
+
+__IO__:
+
+* __L__ [ _Meter_ ] | 299792458 / F 
+Wavelength
+* __F__ [ _Hertz_ ] |  299792458 / L
+Frequency
+
+--------

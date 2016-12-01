@@ -332,7 +332,9 @@ function StackEquation(stack, equation){
         if(this.resultScaler == undefined){
             this.resultScaler =  this.resultQuantity().scaleup;
         }else{
-             this.resultScaler = this.resultScaler.scaleup;
+            if(this.resultScaler.scaleup != undefined){
+                this.resultScaler = this.resultScaler.scaleup;
+            }
         }
         this.updateRender();
     }
@@ -350,7 +352,9 @@ function StackEquation(stack, equation){
         if(this.resultScaler == undefined){
             this.resultScaler = this.resultQuantity().scaledown;
         }else{
-             this.resultScaler = this.resultScaler.scaledown;
+            if(this.resultScaler.scaledown != undefined){
+                this.resultScaler = this.resultScaler.scaledown;
+             }
         }
         this.updateRender();
     }

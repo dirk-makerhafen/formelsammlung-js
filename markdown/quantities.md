@@ -1,5 +1,5 @@
 
-* [Length](#metric-length)
+* [Length Metric](#metric-length)
 * [Other Length](#other-length)
     
 * [Metric Area](#metric-area)
@@ -24,13 +24,14 @@
 
 * [Electric Resistance](#electric-resistance)
 
+* [Frequency](#frequency)
+
 * [Power](#power)
 
 * [Pressure](#pressure)
 
 
 * [Other](#other)
- 
  
  
 ------------- 
@@ -347,6 +348,46 @@ some large resistance
 
 -------------
   
+#### <a name="frequency"></a> Frequency  ####
+
+-------------
+| Hertz | | Hz |  | Kilohertz |  | 
+|---|---|---|---|---|---|
+
+Frequency in hz.
+
+-------------
+| Kilohertz | | kHz | Hertz | Megahertz |  | 
+|---|---|---|---|---|---|
+
+Frequency in khz.
+
+-------------
+| Megahertz | | MHz | Kilohertz | Gigahertz |  | 
+|---|---|---|---|---|---|
+
+Frequency in MHz.
+
+-------------
+| Gigahertz | | GHz | Megahertz |  |  | 
+|---|---|---|---|---|---|
+
+Frequency in GHz.  
+
+-------------
+| Rotations per minute | rpm | 0.10471975511965977 s^-1 |  | Rotations per second |  | 
+|---|---|---|---|---|---|
+
+RPM
+
+-------------
+| Rotations per second | rps | 6.283185307179586 s^-1 | Rotations per minute |  |  | 
+|---|---|---|---|---|---|
+
+RPS
+
+-------------
+  
 #### <a name="power"></a>  Power ####
 
 ------------- 
@@ -487,28 +528,10 @@ Flow in liter per minute
 spezifischer widerstand eines materials
 
 -------------
-| Rotations per minute | rpm | 0.10471975511965977 s^-1 |  | Rotations per second |  | 
-|---|---|---|---|---|---|
-
-RPM
-
--------------
-| Rotations per second | rps | 6.283185307179586 s^-1 | Rotations per minute |  |  | 
-|---|---|---|---|---|---|
-
-RPS
-
--------------
 | Newton Meter | | N * m |  |  |  | 
 |---|---|---|---|---|---|
 
 Torque in newton meter
-
--------------
-| Hertz | | Hz |  |  |  | 
-|---|---|---|---|---|---|
-
-Frequency in hz.
 
 -------------
 | Flächenträgheitsmoment | | m^4 |  |  |  | 

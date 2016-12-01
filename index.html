@@ -193,9 +193,9 @@
                 </div>
             </div>
             <div class="col-md-1 scapeTransformGlyph">
-                <span style="display:{{displayScaleUp}}" class="glyphicon glyphicon-arrow-up" onclick="Stack.get('{{id}}').scaleUp();"></span>
-                <span style="display:{{displayScaleDown}}" class="glyphicon glyphicon-arrow-down" onclick="Stack.get('{{id}}').scaleDown();"></span>
-                <span style="display:{{displayShowConvert}}"  class="glyphicon glyphicon-random" onclick="Stack.get('{{id}}').toggleShowConverter();"></span>
+                <span style="color:lightgray;color:bla{{displayScaleUp}}ck" class="glyphicon glyphicon-arrow-up" onclick="Stack.get('{{id}}').scaleUp();"></span>
+                <span style="color:lightgray;color:bla{{displayScaleDown}}ck" class="glyphicon glyphicon-arrow-down" onclick="Stack.get('{{id}}').scaleDown();"></span>
+                <span style="color:lightgray;color:bla{{displayShowConvert}}ck"  class="glyphicon glyphicon-random" onclick="Stack.get('{{id}}').toggleShowConverter();"></span>
             </div>
         </div>
     </div>
@@ -235,9 +235,9 @@
                 </div>
             </div>
             <div class="col-md-1 scapeTransformGlyph">
-                <span style="display:{{displayScaleUp}}" class="glyphicon glyphicon-arrow-up" onclick="Stack.get('{{id}}').scaleUp();"></span>
-                <span style="display:{{displayScaleDown}}" class="glyphicon glyphicon-arrow-down" onclick="Stack.get('{{id}}').scaleDown();"></span>
-                <span style="display:{{displayShowConvert}}"  class="glyphicon glyphicon-random" onclick="Stack.get('{{id}}').toggleShowConverter();"></span>
+                <span style="color:lightgray;color:bla{{displayScaleUp}}ck" class="glyphicon glyphicon-arrow-up" onclick="Stack.get('{{id}}').scaleUp();"></span>
+                <span style="color:lightgray;color:bla{{displayScaleDown}}ck" class="glyphicon glyphicon-arrow-down" onclick="Stack.get('{{id}}').scaleDown();"></span>
+                <span style="color:lightgray;color:bla{{displayShowConvert}}ck"  class="glyphicon glyphicon-random" onclick="Stack.get('{{id}}').toggleShowConverter();"></span>
             </div>
             <div class="col-md-5">
                 {{#io}}
@@ -356,15 +356,14 @@ function init(){
     $.ajax({ async: false, url:"markdown/equations.md" ,success: function (data){ Equations.loadMarkdown(data); } }); 
     $.ajax({ async: false, url:"markdown/materials.md" ,success: function (data){ Materials.loadMarkdown(data); } }); 
             
-    $.ajax({ async: false, url:"markdown/quantities_DE.md",success: function (data){ Quantities.loadTranslationMarkdown("DE",data); } });   
-    $.ajax({ async: false, url:"markdown/equations_DE.md" ,success: function (data){ Equations.loadTranslationMarkdown("DE",data); } }); 
-    $.ajax({ async: false, url:"markdown/materials_DE.md" ,success: function (data){ Materials.loadTranslationMarkdown("DE",data); } }); 
+    $.ajax({ url:"markdown/quantities_DE.md",success: function (data){ Quantities.loadTranslationMarkdown("DE",data); } });   
+    $.ajax({ url:"markdown/equations_DE.md" ,success: function (data){ Equations.loadTranslationMarkdown("DE",data); } }); 
+    $.ajax({ url:"markdown/materials_DE.md" ,success: function (data){ Materials.loadTranslationMarkdown("DE",data); } }); 
 
     Quantities.init();    
     Quantities.setFilter("");
     Equations.setFilter("");
     Materials.setFilter("");
-  
 }
 
 </script>
