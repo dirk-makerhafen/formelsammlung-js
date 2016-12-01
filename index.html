@@ -355,12 +355,12 @@ function init(){
     $.ajax({ url:"markdown/quantities.md",success: function (data){ Quantities.loadMarkdown(data); } });   
     $.ajax({ url:"markdown/equations.md" ,success: function (data){ Equations.loadMarkdown(data); } }); 
     $.ajax({ url:"markdown/materials.md" ,success: function (data){ Materials.loadMarkdown(data); } }); 
-    
-    $.ajax({ url:"markdown/quantities_DE.md",success: function (data){ Quantities.loadTranslationMarkdown("DE",data); } });   
-    $.ajax({ url:"markdown/equations_DE.md" ,success: function (data){ Equations.loadTranslationMarkdown("DE",data); } }); 
-    $.ajax({ url:"markdown/materials_DE.md" ,success: function (data){ Materials.loadTranslationMarkdown("DE",data); } }); 
-    
+
     $(document).ajaxStop(function () {
+            
+        $.ajax({ url:"markdown/quantities_DE.md",success: function (data){ Quantities.loadTranslationMarkdown("DE",data); } });   
+        $.ajax({ url:"markdown/equations_DE.md" ,success: function (data){ Equations.loadTranslationMarkdown("DE",data); } }); 
+        $.ajax({ url:"markdown/materials_DE.md" ,success: function (data){ Materials.loadTranslationMarkdown("DE",data); } }); 
         Quantities.init();
         
         Quantities.setFilter("");
