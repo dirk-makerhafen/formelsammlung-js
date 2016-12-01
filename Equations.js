@@ -114,7 +114,7 @@ function EquationIO(quantity,symbol,description){
         }
         
         if(stackElement.constructor.name == "StackEquation"){
-            q = stackElement.resultQuantity();
+            var q = stackElement.resultQuantity();
             if(q!=undefined){
                 if(q.unit.equals(this.quantity.unit)){
                     return true;
@@ -159,26 +159,26 @@ function Equations(){
         var parts = markdown.split("--------");
         for (var partsIndex = 1; partsIndex < parts.length; partsIndex++) {
             if(parts[partsIndex].indexOf("__Name__:") == -1){continue;}
-            parseableString = parts[partsIndex];
+            var parseableString = parts[partsIndex];
 
-            name = markdown_extractValue(parseableString,"__Name__:");
-            description = markdown_extractValue(parseableString,"__Description__:");
+            var name = markdown_extractValue(parseableString,"__Name__:");
+            var description = markdown_extractValue(parseableString,"__Description__:");
             
-            equation = parts[partsIndex].split("__Equation__:")[1].split("__IO__:")[0].trim();
-            ioparts = parts[partsIndex].split("__IO__:")[1].split("--------")[0].trim().split("* __");
-            ios = []
+            var equation = parts[partsIndex].split("__Equation__:")[1].split("__IO__:")[0].trim();
+            var ioparts = parts[partsIndex].split("__IO__:")[1].split("--------")[0].trim().split("* __");
+            var ios = []
             for(var i=0;i<ioparts.length;++i){
                 if(ioparts[i].indexOf("__ [ _") == -1){continue;}
-                letter = ioparts[i].split("__")[0].trim();
-                quantity =  ioparts[i].split("[ _")[1].split("_ ]")[0].trim();
-                iodescription=  ioparts[i].split("_ ]")[1].split("\n")[1].trim();
+                var letter = ioparts[i].split("__")[0].trim();
+                var quantity =  ioparts[i].split("[ _")[1].split("_ ]")[0].trim();
+                var iodescription=  ioparts[i].split("_ ]")[1].split("\n")[1].trim();
                 
-                q = Quantities.get(quantity);
+                var q = Quantities.get(quantity);
                 if (q == undefined){
                     alert("Quantity " + quantity + " not found");
                     continue;
                 }
-                io = new EquationIO(q,letter,iodescription)
+                var io = new EquationIO(q,letter,iodescription)
                 io.equation = ioparts[i].split("_ ]")[1].split("|")[1].split("\n")[0].trim();
                 ios.push(io);
             }
@@ -194,11 +194,11 @@ function Equations(){
         var parts = markdown.split("--------");
         for (var partsIndex = 1; partsIndex < parts.length; partsIndex++) {
             if(parts[partsIndex].indexOf("__Name__:") == -1){continue;}
-            parseableString = parts[partsIndex];
+            var parseableString = parts[partsIndex];
 
-            parentname = markdown_extractValue(parseableString,"__ParentName__:");
-            name = markdown_extractValue(parseableString,"__Name__:");
-            description = markdown_extractValue(parseableString,"__Description__:");
+            var parentname = markdown_extractValue(parseableString,"__ParentName__:");
+            var name = markdown_extractValue(parseableString,"__Name__:");
+            var description = markdown_extractValue(parseableString,"__Description__:");
             
             var e = this.get(parentname);            
             if(e.translations == undefined){ e.translations = {} }
@@ -206,13 +206,13 @@ function Equations(){
             
             e.translations[language].name = name
             e.translations[language].description = description            
-            ioparts = parts[partsIndex].split("__IO__:")[1].split("--------")[0].trim().split("* __");
-            ios = []
+            var ioparts = parts[partsIndex].split("__IO__:")[1].split("--------")[0].trim().split("* __");
+            var ios = []
             for(var i=0;i<ioparts.length;++i){
                 if(ioparts[i].indexOf("__") == -1){continue;}
-                letter = ioparts[i].split("__")[0].trim();
-                iodescription=  ioparts[i].split("__")[1].split("\n")[1].trim();
-                io = e.getIoBySymbol(letter)
+                var letter = ioparts[i].split("__")[0].trim();
+                var iodescription=  ioparts[i].split("__")[1].split("\n")[1].trim();
+                var io = e.getIoBySymbol(letter)
                 if(io.translations == undefined){ io.translations = {} }
                 if(io.translations[language] == undefined){ io.translations[language] = {} }
                 io.translations[language].description = iodescription            

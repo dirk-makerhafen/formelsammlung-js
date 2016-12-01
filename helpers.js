@@ -20,7 +20,8 @@ markdown_extractValue = function(string,key){
 }
 
 markdown_extractValues = function(string,key){
-    valuesString = markdown_extractValue(string,key); 
+    var valuesString = markdown_extractValue(string,key); 
+    var values = undefined;
     if(valuesString.indexOf(",")!=-1){
         values = valuesString.split(",")
     }else{
@@ -38,6 +39,7 @@ markdown_extractValues = function(string,key){
 } 
 
 stripArray = function(valuesString){
+    var values = undefined;
     if(valuesString.indexOf(",")!=-1){
         values = valuesString.split(",")
     }else{

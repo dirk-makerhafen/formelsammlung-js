@@ -93,14 +93,14 @@ function Quantities(){
         }catch(err){return;}    
         for (var partsIndex = 1; partsIndex < parts.length; partsIndex++) {
             if(parts[partsIndex].indexOf("|---|---|---|---|---|---|") == -1){continue;}
-            parseableString = parts[partsIndex];
+            var parseableString = parts[partsIndex];
             
-            data = parseableString.split("|---|")[0].split("|")
-            names = stripArray(data[1]);
-            shortnames = stripArray(data[2]);
-            unitstring = data[3].trim();
-            description = parseableString.split("|---|---|---|---|---|---|")[1].split("-------------")[0];
-            
+            var data = parseableString.split("|---|")[0].split("|")
+            var names = stripArray(data[1]);
+            var shortnames = stripArray(data[2]);
+            var unitstring = data[3].trim();
+            var description = parseableString.split("|---|---|---|---|---|---|")[1].split("-------------")[0];
+            var unit = undefined;
             if(isNaN(unitstring.split(" ")[0])){
                 unit = math.unit(unitstring);
             }else{
@@ -109,7 +109,7 @@ function Quantities(){
                 unit = math.unit(shortnames[0]);
             }
              
-            q = new Quantity(names.splice(0, 1)[0],description,unit);
+            var q = new Quantity(names.splice(0, 1)[0],description,unit);
             
             q.aliasnames = names;
             q.shortname = shortnames.splice(0, 1)[0];            
@@ -131,13 +131,13 @@ function Quantities(){
         }    
         for (var partsIndex = 1; partsIndex < parts.length; partsIndex++) {
             if(parts[partsIndex].indexOf("|---|---|---|---|") == -1){continue;}
-            parseableString = parts[partsIndex];
-            data = parseableString.split("|---|")[0].split("|")
+            var parseableString = parts[partsIndex];
+            var data = parseableString.split("|---|")[0].split("|")
             
-            parentname =  stripArray(data[1]);
-            names = stripArray(data[2]);
-            shortnames = stripArray(data[3]);
-            description = parseableString.split("|---|---|---|---|")[1].split("---------")[0];
+            var parentname =  stripArray(data[1]);
+            var names = stripArray(data[2]);
+            var shortnames = stripArray(data[3]);
+            var description = parseableString.split("|---|---|---|---|")[1].split("---------")[0];
             var q=this.get(parentname) 
             if(q.translations == undefined){ q.translations = {} }
             if(q.translations[language] == undefined){ q.translations[language] = {} }

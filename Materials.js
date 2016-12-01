@@ -95,12 +95,12 @@ function Materials(){
         }catch(err){return;}    
         for (var partsIndex = 1; partsIndex < parts.length; partsIndex++) {
             if(parts[partsIndex].indexOf("* ") == -1){continue;}
-            parseableString = parts[partsIndex];
-            name = parseableString.split("\n")[1].split("__")[1];
-            description = parseableString.split("__"+name+"__")[1].split("\n* ")[0].trim();
-            values = parseableString.split("__"+name+"__")[1].split("\n* ");
-            name = name.trim();
-            properties = []
+            var parseableString = parts[partsIndex];
+            var name = parseableString.split("\n")[1].split("__")[1];
+            var description = parseableString.split("__"+name+"__")[1].split("\n* ")[0].trim();
+            var values = parseableString.split("__"+name+"__")[1].split("\n* ");
+            var name = name.trim();
+            var properties = []
             for (var valueindex = 1; valueindex < values.length; valueindex++) {
                 var quantityname = values[valueindex].split(":")[0].trim();
                 var quantityvalue = values[valueindex].split(":")[1].trim();
@@ -119,10 +119,10 @@ function Materials(){
         }    
         for (var partsIndex = 1; partsIndex < parts.length; partsIndex++) {
             if(parts[partsIndex].indexOf("__") == -1){continue;}
-            parseableString = parts[partsIndex];
-            parentname = parseableString.split("\n")[1].split("__")[1].trim();
-            name = parseableString.split("\n")[2].split("__")[1].trim();
-            description = parseableString.split("__"+name+"__")[1].split("\n* ")[0].trim();
+            var parseableString = parts[partsIndex];
+            var parentname = parseableString.split("\n")[1].split("__")[1].trim();
+            var name = parseableString.split("\n")[2].split("__")[1].trim();
+            var description = parseableString.split("__"+name+"__")[1].split("\n* ")[0].trim();
             
             var m=this.get(parentname) 
             if(m.translations == undefined){ m.translations = {} }
