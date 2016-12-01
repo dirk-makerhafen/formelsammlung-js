@@ -16,7 +16,6 @@
     <script src="helpers.js"></script>
     
     <script src="Quantitys.js"></script>
-    <script src="Naturalconstants.js"></script>
     <script src="Materials.js"></script>
     <script src="Equations.js"></script>
     <script src="Stack.js"></script>
@@ -277,7 +276,7 @@
             {{#equationio}}
                 {{description_translation}}<br>
                 {{#quantity}}
-                    <i>{{name_translation}} </i>
+                    <a onclick='jQuery("#QuantitiesSearchInput").val("{{name_translation}}").trigger("keyup");'> {{name_translation}} </a>
                 {{/quantity}}
             {{/equationio}}
 
@@ -350,69 +349,30 @@ setLanguage = function(lang){
     Equations.render();
     Materials.render();
 }    
-    
-
-function loadMarkdown(){
-    var markdowns = document.getElementById("Markdowns");
-    for(i = 0; i < markdowns.childNodes.length; i++){
-        if(markdowns.childNodes[i].nodeName == 'IFRAME'){
-            if(markdowns.childNodes[i].id.indexOf("MarkdownQuantities") == 0){
-                Quantities.loadMarkdown(markdowns.childNodes[i].id)
-            }
-            if(markdowns.childNodes[i].id.indexOf("MarkdownEquations") == 0){
-                Equations.loadMarkdown(markdowns.childNodes[i].id)
-            }
-            if(markdowns.childNodes[i].id.indexOf("MarkdownMaterials") == 0){
-                Materials.loadMarkdown(markdowns.childNodes[i].id)
-            }
-        }
-    }
-    var markdowns_int = document.getElementById("Markdowns_INT");
-    for(i = 0; i < markdowns_int.childNodes.length; i++){
-        if(markdowns_int.childNodes[i].nodeName == 'IFRAME'){
-            if(markdowns_int.childNodes[i].id.indexOf("MarkdownQuantities") == 0){
-                Quantities.loadTranslationMarkdown(markdowns_int.childNodes[i].id)
-            }
-            if(markdowns_int.childNodes[i].id.indexOf("MarkdownEquations") == 0){
-                Equations.loadTranslationMarkdown(markdowns_int.childNodes[i].id)
-            }
-            if(markdowns_int.childNodes[i].id.indexOf("MarkdownMaterials") == 0){
-                Materials.loadTranslationMarkdown(markdowns_int.childNodes[i].id)
-            }
-        }
-    }
-}
 
 function init(){
-    loadMarkdown();
-    Quantities.init();
 
-    Stack = new Stack();
-
-    Quantities.setFilter("");
-    Equations.setFilter("");
-    Materials.setFilter("");
-
+    $.ajax({ url:"markdown/quantities.md",success: function (data){ Quantities.loadMarkdown(data); } });   
+    $.ajax({ url:"markdown/equations.md" ,success: function (data){ Equations.loadMarkdown(data); } }); 
+    $.ajax({ url:"markdown/materials.md" ,success: function (data){ Materials.loadMarkdown(data); } }); 
+    
+    $.ajax({ url:"markdown/quantities_DE.md",success: function (data){ Quantities.loadTranslationMarkdown("DE",data); } });   
+    $.ajax({ url:"markdown/equations_DE.md" ,success: function (data){ Equations.loadTranslationMarkdown("DE",data); } }); 
+    $.ajax({ url:"markdown/materials_DE.md" ,success: function (data){ Materials.loadTranslationMarkdown("DE",data); } }); 
+    
+    $(document).ajaxStop(function () {
+        Quantities.init();
+        
+        Quantities.setFilter("");
+        Equations.setFilter("");
+        Materials.setFilter("");
+      });
 }
 
 </script>
 
 </head>
 <body onload="init()">
-    <div id="Markdowns" style="display:none;">
-        <iframe id="MarkdownQuantities"            src="markdown/quantities.md"></iframe>
-      
-        <iframe id="MarkdownEquations"         src="markdown/equations.md"></iframe>
-        
-        <iframe id="MarkdownMaterials"         src="markdown/materials.md"></iframe>
-    </div>
-    <div id="Markdowns_INT" style="display:none;">
-        <iframe id="MarkdownQuantities_DE"        src="markdown/quantities_DE.md"></iframe>
-        <iframe id="MarkdownEquations_DE"        src="markdown/equations_DE.md"></iframe>
-        <iframe id="MarkdownMaterials_DE"        src="markdown/materials_DE.md"></iframe>
-
-    </div>
-    
     
     <div class="container">
         <div class="box">
@@ -423,26 +383,28 @@ function init(){
         </div>
         
         <div class="box"> 
-            <div id="Stack"> </div>
+            <div id="Stack"> 
+                
+            </div>
         </div>
         
         <div class="box">
             <div class="searchbox">
-                <input class="seachInput" onKeyUp="Quantities.setFilter(this.value)" placeholder="Search Quantities"></input><br>
+                <input id="QuantitiesSearchInput" class="seachInput" onKeyUp="Quantities.setFilter(this.value)" placeholder="Search Quantities"></input><br>
             </div>
             <div id="QuantitiesList"></div>
         </div>
         
         <div class="box">
             <div class="searchbox">
-                <input class="seachInput"  onKeyUp="Equations.setFilter(this.value)" placeholder="Search Equations"></input><br>
+                <input id="EquationsSearchInput" class="seachInput" onKeyUp="Equations.setFilter(this.value)" placeholder="Search Equations"></input><br>
             </div>
             <div id="EquationsList"></div>
         </div>
         
         <div class="box">
             <div class="searchbox">
-                <input class="seachInput"  onKeyUp="Materials.setFilter(this.value)" placeholder="Search Materials"></input><br>
+                <input id="MaterialsSearchInput" class="seachInput" onKeyUp="Materials.setFilter(this.value)" placeholder="Search Materials"></input><br>
             </div>
             <div id="MaterialsList"></div>
         </div>

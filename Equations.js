@@ -152,14 +152,11 @@ function Equations(){
     this.filter = "";
     this.filteredequations = this.allequations;
     
-    this.loadMarkdown = function(markdownId){
-        var oFrame = document.getElementById(markdownId);
-        var strRawContents = oFrame.contentWindow.document.body.childNodes[0].innerHTML;
-        
+    this.loadMarkdown = function(markdown){
         extractValue = function(string,key){
             return string.split(key)[1].split("\n__")[0].trim();;
         }
-        var parts = strRawContents.split("--------");
+        var parts = markdown.split("--------");
         for (var partsIndex = 1; partsIndex < parts.length; partsIndex++) {
             if(parts[partsIndex].indexOf("__Name__:") == -1){continue;}
             parseableString = parts[partsIndex];
@@ -190,15 +187,11 @@ function Equations(){
     }    
 
     
-    this.loadTranslationMarkdown = function(markdownId){
-        var language = markdownId.split("_")[1].trim();
-        var oFrame = document.getElementById(markdownId);
-        var strRawContents = oFrame.contentWindow.document.body.childNodes[0].innerHTML;
-        
+    this.loadTranslationMarkdown = function(language,markdown){
         extractValue = function(string,key){
             return string.split(key)[1].split("\n__")[0].trim();;
         }
-        var parts = strRawContents.split("--------");
+        var parts = markdown.split("--------");
         for (var partsIndex = 1; partsIndex < parts.length; partsIndex++) {
             if(parts[partsIndex].indexOf("__Name__:") == -1){continue;}
             parseableString = parts[partsIndex];
@@ -243,13 +236,19 @@ function Equations(){
     this.setFilter = function(filter){
         this.filter = filter;
         this.filteredequations = []
-        for (var index = 0; index < this.allequations.length; ++index) {
-            if(  this.allequations[index].name.toLowerCase().indexOf(this.filter) !== -1 || 
-                 this.allequations[index].description.toLowerCase().indexOf(this.filter) !== -1 )
-                {
-                    this.filteredequations.push(this.allequations[index]);
-                }
-        }   
+        
+        if(filter == ""){
+            this.filteredequations = this.allequations;
+        }else{
+            for (var index = 0; index < this.allequations.length; ++index) {
+                if(  this.allequations[index].name.toLowerCase().indexOf(this.filter) !== -1 || 
+                     this.allequations[index].description.toLowerCase().indexOf(this.filter) !== -1 )
+                    {
+                        this.filteredequations.push(this.allequations[index]);
+                    }
+            }   
+        }
+        
         this.render();
     }
    

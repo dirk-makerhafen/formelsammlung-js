@@ -87,10 +87,9 @@ function Quantities(){
     this.filter = "";
     this.filteredquantities = this.allquantities;
     
-    this.loadMarkdown = function(markdownId){
-        var oFrame = document.getElementById(markdownId);
+    this.loadMarkdown = function(markdown){
         try {
-            var parts = oFrame.contentWindow.document.body.childNodes[0].innerHTML.split("-------------");
+            var parts = markdown.split("-------------");
         }catch(err){return;}    
         for (var partsIndex = 1; partsIndex < parts.length; partsIndex++) {
             if(parts[partsIndex].indexOf("|---|---|---|---|---|---|") == -1){continue;}
@@ -124,11 +123,9 @@ function Quantities(){
         }
     }  
     
-    this.loadTranslationMarkdown = function(markdownId){
-        var language = markdownId.split("_")[1].trim();
-        var oFrame = document.getElementById(markdownId);
+    this.loadTranslationMarkdown = function(language,markdown){
         try{
-            var parts = oFrame.contentWindow.document.body.childNodes[0].innerHTML.split("---------");
+            var parts = markdown.split("---------");
         }catch(err){
             return;
         }    
@@ -171,41 +168,44 @@ function Quantities(){
         this.filter = filter;
         this.filteredquantities = []
         
-        this.match = function(index,matched){
-            if(matched==true){
-                if(this.filteredquantities.indexOf(this.allquantities[index]) == -1 ){
-                    this.filteredquantities.push(this.allquantities[index]);
+        if(filter == ""){
+            this.filteredquantities = this.allquantities;
+        }else{
+            this.match = function(index,matched){
+                if(matched==true){
+                    if(this.filteredquantities.indexOf(this.allquantities[index]) == -1 ){
+                        this.filteredquantities.push(this.allquantities[index]);
+                    }
                 }
             }
+            // TODO: Better, faster, non stupid.
+            var keys = ["unit","shortname_translation","name_translation","description_translation"]
+            if(LANGUAGE != "EN"){
+                keys.push("shortname");
+                keys.push("name");
+                keys.push("description");
+            }
+            for (var matchindex = 0; matchindex < keys.length; ++matchindex) {  
+                for (var index = 0; index < this.allquantities.length; ++index) {               
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
+                    this.match(index, mstr == this.filter  );}
+                for (var index = 0; index < this.allquantities.length; ++index) {            
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
+                    this.match(index, mstr.toLowerCase() == this.filter  );}
+                for (var index = 0; index < this.allquantities.length; ++index) {            
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
+                    this.match(index, mstr.indexOf(this.filter) ==  0);}
+                for (var index = 0; index < this.allquantities.length; ++index) {            
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
+                    this.match(index, mstr.toLowerCase().indexOf(this.filter) ==  0);}
+                for (var index = 0; index < this.allquantities.length; ++index) {            
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
+                    this.match(index, mstr.indexOf(this.filter) >  0);}
+                for (var index = 0; index < this.allquantities.length; ++index) {            
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
+                    this.match(index, mstr.toLowerCase().indexOf(this.filter) >  0);}
+            }
         }
-        // TODO: Better, faster, non stupid.
-        var keys = ["unit","shortname_translation","name_translation","description_translation"]
-        if(LANGUAGE != "EN"){
-            keys.push("shortname");
-            keys.push("name");
-            keys.push("description");
-        }
-        for (var matchindex = 0; matchindex < keys.length; ++matchindex) {  
-            for (var index = 0; index < this.allquantities.length; ++index) {               
-                if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
-                this.match(index, mstr == this.filter  );}
-            for (var index = 0; index < this.allquantities.length; ++index) {            
-                if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
-                this.match(index, mstr.toLowerCase() == this.filter  );}
-            for (var index = 0; index < this.allquantities.length; ++index) {            
-                if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
-                this.match(index, mstr.indexOf(this.filter) ==  0);}
-            for (var index = 0; index < this.allquantities.length; ++index) {            
-                if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
-                this.match(index, mstr.toLowerCase().indexOf(this.filter) ==  0);}
-            for (var index = 0; index < this.allquantities.length; ++index) {            
-                if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
-                this.match(index, mstr.indexOf(this.filter) >  0);}
-            for (var index = 0; index < this.allquantities.length; ++index) {            
-                if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
-                this.match(index, mstr.toLowerCase().indexOf(this.filter) >  0);}
-        }
-        
         this.render();
     }
     

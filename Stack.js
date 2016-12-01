@@ -70,5 +70,8 @@ function Stack(){
             this.elements[index].updateRender(this.id);
         }
     }
-    
 }
+
+Stack = new Stack();
+
+

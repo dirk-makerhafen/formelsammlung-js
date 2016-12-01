@@ -74,21 +74,24 @@ function Materials(){
     this.setFilter = function(filter){
         this.filter = filter;
         this.filteredmaterials = []
-        for (var index = 0; index < this.allmaterials.length; ++index) {
-            if(  this.allmaterials[index].name.toLowerCase().indexOf(this.filter) !== -1 || 
-                 this.allmaterials[index].description.toLowerCase().indexOf(this.filter) !== -1 )
-                {
-                    this.filteredmaterials.push(this.allmaterials[index]);
-                }
-        }        
+        if(filter == ""){
+            this.filteredmaterials = this.allmaterials;
+        }else{
+            for (var index = 0; index < this.allmaterials.length; ++index) {
+                if(  this.allmaterials[index].name.toLowerCase().indexOf(this.filter) !== -1 || 
+                     this.allmaterials[index].description.toLowerCase().indexOf(this.filter) !== -1 )
+                    {
+                        this.filteredmaterials.push(this.allmaterials[index]);
+                    }
+            }        
+        }
         this.render();
     }
     
        
-    this.loadMarkdown = function(markdownId){
-        var oFrame = document.getElementById(markdownId);
+    this.loadMarkdown = function(markdown){
         try {
-            var parts = oFrame.contentWindow.document.body.childNodes[0].innerHTML.split("-------------");
+            var parts = markdown.split("-------------");
         }catch(err){return;}    
         for (var partsIndex = 1; partsIndex < parts.length; partsIndex++) {
             if(parts[partsIndex].indexOf("* ") == -1){continue;}
@@ -108,11 +111,9 @@ function Materials(){
         }
     }  
     
-    this.loadTranslationMarkdown = function(markdownId){
-        var language = markdownId.split("_")[1].trim();
-        var oFrame = document.getElementById(markdownId);
+    this.loadTranslationMarkdown = function(language,markdown){
         try{
-            var parts = oFrame.contentWindow.document.body.childNodes[0].innerHTML.split("-------------");
+            var parts = markdown.split("-------------");
         }catch(err){
             return;
         }    
