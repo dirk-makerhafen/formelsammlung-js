@@ -208,3 +208,34 @@ Wavelength
 Frequency
 
 --------
+
+__Name__: Capacitor Charge/Discharge
+
+__Description__:
+
+Capacitor Charge/Discharge
+
+__Equation__:
+
+Vc = Vs + ((Vi-Vs) * math.e**(-T/R*C)  )
+
+__IO__:
+
+* __Vi__ [ _Volt_ ] |   
+From voltage - Initial voltage of the capacitor
+* __Vc__ [ _Volt_ ] |  Vs + ( (Vi - Vs) * math.e**(-T/R*C) )  
+To voltage - Voltage of the capacitor after time has passed
+* __Vs__ [ _Volt_ ] |  Vc - ( (Vi - Vs) * math.e**(-T/R*C) )
+Supply voltage - Voltage of the power supply. This can also be zero to represent a short
+* __C__ [ _Farad_ ] |   
+Capacitance - Capacitance of the capacitor
+* __R__ [ _Ohm_ ] |  
+Resistance - Resistance of the resistor
+* __T__ [ _Second_ ] |  
+Time - Charging or discharging time period
+
+
+--------
+
+
+
