@@ -86,6 +86,7 @@
     .iostuff {
         float:left;
         padding: 5px;
+        margin-top: -10px;
     }
     .iostuffselect {
         width:100%
@@ -279,11 +280,8 @@
                     <a onclick='jQuery("#QuantitiesSearchInput").val("{{name_translation}}").trigger("keyup");'> {{name_translation}} </a>
                 {{/quantity}}
             {{/equationio}}
-
-            
         </div>
     </div>
-
 </script>
 
 
@@ -310,7 +308,6 @@
             </div>
         </div>
     </div>
-    
 </script>
 
 
@@ -325,9 +322,8 @@
             <div style="padding-left:5px"><b>{{material.name}}</b></div>   
             <div style="padding-left:5px;display:No{{equation.name}}ne"><b>{{equation.name}}</b>
                 <a id="{{id}}_more" onclick='jQuery("#{{id}}_details").toggle("show");jQuery("#{{id}}_more").hide();jQuery("#{{id}}_less").show();'>Details</a>
-                    <a style="display:none;" id="{{id}}_less" onclick='jQuery("#{{id}}_details").toggle("show");jQuery("#{{id}}_less").hide();jQuery("#{{id}}_more").show();'>Hide Details</a>
-            
-             </div>         
+                <a style="display:none;" id="{{id}}_less" onclick='jQuery("#{{id}}_details").toggle("show");jQuery("#{{id}}_less").hide();jQuery("#{{id}}_more").show();'>Hide Details</a>     
+            </div>         
             <div class="updowndeleteGlyph">
                 <span class="glyphicon glyphicon-arrow-up" onclick="Stack.moveUp('{{id}}')"></span>
                 <span class="glyphicon glyphicon-arrow-down" onclick="Stack.moveDown('{{id}}')"></span>
@@ -339,6 +335,10 @@
 </script>
   
 <script>
+
+var SETTINGS = {
+    "NoAutomaticDoubleMapping" : true,
+}
     
 var LANGUAGE = "EN" 
 
@@ -377,6 +377,9 @@ function init(){
                 <option value="EN">English</option>
                 <option value="DE">German</option>
             </select>
+            <checkbox class="" onchange="setLanguage(this.value);">
+               
+            </checkbox>
         </div>
         
         <div class="box"> 
