@@ -147,6 +147,26 @@ function StackMaterial(stack,material){
     this.name = "material " + getUniqNumber();
     this.color = "#eee";
     
+    this.mappedto = []
+    
+    this.addMappedTo = function(StackEquationIo){
+        if(this.mappedto.indexOf(StackEquationIo) == -1){
+            this.mappedto.push(StackEquationIo)
+        }
+    }
+    this.removeMappedTo = function(StackEquationIo){
+        var index = this.mappedto.indexOf(StackEquationIo);
+        if(index != -1){
+            this.mappedto.splice(index,1);
+        }
+    }
+    
+    this.dispose = function(){
+        while (this.mappedto.length > 0){
+            this.mappedto[0].setMappedTo("UNMAPPED",true);
+        }
+    }
+    
     this.setName = function(name){
         this.name = name;
         var e = document.getElementsByClassName("StackEquationIo_"+this.id);

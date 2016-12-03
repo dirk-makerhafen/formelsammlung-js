@@ -6,7 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    
     <script src="https://code.jquery.com/jquery-latest.js"></script>
+    
+    <link rel="stylesheet" href="lib/styles/jquery.sliderTabs.min.css">
+    <script src="lib/jquery.sliderTabs.js"></script>
+    
     
     <script src="lib/jquery.easyPaginate.js"></script>
     <script src="lib/math.js"></script>
@@ -277,7 +282,7 @@
             {{#equationio}}
                 {{description_translation}}<br>
                 {{#quantity}}
-                    <a onclick='jQuery("#QuantitiesSearchInput").val("{{name_translation}}").trigger("keyup");'> {{name_translation}} </a>
+                    <a onclick='jQuery("#QuantitiesSearchInput").val("{{name_translation}}").trigger("keyup");$("#QuantitiesBoxTabSelect").click()'> {{name_translation}} </a>
                 {{/quantity}}
             {{/equationio}}
         </div>
@@ -337,7 +342,7 @@
 <script>
 
 var SETTINGS = {
-    "NoAutomaticDoubleMapping" : true,
+    "EquationsIgnoreMappedElements" : false,  // ignore stack elements that already have a mapping when calculating nr of available mappings in Equation.
 }
     
 var LANGUAGE = "EN" 
@@ -349,7 +354,7 @@ setLanguage = function(lang){
     Equations.render();
     Materials.render();
 }    
-
+var slider  = undefined;
 function init(){
  
     $.ajax({ async: false, url:"markdown/quantities.md",success: function (data){ Quantities.loadMarkdown(data); } });   
@@ -364,6 +369,9 @@ function init(){
     Quantities.setFilter("");
     Equations.setFilter("");
     Materials.setFilter("");
+    slider = $("div#SliderTabs").sliderTabs({
+        mousewheel: false,
+    });
 }
 
 </script>
@@ -372,6 +380,7 @@ function init(){
 <body onload="init()">
     
     <div class="container">
+    
         <div class="box">
             <select class="" onchange="setLanguage(this.value);">
                 <option value="EN">English</option>
@@ -384,29 +393,37 @@ function init(){
         
         <div class="box"> 
             <div id="Stack"> 
-                
             </div>
         </div>
+ 
+        <div id="SliderTabs" class="box" >
+            <ul>
+                <li><a id="QuantitiesBoxTabSelect"    href="#QuantitiesBox">Quantities</a></li>
+                <li><a id="MaterialsBoxTabSelect"  href="#MaterialsBox">Materials</a></li>
+                <li><a id="EquationsBoxTabSelect"  href="#EquationsBox">Equations</a></li>
+            </ul>
         
-        <div class="box">
-            <div class="searchbox">
-                <input id="QuantitiesSearchInput" class="seachInput" onKeyUp="Quantities.setFilter(this.value)" placeholder="Search Quantities"></input><br>
-            </div>
-            <div id="QuantitiesList"></div>
-        </div>
         
-        <div class="box">
-            <div class="searchbox">
-                <input id="EquationsSearchInput" class="seachInput" onKeyUp="Equations.setFilter(this.value)" placeholder="Search Equations"></input><br>
+            <div id="QuantitiesBox">
+                <div class="searchbox">
+                    <input id="QuantitiesSearchInput" class="seachInput" onKeyUp="Quantities.setFilter(this.value)" placeholder="Search Quantities"></input><br>
+                </div>
+                <div id="QuantitiesList"></div>
             </div>
-            <div id="EquationsList"></div>
-        </div>
-        
-        <div class="box">
-            <div class="searchbox">
-                <input id="MaterialsSearchInput" class="seachInput" onKeyUp="Materials.setFilter(this.value)" placeholder="Search Materials"></input><br>
+            
+            <div id="EquationsBox">
+                <div class="searchbox">
+                    <input id="EquationsSearchInput" class="seachInput" onKeyUp="Equations.setFilter(this.value)" placeholder="Search Equations"></input><br>
+                </div>
+                <div id="EquationsList"></div>
             </div>
-            <div id="MaterialsList"></div>
+            
+            <div id="MaterialsBox">
+                <div class="searchbox">
+                    <input id="MaterialsSearchInput" class="seachInput" onKeyUp="Materials.setFilter(this.value)" placeholder="Search Materials"></input><br>
+                </div>
+                <div id="MaterialsList"></div>
+            </div>
         </div>
     </div>
     

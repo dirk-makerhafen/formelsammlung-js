@@ -191,19 +191,19 @@ function Quantities(){
                     this.match(index, mstr == this.filter  );}
                 for (var index = 0; index < this.allquantities.length; ++index) {            
                     if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
-                    this.match(index, mstr.toLowerCase() == this.filter  );}
+                    this.match(index, mstr.toLowerCase() == this.filter.toLowerCase()  );}
                 for (var index = 0; index < this.allquantities.length; ++index) {            
                     if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
                     this.match(index, mstr.indexOf(this.filter) ==  0);}
                 for (var index = 0; index < this.allquantities.length; ++index) {            
                     if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
-                    this.match(index, mstr.toLowerCase().indexOf(this.filter) ==  0);}
+                    this.match(index, mstr.toLowerCase().indexOf(this.filter.toLowerCase()) ==  0);}
                 for (var index = 0; index < this.allquantities.length; ++index) {            
                     if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
                     this.match(index, mstr.indexOf(this.filter) >  0);}
                 for (var index = 0; index < this.allquantities.length; ++index) {            
                     if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
-                    this.match(index, mstr.toLowerCase().indexOf(this.filter) >  0);}
+                    this.match(index, mstr.toLowerCase().indexOf(this.filter.toLowerCase()) >  0);}
             }
         }
         this.render();
@@ -220,7 +220,7 @@ function Quantities(){
         document.getElementById(this.targetdiv).innerHTML = r;
         $('#QuantitiesPagination').easyPaginate({
             paginateElement: 'div',
-            elementsPerPage: 4,
+            elementsPerPage: 8,
             hashPage: "QuantitiesPage",
         });
     }
@@ -236,6 +236,26 @@ function StackQuantity(stack,quantity){
     this.name = "variable " + getUniqNumber();
     this.showConverter = "None";
     
+    this.mappedto = []
+    
+    this.addMappedTo = function(StackEquationIo){
+        if(this.mappedto.indexOf(StackEquationIo) == -1){
+            this.mappedto.push(StackEquationIo)
+        }
+    }
+    this.removeMappedTo = function(StackEquationIo){
+        var index = this.mappedto.indexOf(StackEquationIo);
+        if(index != -1){
+            this.mappedto.splice(index,1);
+        }
+    }
+    
+    this.dispose = function(){
+        while (this.mappedto.length > 0){
+            this.mappedto[0].setMappedTo("UNMAPPED",true);
+        }
+    }
+    
     this.toggleShowConverter = function(){
         if(this.showConverter == "None"){
             this.showConverter = "";
@@ -247,7 +267,7 @@ function StackQuantity(stack,quantity){
     }
     
     this.setValue = function(value){
-        this.value = value;
+        this.value = parseFloat(value.replace(",","."));
         this.updateRenderConverter();
         this.parentStack.updateRender(this.id);
     }

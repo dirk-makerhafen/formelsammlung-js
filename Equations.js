@@ -32,10 +32,22 @@ function Equation(name,description,equationstring,io){
     }   
     
     this.getMappableIoIndexes = function(){
+        var wouldmap = [] // prevent doublicate io mapping
         var indexes = []
+        
+        
         for (var index = 0; index < this.io.length; ++index) {
-            if(this.io[index].mapableStackElements().length!=0){
-                indexes.push(index);
+            var mse = this.io[index].mapableStackElements();
+            if(mse.length > 0){
+                for(var i =0;i<mse.length;i++){
+                   if(wouldmap.indexOf(mse[i]) == -1){
+                        if(!( SETTINGS["EquationsIgnoreMappedElements"] == true && mse[i].mappedto.length > 0)){  
+                            wouldmap.push(mse[i]);
+                            indexes.push(index);
+                            break;    
+                        }                        
+                   }
+                }
             }
         }
         return indexes;
@@ -261,7 +273,7 @@ function Equations(){
 
         $('#EquationsPagination').easyPaginate({
             paginateElement: 'div',
-            elementsPerPage: 4,
+            elementsPerPage: 8,
             hashPage: "EquationsPage",
         });
     }
@@ -282,7 +294,28 @@ function StackEquation(stack, equation){
     for (var index = 0; index < this.equation.io.length; ++index) {
         this.io.push(new StackEquationIO(this,this.equation.io[index]));
     }
-        
+       
+    this.mappedto = []
+    
+    this.addMappedTo = function(StackEquationIo){
+        if(this.mappedto.indexOf(StackEquationIo) == -1){
+            this.mappedto.push(StackEquationIo)
+        }
+    }
+    this.removeMappedTo = function(StackEquationIo){
+        var index = this.mappedto.indexOf(StackEquationIo);
+        if(index != -1){
+            this.mappedto.splice(index,1);
+        }
+    }
+    
+    this.dispose = function(){
+        while (this.mappedto.length > 0){
+            this.mappedto[0].setMappedTo("UNMAPPED",true);
+        }
+    }
+
+       
     this.setName = function(name){
         this.name = name;
         this.parentStack.updateRender(this.id);
@@ -388,11 +421,11 @@ function StackEquation(stack, equation){
                     
                     var v="";
                     if(mappedto.constructor.name == "StackQuantity"){
-                        v = parseFloat((""+mappedto.value).replace(",","."));
+                        v = parseFloat((""+mappedto.value));
                         v = mappedto.quantity.convertValue(v,this.io[i].equationio.quantity)
                     }
                     if(mappedto.constructor.name == "StackEquation"){
-                        v = parseFloat((""+mappedto.resultValue()).replace(",","."));
+                        v = parseFloat((""+mappedto.resultValue()));
                         v = mappedto.resultQuantity().convertValue(v,this.io[i].equationio.quantity);
                     }
                     if(mappedto.constructor.name == "StackMaterial"){
@@ -512,14 +545,25 @@ function StackEquationIO(stackequation,equationio){
         return selectableStackElements;
     }
     
-    this.setMappedTo = function(key){
+    this.setMappedTo = function(key,norender=false){
+        var e = Stack.get(this.mappedto)
+        if (e!=undefined){
+            e.removeMappedTo(this);
+        }
+
         if(key == "OUTPUT"){
             this.parentStackEquation.resultScaler = undefined;
         }
         this.mappedto = key;
-        this.updateRender();
-        this.parentStackEquation.updateRender();
-        this.parentStackEquation.parentStack.updateRender(this.parentStackEquation.id);
+        var e = Stack.get(this.mappedto)
+        if (e!=undefined){
+            e.addMappedTo(this);
+        }
+        if(norender==false){
+            this.updateRender();
+            this.parentStackEquation.updateRender();
+            this.parentStackEquation.parentStack.updateRender(this.parentStackEquation.id);
+        }
     }
         
     this.render = function(){
@@ -532,12 +576,22 @@ function StackEquationIO(stackequation,equationio){
     }
     
     this.autoMapStackElements = function(){
-        var tmp =  this.mapableStackElements(); 
-        if(tmp.length > 0 && this.mappedto == "UNMAPPED"){  
-            this.mappedto = tmp[0].id;
-        }
-        if(tmp.length == 0 && ( this.mappedto != "UNMAPPED" && this.mappedto != "OUTPUT" )){
-            this.mappedto = "UNMAPPED";
+        var mapableElements =  this.mapableStackElements(); 
+        if(mapableElements.length > 0 && this.mappedto == "UNMAPPED"){  
+            for(var i=0;i < mapableElements.length;i++){   // for each mappable element
+                var mapableElement = mapableElements[i];
+                var isAlreadyMappedToParentStackEquation = false;
+                for(var j=0;j < mapableElement.mappedto.length;j++){ // for each equationIO this element already maps to 
+                    if(mapableElement.mappedto[j].parentStackEquation == this.parentStackEquation){
+                        isAlreadyMappedToParentStackEquation = true;
+                        break;
+                    }
+                }
+                if(isAlreadyMappedToParentStackEquation == false){
+                    this.setMappedTo(mapableElement.id,true)
+                    break;
+                }
+            }
         }
     }
     

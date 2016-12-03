@@ -17,6 +17,7 @@ function Stack(){
     }
    
     this.remove = function(elementId){
+        this.get(elementId).dispose();
         this.elements.splice(this.getIndexOfElement(elementId), 1);
         this.render();
     }
