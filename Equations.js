@@ -255,13 +255,43 @@ function Equations(){
         if(filter == ""){
             this.filteredequations = this.allequations;
         }else{
-            for (var index = 0; index < this.allequations.length; ++index) {
-                if(  this.allequations[index].name.toLowerCase().indexOf(this.filter) !== -1 || 
-                     this.allequations[index].description.toLowerCase().indexOf(this.filter) !== -1 )
-                    {
+        
+
+        
+            this.match = function(index,matched){
+                if(matched==true){
+                    if(this.filteredequations.indexOf(this.allequations[index]) == -1 ){
                         this.filteredequations.push(this.allequations[index]);
                     }
-            }   
+                }
+            }
+        
+            // TODO: Better, faster, non stupid.
+            var keys = ["name_translation","description_translation"]
+            if(LANGUAGE != "EN"){
+                keys.push("name");
+                keys.push("description");
+            }
+            for (var matchindex = 0; matchindex < keys.length; ++matchindex) {  
+                for (var index = 0; index < this.allequations.length; ++index) {               
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allequations[index][keys[matchindex]]+""}else{var mstr = this.allequations[index][keys[matchindex]]()+""}
+                    this.match(index, mstr == this.filter  );}
+                for (var index = 0; index < this.allequations.length; ++index) {            
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allequations[index][keys[matchindex]]+""}else{var mstr = this.allequations[index][keys[matchindex]]()+""}
+                    this.match(index, mstr.toLowerCase() == this.filter.toLowerCase()  );}
+                for (var index = 0; index < this.allequations.length; ++index) {            
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allequations[index][keys[matchindex]]+""}else{var mstr = this.allequations[index][keys[matchindex]]()+""}
+                    this.match(index, mstr.indexOf(this.filter) ==  0);}
+                for (var index = 0; index < this.allequations.length; ++index) {            
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allequations[index][keys[matchindex]]+""}else{var mstr = this.allequations[index][keys[matchindex]]()+""}
+                    this.match(index, mstr.toLowerCase().indexOf(this.filter.toLowerCase()) ==  0);}
+                for (var index = 0; index < this.allequations.length; ++index) {            
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allequations[index][keys[matchindex]]+""}else{var mstr = this.allequations[index][keys[matchindex]]()+""}
+                    this.match(index, mstr.indexOf(this.filter) >  0);}
+                for (var index = 0; index < this.allequations.length; ++index) {            
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allequations[index][keys[matchindex]]+""}else{var mstr = this.allequations[index][keys[matchindex]]()+""}
+                    this.match(index, mstr.toLowerCase().indexOf(this.filter.toLowerCase()) >  0);}
+            }
         }
         
         this.render();
@@ -291,13 +321,22 @@ function Equations(){
         return r;
     }
     
+    this.init = function(){
+        this.allequations.sort(function(a, b) {
+            if( a.name_translation() >  b.name_translation()){ return  1;};
+            if( a.name_translation() <  b.name_translation()){ return -1;};
+            if( a.name_translation() == b.name_translation()){ return  0;};
+        });
+        this.filteredequations = this.allequations;
+    }
+    
     this.render = function(){
         this.filteredequations.sort(function(a, b) {
             var d = b.distance() - a.distance();
-            if(d==0){
-                if( a.name >  b.name){ return  1;};
-                if( a.name <  b.name){ return -1;};
-                if( a.name == b.name){ return  0;};
+            if(d==200){
+                if( a.name_translation().toLowerCase() >  b.name_translation().toLowerCase()){ return  1;};
+                if( a.name_translation().toLowerCase() <  b.name_translation().toLowerCase()){ return -1;};
+                if( a.name_translation().toLowerCase() == b.name_translation().toLowerCase()){ return  0;};
             }
             return d;
         });
@@ -454,7 +493,9 @@ function StackEquation(stack, equation){
                     }
                     if(mappedto.constructor.name == "StackEquation"){
                         v = parseFloat((""+mappedto.resultValue()));
-                        v = mappedto.resultQuantity().convertValue(v,this.io[i].equationio.quantity);
+                        if(!isNaN(v)){
+                            v = mappedto.resultQuantity().convertValue(v,this.io[i].equationio.quantity);
+                        }
                     }
                     if(mappedto.constructor.name == "StackMaterial"){
                         v=mappedto.material.getPropertyByQuantity(this.io[i].equationio.quantity).value;

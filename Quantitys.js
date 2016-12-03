@@ -238,6 +238,12 @@ function Quantities(){
         for (var index = 0; index < this.allquantities.length; ++index) {
             this.allquantities[index].init();
         }
+        this.allquantities.sort(function(a, b) {
+            if( a.name_translation().toLowerCase() >  b.name_translation().toLowerCase()){ return  1;};
+            if( a.name_translation().toLowerCase() <  b.name_translation().toLowerCase()){ return -1;};
+            if( a.name_translation().toLowerCase() == b.name_translation().toLowerCase()){ return  0;};
+        });
+        this.filteredquantities = this.allquantities;
      
     }
     
