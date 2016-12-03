@@ -164,6 +164,10 @@ function Equations(){
     this.filter = "";
     this.filteredequations = this.allequations;
     
+    this.paginationPage = 1;
+    this.paginationElementsPerPage = 10;
+    
+    
     this.loadMarkdown = function(markdown){
         extractValue = function(string,key){
             return string.split(key)[1].split("\n__")[0].trim();;
@@ -197,7 +201,6 @@ function Equations(){
             this.add(new Equation(name,description,equation,ios));
         }
     }    
-
     
     this.loadTranslationMarkdown = function(language,markdown){
         extractValue = function(string,key){
@@ -248,7 +251,7 @@ function Equations(){
     this.setFilter = function(filter){
         this.filter = filter;
         this.filteredequations = []
-        
+        this.paginationPage = 1;        
         if(filter == ""){
             this.filteredequations = this.allequations;
         }else{
@@ -263,19 +266,44 @@ function Equations(){
         
         this.render();
     }
-   
+
+    this.filteredEquationsPagination = function(){
+        var index = this.paginationElementsPerPage*(this.paginationPage-1);
+        return this.filteredequations.slice(index,index+ this.paginationElementsPerPage);
+    }
+    
+    this.paginationMaxPages = function(){
+        return math.ceil(this.filteredequations.length / this.paginationElementsPerPage); 
+    }
+    
+    this.setPaginationPage = function(newpage){
+        this.paginationPage = newpage;
+        this.render();
+    }
+    
+    this.paginationPageLinks = function(){
+        var r = []
+        if(this.paginationMaxPages()==1){return [];};
+        for(var i =1;i<this.paginationMaxPages()+1;i++){ 
+            if(i==this.paginationPage){ var selected = "active";}else{ var selected = ""};
+            r.push({"nr":i,"selected":selected});
+        }
+        return r;
+    }
+    
     this.render = function(){
         this.filteredequations.sort(function(a, b) {
-            return b.distance() - a.distance() ;
+            var d = b.distance() - a.distance();
+            if(d==0){
+                if( a.name >  b.name){ return  1;};
+                if( a.name <  b.name){ return -1;};
+                if( a.name == b.name){ return  0;};
+            }
+            return d;
         });
         var r = Mustache.render($('#EquationsTemplate').html(), this);
         document.getElementById(this.targetdiv).innerHTML = r;
-
-        $('#EquationsPagination').easyPaginate({
-            paginateElement: 'div',
-            elementsPerPage: 8,
-            hashPage: "EquationsPage",
-        });
+        
     }
 }
 
@@ -302,6 +330,7 @@ function StackEquation(stack, equation){
             this.mappedto.push(StackEquationIo)
         }
     }
+    
     this.removeMappedTo = function(StackEquationIo){
         var index = this.mappedto.indexOf(StackEquationIo);
         if(index != -1){
@@ -314,7 +343,6 @@ function StackEquation(stack, equation){
             this.mappedto[0].setMappedTo("UNMAPPED",true);
         }
     }
-
        
     this.setName = function(name){
         this.name = name;

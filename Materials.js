@@ -57,6 +57,8 @@ function Materials(){
     this.allmaterials = [];
     this.filter = "";
     this.filteredmaterials = this.allmaterials;
+    this.paginationPage = 1;
+    this.paginationElementsPerPage = 10;  
     
     this.add = function(quantity){
         this.allmaterials.push(quantity);
@@ -74,6 +76,7 @@ function Materials(){
     this.setFilter = function(filter){
         this.filter = filter;
         this.filteredmaterials = []
+        this.paginationPage = 1;
         if(filter == ""){
             this.filteredmaterials = this.allmaterials;
         }else{
@@ -85,10 +88,10 @@ function Materials(){
                     }
             }        
         }
+        
         this.render();
     }
-    
-       
+           
     this.loadMarkdown = function(markdown){
         try {
             var parts = markdown.split("-------------");
@@ -133,6 +136,29 @@ function Materials(){
     }  
     
 
+    this.filteredMaterialsPagination = function(){
+        var index = this.paginationElementsPerPage*(this.paginationPage-1);
+        return this.filteredmaterials.slice(index,index+ this.paginationElementsPerPage);
+    }
+    
+    this.paginationMaxPages = function(){
+        return math.ceil(this.filteredmaterials.length / this.paginationElementsPerPage); 
+    }
+    
+    this.setPaginationPage = function(newpage){
+        this.paginationPage = newpage;
+        this.render();
+    }
+    
+    this.paginationPageLinks = function(){
+        var r = []
+        if(this.paginationMaxPages()==1){return [];};        
+        for(var i =1;i<this.paginationMaxPages()+1;i++){  
+            if(i==this.paginationPage){ var selected = "active";}else{ var selected = ""};
+            r.push({"nr":i,"selected":selected});}
+        return r;
+    }
+    
     this.render = function(){
         var r = Mustache.render($('#MaterialsTemplate').html(), this);
         document.getElementById(this.targetdiv).innerHTML = r;

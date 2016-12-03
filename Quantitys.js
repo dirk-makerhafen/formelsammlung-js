@@ -86,6 +86,9 @@ function Quantities(){
     this.allquantities = [];
     this.filter = "";
     this.filteredquantities = this.allquantities;
+        
+    this.paginationPage = 1;
+    this.paginationElementsPerPage = 7;
     
     this.loadMarkdown = function(markdown){
         try {
@@ -150,7 +153,29 @@ function Quantities(){
         }
     }  
     
-
+    this.filteredQuantitiesPagination = function(){
+        var index = this.paginationElementsPerPage*(this.paginationPage-1);
+        return this.filteredquantities.slice(index,index+ this.paginationElementsPerPage);
+    }
+    
+    this.paginationMaxPages = function(){
+        return math.ceil(this.filteredquantities.length / this.paginationElementsPerPage); 
+    }
+    
+    this.setPaginationPage = function(newpage){
+        this.paginationPage = newpage;
+        this.render();
+    }
+    
+    this.paginationPageLinks = function(){
+        var r = []
+        if(this.paginationMaxPages()==1){return [];};
+        for(var i =1;i<this.paginationMaxPages()+1;i++){  
+            if(i==this.paginationPage){ var selected = "active";}else{ var selected = ""};
+            r.push({"nr":i,"selected":selected});}
+        return r;
+    }
+    
     this.add = function(quantity){
         this.allquantities.push(quantity);
     };
@@ -167,7 +192,7 @@ function Quantities(){
     this.setFilter = function(filter){
         this.filter = filter;
         this.filteredquantities = []
-        
+        this.paginationPage = 1;
         if(filter == ""){
             this.filteredquantities = this.allquantities;
         }else{
@@ -213,16 +238,13 @@ function Quantities(){
         for (var index = 0; index < this.allquantities.length; ++index) {
             this.allquantities[index].init();
         }
+     
     }
     
     this.render = function(){
         var r = Mustache.render($('#QuantitiesTemplate').html(), this);
         document.getElementById(this.targetdiv).innerHTML = r;
-        $('#QuantitiesPagination').easyPaginate({
-            paginateElement: 'div',
-            elementsPerPage: 8,
-            hashPage: "QuantitiesPage",
-        });
+
     }
 }
 
@@ -243,6 +265,7 @@ function StackQuantity(stack,quantity){
             this.mappedto.push(StackEquationIo)
         }
     }
+    
     this.removeMappedTo = function(StackEquationIo){
         var index = this.mappedto.indexOf(StackEquationIo);
         if(index != -1){

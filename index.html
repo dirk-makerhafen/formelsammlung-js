@@ -12,8 +12,6 @@
     <link rel="stylesheet" href="lib/styles/jquery.sliderTabs.min.css">
     <script src="lib/jquery.sliderTabs.js"></script>
     
-    
-    <script src="lib/jquery.easyPaginate.js"></script>
     <script src="lib/math.js"></script>
     <script src="lib/mustache.js"></script>
     <script src="lib/markdown.min.js"></script>
@@ -26,9 +24,7 @@
     <script src="Stack.js"></script>
     
     <style type="text/css">
-    .easyPaginateNav a {padding:5px;}
-    .easyPaginateNav a.current {font-weight:bold;text-decoration:underline;}
-    
+
     .limitedbox {
         min-height:250px;
     }
@@ -107,6 +103,11 @@
         margin-right : 10px;
     }
     
+    .pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
+        background-color: lightgray;
+        border-color: gray;
+    }
+    
 </style>
                     
 
@@ -147,25 +148,41 @@
 
 <script type="x-tmpl-mustache" id="QuantitiesTemplate" >
     <div id="QuantitiesPagination" class="limitedbox">
-    {{#filteredquantities}}
-        {{{render}}}
-    {{/filteredquantities}}
+        {{#filteredQuantitiesPagination}}
+            {{{render}}}
+        {{/filteredQuantitiesPagination}}
+        <ul class="pagination">          
+            {{#paginationPageLinks}}
+                <li class="{{selected}}"><a href="#" onclick="Quantities.setPaginationPage({{nr}})">{{nr}}</a></li>
+            {{/paginationPageLinks}}
+        </ul>        
     </div>
 </script>
 
 <script type="x-tmpl-mustache" id="EquationsTemplate">
     <div id="EquationsPagination" class="limitedbox">
-    {{#filteredequations}}
-        {{{render}}}
-    {{/filteredequations}}
+        {{#filteredEquationsPagination}}
+            {{{render}}}
+        {{/filteredEquationsPagination}}
+        <ul class="pagination">          
+            {{#paginationPageLinks}}
+                <li class="{{selected}}"><a href="#" onclick="Equations.setPaginationPage({{nr}})">{{nr}}</a></li>
+            {{/paginationPageLinks}}
+        </ul>
+        
     </div>
 </script>
 
 <script type="x-tmpl-mustache" id="MaterialsTemplate">
-    <div  id="MaterialsPagination"  class="limitedbox">
-    {{#filteredmaterials}}
-        {{{render}}}
-    {{/filteredmaterials}}
+    <div  id="MaterialsPagination"  class="limitedbox">    
+        {{#filteredmaterials}}
+            {{{render}}}
+        {{/filteredmaterials}}
+        <ul class="pagination">          
+            {{#paginationPageLinks}}
+                <li class="{{selected}}"><a href="#" onclick="Materials.setPaginationPage({{nr}})">{{nr}}</a></li>
+            {{/paginationPageLinks}}
+        </ul>        
     </div>
 </script>
 
@@ -354,7 +371,6 @@ setLanguage = function(lang){
     Equations.render();
     Materials.render();
 }    
-var slider  = undefined;
 function init(){
  
     $.ajax({ async: false, url:"markdown/quantities.md",success: function (data){ Quantities.loadMarkdown(data); } });   
@@ -369,7 +385,7 @@ function init(){
     Quantities.setFilter("");
     Equations.setFilter("");
     Materials.setFilter("");
-    slider = $("div#SliderTabs").sliderTabs({
+    var slider = $("div#SliderTabs").sliderTabs({
         mousewheel: false,
     });
 }
