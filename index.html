@@ -22,7 +22,12 @@
     <script src="Materials.js"></script>
     <script src="Equations.js"></script>
     <script src="Stack.js"></script>
-    
+
+
+    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
     <style type="text/css">
 
     .limitedbox {
@@ -108,13 +113,19 @@
         border-color: gray;
     }
     
+    .glyphicon {
+        cursor: pointer;
+    }
+    .ui-slider-tabs-list-wrapper {
+        width: 80%;
+    }
 </style>
                     
 
 <script type="x-tmpl-mustache" id="QuantityTemplate">
     <div class="box">
         <span style="font-size:0.9em;float:right;display:{{displayTranslateMe}};"> {{displayTranslateMe}}Translate me to your language! </span>
-        <span style="color:green;" class="glyphicon glyphicon-plus" onclick="Stack.add(Quantities.get('{{name}}'))">use</span>
+        <span style="color:green;cursor: pointer;" class="glyphicon glyphicon-plus" onclick="Stack.add(Quantities.get('{{name}}'))">use</span>
         <b>{{name_translation}}</b>,{{aliasnames_translation}} - {{shortname_translation}},{{aliasshortnames_translation}} - {{unit}}
         <br>
         {{{renderDescription}}}
@@ -124,7 +135,7 @@
 <script type="x-tmpl-mustache" id="EquationTemplate">
     <div class="box">
         <span style="font-size:0.9em;float:right;display:{{displayTranslateMe}};"> {{displayTranslateMe}}Translate me to your language! </span>
-        <span style="color:{{color}}" class="glyphicon glyphicon-plus" onclick="Stack.add(Equations.get('{{name}}'))">use</span>
+        <span style="color:{{color}};cursor: pointer;" class="glyphicon glyphicon-plus" onclick="Stack.add(Equations.get('{{name}}'))">use</span>
         <b>{{name_translation}}</b>  -  {{nrOfMappableIos}}/{{io.length}} - 
         <span style="display:no{{outputName}}ne;">Could calculate: </span><b>{{outputName}}</b>
         <br>
@@ -135,7 +146,7 @@
 <script type="x-tmpl-mustache" id="MaterialTemplate">
     <div class="box">
         <span style="font-size:0.9em;float:right;display:{{displayTranslateMe}};"> {{displayTranslateMe}}Translate me to your language! </span>
-        <span style="color:green" class="glyphicon glyphicon-plus" onclick="Stack.add(Materials.get('{{name}}'))">use</span>
+        <span style="color:green;cursor: pointer;" class="glyphicon glyphicon-plus" onclick="Stack.add(Materials.get('{{name}}'))">use</span>
         <b>{{name_translation}}</b><br>
         {{{renderDescription}}}
     </div>
@@ -280,8 +291,6 @@
 </script>
 
 
-
-
 <script type="x-tmpl-mustache" id="StackEquationIoTemplate" >
     <div class="row" style="padding: 2px;">
         <div style="width:34%">
@@ -382,44 +391,50 @@ function init(){
     $.ajax({ url:"markdown/materials_DE.md" ,success: function (data){ Materials.loadTranslationMarkdown("DE",data); } }); 
 
     Quantities.init();    
+    Equations.init();    
+    
     Quantities.setFilter("");
     Equations.setFilter("");
     Materials.setFilter("");
     var slider = $("div#SliderTabs").sliderTabs({
         mousewheel: false,
     });
+    
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/de_DE/sdk.js#xfbml=1&version=v2.8";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    
 }
 
 </script>
 
 </head>
 <body onload="init()">
-    
+
     <div class="container">
-    
-        <div class="box">
-            <select class="" onchange="setLanguage(this.value);">
-                <option value="EN">English</option>
-                <option value="DE">German</option>
-            </select>
-            <checkbox class="" onchange="setLanguage(this.value);">
-               
-            </checkbox>
-        </div>
-        
+
         <div class="box"> 
             <div id="Stack"> 
             </div>
         </div>
- 
+                 
         <div id="SliderTabs" class="box" >
+      
             <ul>
                 <li><a id="QuantitiesBoxTabSelect"    href="#QuantitiesBox">Quantities</a></li>
                 <li><a id="MaterialsBoxTabSelect"  href="#MaterialsBox">Materials</a></li>
                 <li><a id="EquationsBoxTabSelect"  href="#EquationsBox">Equations</a></li>
             </ul>
-        
-        
+            
+            <select style="float:right;margin-top:4px;" onchange="setLanguage(this.value);">
+                <option value="EN">English</option>
+                <option value="DE">German</option>
+            </select>
+            
             <div id="QuantitiesBox">
                 <div class="searchbox">
                     <input id="QuantitiesSearchInput" class="seachInput" onKeyUp="Quantities.setFilter(this.value)" placeholder="Search Quantities"></input><br>
@@ -441,6 +456,27 @@ function init(){
                 <div id="MaterialsList"></div>
             </div>
         </div>
+        
+        <div class="box">
+            <a target="blanc" href="https://github.com/dirk-attraktor/formelsammlung-js/"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
+            <div class="row" style="margin-top: 5px; ">
+                <div style="text-align:center;margin-top: 4px;" class="col-md-3">
+                    <a class="twitter-share-button"href="https://twitter.com/intent/tweet?text=Make #Formelsammlung great again">Tweet</a>       
+                </div>
+                <div style="text-align:center;margin-top: 4px;"  class="col-md-3">
+                    <div class="fb-like" data-href="https://dirk-attraktor.github.io/formelsammlung-js/" data-width="100" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
+                </div>
+
+                <div style="text-align:center;margin-top: 2px;"  class="col-md-3">
+                    <div class="g-plus" data-action="share" data-annotation="bubble"  data-height="24" data-href="https://dirk-attraktor.github.io/formelsammlung-js/"></div>                 
+                </div>
+                <div style="text-align:center;"  class="col-md-3">
+                    <a class="github-button" href="https://github.com/dirk-attraktor/formelsammlung-js/issues" data-icon="octicon-issue-opened"  data-style="mega" data-count-api="/repos/dirk-attraktor/formelsammlung-js#open_issues_count" data-count-aria-label="# issues on GitHub" aria-label="Issue dirk-attraktor/formelsammlung-js on GitHub">Issue</a>
+                </div>
+               
+            </div>
+        </div>
+        
     </div>
     
   </body>
