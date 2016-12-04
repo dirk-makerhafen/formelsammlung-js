@@ -1,6 +1,6 @@
 # formelsammlung-js
 
-## [Interaktive Formelsammlung Online Demo](https://dirk-attraktor.github.io/formelsammlung-js/index.html)
+## [Interaktive Formelsammlung Online Demo](https://dirk-attraktor.github.io/formelsammlung-js/)
 
 
 
