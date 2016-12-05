@@ -299,7 +299,7 @@
 <script type="x-tmpl-mustache" id="StackEquationIoTemplate" >
     <div class="row" style="padding: 2px;">
         <div style="width:34%">
-            <select class="iostuff iostuffselect {{selectableDivClass}}" onchange="Stack.get('{{parentStackEquation.id}}').getIO('{{id}}').setMappedTo(this.value)">
+            <select class="iostuff iostuffselect {{selectableDivClass}}" onchange="Stack.get('{{parentStackEquation.id}}').getIO('{{id}}').setMappedTo(this.value,false)">
                 <option value="OUTPUT">Output</option>
                 {{#mapableStackElements}}
                     <option {{selected}} class="selected_{{name}} StackEquationIo_{{id}}" value="{{id}}">{{name}}</option>

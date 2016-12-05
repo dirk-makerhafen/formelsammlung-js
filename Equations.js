@@ -540,7 +540,7 @@ function StackEquation(stack, equation){
             this.io[i].autoMapStackElements(); 
         }
         if (this.getIndexOfIOByMapping("UNMAPPED").length == 1 && this.getIndexOfIOByMapping("OUTPUT").length == 0){
-            this.io[this.getIndexOfIOByMapping("UNMAPPED")[0]].setMappedTo("OUTPUT");
+            this.io[this.getIndexOfIOByMapping("UNMAPPED")[0]].setMappedTo("OUTPUT",true);
         } 
         var r = Mustache.render($('#StackEquationTemplate').html(), this);
         return r;
@@ -614,7 +614,7 @@ function StackEquationIO(stackequation,equationio){
         return selectableStackElements;
     }
     
-    this.setMappedTo = function(key,norender=false){
+    this.setMappedTo = function(key,norender){
         var e = Stack.get(this.mappedto)
         if (e!=undefined){
             e.removeMappedTo(this);
@@ -657,7 +657,7 @@ function StackEquationIO(stackequation,equationio){
                     }
                 }
                 if(isAlreadyMappedToParentStackEquation == false){
-                    this.setMappedTo(mapableElement.id,true)
+                    this.setMappedTo(mapableElement.id,true);
                     break;
                 }
             }
