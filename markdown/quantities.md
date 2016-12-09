@@ -39,46 +39,46 @@
 #### <a name="metric-length"></a> Metric Length ####
 
 ------------- 
-| Nanometer | nm | nm |  | Micrometer | Mil | 
+| Nanometer | nm | 10^-9 Meter |  | Micrometer | Mil | 
 |---|---|---|---|---|---|
 
 1 millionths of a Millimeter. The nanometer is often used to express dimensions on an atomic scale: the diameter of a helium atom, for example is 0.1 nm.
 The nanometer is also commonly used to specify the wavelength of electromagnetic radiation near the visible part of the spectrum: visible light ranges from around 400 to 700 nm
 
 -------------
-| Micrometer | um | um | Nanometer | Millimeter | Mil | 
+| Micrometer | um | 10^-6 Meter | Nanometer | Millimeter | Mil | 
 |---|---|---|---|---|---|
 
 1/1000 of a Millimeter. The micrometer is a common unit of measurement for wavelengths of infrared radiation as well as sizes of biological cells and bacteria.
 Micrometers are the standard for grading wool by the diameter of the fibres; wool finer than 25 µm can be used for garments, while coarser grades are used for outerwear, rugs, and carpets.[2] The width of a single human hair ranges from approximately 10 to 200 µm. The first and longest human chromosome is 10µm in length.
 
 -------------
-| Millimeter | mm | mm | Micrometer | Centimeter | Inch | 
+| Millimeter | mm | 10^-3 Meter | Micrometer | Centimeter | Inch | 
 |---|---|---|---|---|---|
 
 1/1000 of a meter. A millimeter is equal to exactly 5/127 (approximately 0.039370) of an inch.
 The smallest distances the human eye can resolve is around 0.02 to 0.04 mm, approximately the width of a human hair.[6] A sheet of paper is typically between 0.07 mm and 0.18 mm thick, with ordinary printer paper or copy paper approximately a tenth of a millimeter thick
 
 -------------
-| Centimeter | cm | cm | Millimeter |Meter  | Inch, Foot| 
+| Centimeter | cm | 10^-2 Meter | Millimeter |Meter  | Inch, Foot| 
 |---|---|---|---|---|---|
 
 Add some description here! 
 
 -------------
-| Decimeter | dm | dm | Centimeter | Meter | Inch, Foot | 
+| Decimeter | dm | 10^-1 Meter | Centimeter | Meter | Inch, Foot | 
 |---|---|---|---|---|---|
 
 Nobody uses this, scale to millimeter or Meter.
 
 -------------
-| Meter | m | m | Centimeter | Kilometer | Inch, Foot, Yard | 
+| Meter | m |  | Centimeter | Kilometer | Inch, Foot, Yard | 
 |---|---|---|---|---|---|
 
 The beloved SI Meter
 
 -------------
-| Kilometer | km | km | Meter |  | Yard, Mile | 
+| Kilometer | km | 10^3 Meter | Meter |  | Yard, Mile | 
 |---|---|---|---|---|---|
 
 tousand of them
@@ -88,31 +88,31 @@ tousand of them
 #### <a name="other-length"></a>  Other Length ####
 
 -------------
-| Mil | mil | mil |  | Inch | Millimeter | 
+| Mil | mil | 0.0000254 Meter |  | Inch | Millimeter | 
 |---|---|---|---|---|---|
 
 some description
 
 -------------
-| Inch | inch | inch | Mil | Foot | Centimeter | 
+| Inch | inch | 0.0254 Meter | Mil | Foot | Centimeter | 
 |---|---|---|---|---|---|
 
 some description
 
 -------------
-| Foot | foot | foot | Inch | Yard | Meter | 
+| Foot | ft | 0.3048 Meter | Inch | Yard | Meter | 
 |---|---|---|---|---|---|
 
 some description
 
 -------------
-| Yard | yard | yard | Foot | Mile | Meter | 
+| Yard | yard | 0.9144 Meter | Foot | Mile | Meter | 
 |---|---|---|---|---|---|
 
 some description
 
 -------------
-| Mile | mile | mile | Yard |  | Kilometer | 
+| Mile | mile | 1609.344 Meter | Yard |  | Kilometer | 
 |---|---|---|---|---|---|
 
 some description
@@ -122,19 +122,19 @@ some description
 #### <a name="metric-area"></a> Metric Area  ####
 
 -------------
-| Square Millimeter | | mm^2 |  | Square Centimeter |  | 
+| Square Millimeter | mm^2 | 10^-6 m^2 |  | Square Centimeter |  | 
 |---|---|---|---|---|---|
 
 fill me now!
 
 -------------
-| Square Centimeter | | cm^2 | Square Millimeter | Square Meter |  | 
+| Square Centimeter | cm^2 | 10^-4 m^2 | Square Millimeter | Square Meter |  | 
 |---|---|---|---|---|---|
 
 fill me now!
 
 -------------
-| Square Meter | | m^2 | Square Centimeter |  |  | 
+| Square Meter | m^2 | Meter^2 | Square Centimeter |  |  | 
 |---|---|---|---|---|---|
 
 fill me now!
@@ -168,22 +168,22 @@ fill me now!
 #### <a name="metric-mass"></a>  Metric Mass ####
 
 ------------- 
-| Microgramm | | ug |  | Milligramm |  | 
+| Microgramm | ug | 10^-9 kg |  | Milligramm |  | 
 |---|---|---|---|---|---|
 
 
 -------------
-| Milligramm | | mg | Microgramm | Gramm |  | 
+| Milligramm | mg | 10^-6 kg | Microgramm | Gramm |  | 
 |---|---|---|---|---|---|
 
 
 -------------
-| Gramm | | g | Milligramm | Kilogramm |  | 
+| Gramm | g | 10^-3 kg | Milligramm | Kilogramm |  | 
 |---|---|---|---|---|---|
 
 
 -------------
-| Kilogramm | | kg | Gramm |  |  | 
+| Kilogramm | kg |  | Gramm |  |  | 
 |---|---|---|---|---|---|
 
 some kg description
@@ -201,7 +201,7 @@ some kg description
 #### <a name="time"></a>  Time ####
 
 -------------
-| Nanosecond | | ns |  | Microsecond |  | 
+| Nanosecond | ns | 10^-9 Second |  | Microsecond |  | 
 |---|---|---|---|---|---|
 
 1.0 nanosecond – cycle time for a 1 GHz processor.
@@ -210,7 +210,7 @@ some kg description
 
 
 -------------
-| Microsecond | | us | Nanosecond | Millisecond |  | 
+| Microsecond | us | 10^-6 Second | Nanosecond | Millisecond |  | 
 |---|---|---|---|---|---|
 
 1.8 microseconds – the amount of time subtracted from the Earth's day as a result of the 2011 Japanese earthquake.
@@ -219,7 +219,7 @@ some kg description
 The average human eye blink takes 350000 microseconds (just over 1/3 of one second).
 
 -------------
-| Millisecond | | ms | Microsecond | Second |  | 
+| Millisecond | ms | 10^-3 Second | Microsecond | Second |  | 
 |---|---|---|---|---|---|
 
 1 milliseconds – time taken for light to travel 300 km in a vacuum  
@@ -227,7 +227,7 @@ The average human eye blink takes 350000 microseconds (just over 1/3 of one seco
 300 to 400 milliseconds – the time for the human eye to blink
 
 -------------
-| Second | | s | Millisecond |  |  | 
+| Second | s |  | Millisecond |  |  | 
 |---|---|---|---|---|---|
 
 SI Seconds
@@ -237,19 +237,19 @@ SI Seconds
 #### <a name="electric-current"></a> Electric current   ####
 
 -------------
-| Microampere | | uA |  | Milliampere |  | 
+| Microampere | uA | 10^-6 Ampere |  | Milliampere |  | 
 |---|---|---|---|---|---|
 
-Current in ampere
+Current in Microampere
 
 -------------
-| Milliampere | | mA | Microampere | Ampere |  | 
+| Milliampere | mA | 10^-3 Ampere | Microampere | Ampere |  | 
 |---|---|---|---|---|---|
 
-Current in ampere
+Current in Milliampere
 
 -------------
-| Ampere | | A | Milliampere |  |  | 
+| Ampere | A |  | Milliampere |  |  | 
 |---|---|---|---|---|---|
 
 Current in ampere
@@ -267,19 +267,19 @@ Current in ampere
 ####   <a name="capacitance"></a> Capacitance ####
 
 -------------
-| Microfarad| | uF |  | Millifarad |  | 
+| Microfarad| uF | 10^-6 Farad |  | Millifarad |  | 
 |---|---|---|---|---|---|
 
 capacitance
 
 -------------
-| Millifarad| | mF | Microfarad | Farad |  | 
+| Millifarad| mF | 10^-3 Farad | Microfarad | Farad |  | 
 |---|---|---|---|---|---|
 
 capacitance
 
 -------------
-| Farad| | F | Millifarad |  |  | 
+| Farad| F |  A^2 * s^4 * kg^-1 * m^-2 | Millifarad |  |  | 
 |---|---|---|---|---|---|
 
 capacitance description
@@ -289,31 +289,31 @@ capacitance description
 #### <a name="electric-potential"></a> ELECTRIC POTENTIAL (VOLTAGE)   ####
 
 ------------- 
-| Microvolt | | uV |  | Millivolt |  | 
+| Microvolt | uV | 10^-6 Volt |  | Millivolt |  | 
 |---|---|---|---|---|---|
 
 Das __Volt__ ist die im internationalen Einheitensystem (SI) für die elektrische Spannung verwendete Maßeinheit. 
 
 -------------
-| Millivolt | | mV | Microvolt | Volt |  | 
+| Millivolt | mV | 10^-3 Volt | Microvolt | Volt |  | 
 |---|---|---|---|---|---|
 
 Das __Volt__ ist die im internationalen Einheitensystem (SI) für die elektrische Spannung verwendete Maßeinheit. 
 
 -------------
-| Volt | | V | Millivolt | Kilovolt |  | 
+| Volt | V | kg * m^2 * A^-1 * s^-3 | Millivolt | Kilovolt |  | 
 |---|---|---|---|---|---|
 
 Das __Volt__ ist die im internationalen Einheitensystem (SI) für die elektrische Spannung verwendete Maßeinheit. 
 
 -------------
-| Kilovolt | | kV | Volt | Megavolt |  | 
+| Kilovolt | kV | 10^3 Volt | Volt | Megavolt |  | 
 |---|---|---|---|---|---|
 
 large voltage
 
 -------------
-| Megavolt | | MV | Kilovolt |  |  | 
+| Megavolt | MV | 10^6 Volt | Kilovolt |  |  | 
 |---|---|---|---|---|---|
 
 lightning strike
@@ -323,25 +323,25 @@ lightning strike
 #### <a name="electric-resistance"></a> Resistance   ####
  
 ------------- 
-| Milliohm | | mohm |  | Ohm |  | 
+| Milliohm | mohm | 10^-6 Ohm |  | Ohm |  | 
 |---|---|---|---|---|---|
 
 some very smallresistance
 
 -------------
-| Ohm | | ohm | Milliohm | Kiloohm |  | 
+| Ohm | ohm | kg * m^2 * A^-2 * s^-3 | Milliohm | Kiloohm |  | 
 |---|---|---|---|---|---|
 
 some resistance
 
 -------------
-| Kiloohm | | kohm | Ohm | Megaohm |  | 
+| Kiloohm | kohm | 10^3 Ohm | Ohm | Megaohm |  | 
 |---|---|---|---|---|---|
 
 some resistance
 
 -------------
-| Megaohm | | Mohm | Kiloohm |  |  | 
+| Megaohm | Mohm | 10^6 Ohm | Kiloohm |  |  | 
 |---|---|---|---|---|---|
 
 some large resistance
@@ -351,37 +351,37 @@ some large resistance
 #### <a name="frequency"></a> Frequency  ####
 
 -------------
-| Hertz | | Hz |  | Kilohertz |  | 
+| Hertz | Hz | s^-1 |  | Kilohertz |  | 
 |---|---|---|---|---|---|
 
 Frequency in hz.
 
 -------------
-| Kilohertz | | kHz | Hertz | Megahertz |  | 
+| Kilohertz | kHz | 10^3 Hz | Hertz | Megahertz |  | 
 |---|---|---|---|---|---|
 
 Frequency in khz.
 
 -------------
-| Megahertz | | MHz | Kilohertz | Gigahertz |  | 
+| Megahertz | MHz | 10^6 Hz | Kilohertz | Gigahertz |  | 
 |---|---|---|---|---|---|
 
 Frequency in MHz.
 
 -------------
-| Gigahertz | | GHz | Megahertz |  |  | 
+| Gigahertz | GHz | 10^9 Hz | Megahertz |  |  | 
 |---|---|---|---|---|---|
 
 Frequency in GHz.  
 
 -------------
-| Rotations per minute | rpm | 0.10471975511965977 s^-1 |  | Rotations per second |  | 
+| Rotations per minute | rpm | 0.01666 s^-1 |  | Rotations per second |  | 
 |---|---|---|---|---|---|
 
 RPM
 
 -------------
-| Rotations per second | rps | 6.283185307179586 s^-1 | Rotations per minute |  |  | 
+| Rotations per second | rps | s^-1 | Rotations per minute |  |  | 
 |---|---|---|---|---|---|
 
 RPS
@@ -391,39 +391,39 @@ RPS
 #### <a name="power"></a>  Power ####
 
 ------------- 
-| Picowatt |  | pW |  | Nanowatt |  | 
+| Picowatt | pW | 10^-12 Watt |  | Nanowatt |  | 
 |---|---|---|---|---|---|
 
-The picowatt is equal to one trillionth (10−12) of a watt. 
+The picowatt is equal to one trillionth (10-12) of a watt. 
 Technologically important powers that are measured in picowatts are typically used in reference to radio and radar receivers, acoustics and in the science of radio astronomy.
 
 -------------
-| Nanowatt |  | nW | Picowatt | Microwatt |  | 
+| Nanowatt | nW | 10^-9 Watt | Picowatt | Microwatt |  | 
 |---|---|---|---|---|---|
 
-The nanowatt is equal to one billionth (10−9) of a watt. Important powers that are measured in nanowatts are also typically used in reference to radio and radar receivers.
+The nanowatt is equal to one billionth (10-9) of a watt. Important powers that are measured in nanowatts are also typically used in reference to radio and radar receivers.
 
 -------------
-| Microwatt |  | uW | Nanowatt | Milliwatt |  | 
+| Microwatt | uW | 10^-6 Watt | Nanowatt | Milliwatt |  | 
 |---|---|---|---|---|---|
 
-The microwatt is equal to one millionth (10−6) of a watt. Important powers that are measured in microwatts are typically stated in medical instrumentation systems such as the EEG and the ECG, in a wide variety of scientific and engineering instruments and also in reference to radio and radar receivers. 
+The microwatt is equal to one millionth (10-6) of a watt. Important powers that are measured in microwatts are typically stated in medical instrumentation systems such as the EEG and the ECG, in a wide variety of scientific and engineering instruments and also in reference to radio and radar receivers. 
 Compact solar cells for devices such as calculators and watches are typically measured in microwatts.[3]
 
 -------------
-| Milliwatt |  | mW | Microwatt | Watt |  | 
+| Milliwatt | mW | 10^-3 Watt | Microwatt | Watt |  | 
 |---|---|---|---|---|---|
 
-The milliwatt is equal to one thousandth (10−3) of a watt. A typical laser pointer outputs about five milliwatts of light power, whereas a typical hearing aid for people uses less than one milliwatt.[4] Audio signals and other electronic signal levels are often measured in dBm, referenced to one milliwatt.
+The milliwatt is equal to one thousandth (10-3) of a watt. A typical laser pointer outputs about five milliwatts of light power, whereas a typical hearing aid for people uses less than one milliwatt.[4] Audio signals and other electronic signal levels are often measured in dBm, referenced to one milliwatt.
 
 -------------
-| Watt |  | W | Milliwatt | Kilowatt |  | 
+| Watt | W |  | Milliwatt | Kilowatt |  | 
 |---|---|---|---|---|---|
 
 Powerinwatt
 
 -------------
-| Kilowatt |  | kW | Watt | Megawatt |  | 
+| Kilowatt | kW | 10^3 Watt | Watt | Megawatt |  | 
 |---|---|---|---|---|---|
 
 The kilowatt is equal to one thousand (103) watts. This unit is typically used to express the output power of engines and the power of electric motors, tools, machines, and heaters. It is also a common unit used to express the electromagnetic power output of broadcast radio and television transmitters.
@@ -431,27 +431,25 @@ One kilowatt is approximately equal to 1.34 horsepower. A small electric heater 
 A surface area of one square meter on Earth receives typically about one kilowatt of sunlight from the sun (the solar irradiance) (on a clear day at mid day, close to the equator).[6]
 
 -------------
-| Megawatt |  | MW | Kilowatt | Gigawatt |  | 
+| Megawatt | MW | 10^6 Watt | Kilowatt | Gigawatt |  | 
 |---|---|---|---|---|---|
 
-The megawatt is equal to one million (106) watts. Many events or machines produce or sustain the conversion of energy on this scale, 
-including large electric motors; large warships such as aircraft carriers, cruisers, and submarines; large server farms or data centers. 
+The megawatt is equal to one million (106) watts. 
+..Large electric motors; large warships such as aircraft carriers, cruisers, and submarines; large server farms or data centers. 
 A large residential or commercial building may use several megawatts in electric power and heat. 
-On railways, modern high-powered electric locomotives typically have a peak power output of 5 or 6 MW, although some produce much more. 
-The Eurostar, for example, uses more than 12 MW, while heavy diesel-electric locomotives typically produce/use 3 to 5 MW. U.S. nuclear power plants have net summer capacities between about 500 and 1300 MW.[7]
+Modern high-powered electric locomotives typically have a peak power output of 5 to 12 MW. 
+U.S. nuclear power plants have net summer capacities between about 500 and 1300 MW.[7]
 
 -------------
-| Gigawatt |  | GW | Megawatt | Terawatt |  | 
+| Gigawatt | GW | 10^9 Watt | Megawatt | Terawatt |  | 
 |---|---|---|---|---|---|
 
 The gigawatt is equal to one billion (10^9) watts or 1 gigawatt = 1000 megawatts. 
 This unit is often used for large power plants or power grids. 
-For example, by the end of 2010 power shortages in China's Shanxi province were expected to increase to 5–6 GW[8] 
-and the installed capacity of wind power in Germany was 25.8 GW.[9] 
-The largest unit (out of four) of the Belgian Doel Nuclear Power Station has a peak output of 1.04 GW.[10] HVDC converters have been built with power ratings of up to 2 GW.[11]
+The installed capacity of wind power in Germany was 25.8 GW.[9] 
 
 -------------
-| Terawatt |  | TW | Gigawatt | Petawatt |  | 
+| Terawatt | TW | 10^12 Watt | Gigawatt | Petawatt |  | 
 |---|---|---|---|---|---|
 
 The terawatt is equal to one trillion (1012) watts. 
@@ -459,53 +457,53 @@ The total power used by humans worldwide is commonly measured in terawatts (see 
 The average lightning strike peaks at 1 terawatt, but these strikes only last for 30 microseconds.
 
 -------------
-| Petawatt |  | PW | Petawatt |  |  | 
+| Petawatt | PW | 10^15 Watt | Petawatt |  |  | 
 |---|---|---|---|---|---|
 
-Based on the average total solar irradiance[15] of 1.366 kW/m2, the total power of sunlight striking Earth's atmosphere is estimated at 174 PW (see: solar constant).
+Based on the average total solar irradiance[15] of 1.366 kW/m2, the total power of sunlight striking Earth's atmosphere is estimated at 174 Petawatt
 
 ------------- 
  
 ####  <a name="pressure"></a> Pressure ####
 
 -------------
-| Millibar | mbar | 0.001 bar |  | Bar | Kilopascal | 
+| Millibar | mbar | 10^2 Pa |  | Bar | Kilopascal,Pound-force per square inch | 
 |---|---|---|---|---|---|
 
 atmospheric pressures are in mbar
 
 -------------
-| Bar |  | bar | Millibar |  | Megapascal | 
+| Bar | bar | 10^5 Pa | Millibar |  | Megapascal,Pound-force per square inch | 
 |---|---|---|---|---|---|
 
 Pressure in bar
 
 -------------
-| Pascal |  | Pa |  | Hectopascal | Millibar | 
+| Pascal | Pa | kg * m^-1 * s^-2 |  | Hectopascal | Millibar | 
 |---|---|---|---|---|---|
 
 Pressure in Pascal
 
 -------------
-| Hectopascal |  | hPa | Pascal | Kilopascal | Millibar | 
+| Hectopascal | hPa | 10^2 Pa | Pascal | Kilopascal | Millibar | 
 |---|---|---|---|---|---|
 
-Pressure in Pascal
+Pressure in Hectopascal
 
 -------------
-| Kilopascal |  | kPa | Hectopascal | Megapascal | Millibar  | 
+| Kilopascal | kPa | 10^3 Pa | Hectopascal | Megapascal | Millibar, Pound-force per square inch  | 
 |---|---|---|---|---|---|
 
-Pressure in Pascal
+Pressure in Kilopascal
 
 -------------
-| Megapascal |  | MPa | Kilopascal |  | Bar | 
+| Megapascal | MPa | 10^6 Pa | Kilopascal |  | Bar, Pound-force per square inch| 
 |---|---|---|---|---|---|
 
-Pressure in Pascal
+Pressure in Megapascal
 
 -------------
-| Pound-force per square inch |  | psi |  |  | Bar | 
+| Pound-force per square inch | psi | 6894.76 Pascal |  |  | Bar, Pascal | 
 |---|---|---|---|---|---|
 
 Pressure in psi
@@ -516,33 +514,103 @@ Pressure in psi
 ####  <a name="other"></a> Other  ####
 
 -------------
-| Liter per minute  | lpm | liter/minute |  |  |  | 
+| Liter per second | lps | L * s^-1 |  | Liter per minute |  | 
+|---|---|---|---|---|---|
+
+Flow in liter per second
+
+-------------
+| Liter per minute | lpm | 1/60 L * s^-1 | Liter per second |  |  | 
 |---|---|---|---|---|---|
 
 Flow in liter per minute
 
 -------------
-| Specific Resistance |  | (ohm * mm^2) / m |  |  |  | 
+| Specific Resistance |  | ohm * mm^2 * m^-1 |  |  |  | 
 |---|---|---|---|---|---|
 
 spezifischer widerstand eines materials
 
 -------------
-| Newton Meter | | N * m |  |  |  | 
+| Newton | N | kg * m * s^-2 |  |  |  | 
+|---|---|---|---|---|---|
+
+newton
+
+-------------
+| Newton Meter | Nm | N * m |  |  |  | 
 |---|---|---|---|---|---|
 
 Torque in newton meter
 
 -------------
-| Flächenträgheitsmoment | | m^4 |  |  |  | 
+| Second moment of area | m^4 | Meter^4 |  |  |  | 
 |---|---|---|---|---|---|
 
-Flächenträgheitsmoment
+Second moment of area
 
 -------------
- 
+| Liter | l | 10^-3 Meter^3  |  |  |  | 
+|---|---|---|---|---|---|
 
- 
+liter
+-------------
+| Number of | n |  |  |  |  | 
+|---|---|---|---|---|---|
+
+a pure number without unit
+
+-------------
+| Meter per minute | m/min | Meter * Minute^-1 |  |  |  | 
+|---|---|---|---|---|---|
+
+speed
+
+-------------
+| Minute | min | 60 Second |  |  |  | 
+|---|---|---|---|---|---|
+
+time
+
+-------------
+| Qubikmeter | m^3 | Meter^3 |  |  |  | 
+|---|---|---|---|---|---|
+
+volume
+
+-------------
+| Surface cutting speed |  | m * min^-1 |  |  |  | 
+|---|---|---|---|---|---|
+
+milling fill me
+
+-------------  
+| Chip load |  | mm |  |  |  | 
+|---|---|---|---|---|---|
+
+milling fill me
+
+-------------  
+| E-Modul |  | N/mm^2 |  |  |  | 
+|---|---|---|---|---|---|
+
+milling fill me
+
+-------------  
+| Widerstandsmoment |  | cm^3 |  |  |  | 
+|---|---|---|---|---|---|
+
+milling fill me
+
+-------------   
+| Biegungsspannung |  | N/mm^2 |  |  |  | 
+|---|---|---|---|---|---|
+
+milling fill me
+
+-------------   
+    
+  
  
  
  
