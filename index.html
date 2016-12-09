@@ -25,7 +25,7 @@
     <script src="Stack.js"></script>
 
 
-    <script async defer src="//platform.twitter.com/widgets.js"></script>
+    <script async defer src="https://platform.twitter.com/widgets.js"></script>
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <script async defer src="https://apis.google.com/js/platform.js"></script>
 
@@ -142,12 +142,24 @@
         <b>{{name_translation}}</b>  -  {{nrOfMappableIos}}/{{io.length}} - 
         <span style="display:no{{outputName}}ne;">Could calculate: </span><b>{{outputName}}</b>
         <br>
-        <div id="equationDescription_{{name}}">
-            {{{renderDescription}}}
-        </div>
+        {{{renderDescription}}}
     </div>
 </script>
 
+
+<script type="x-tmpl-mustache" id="EquationDescriptionTemplate">
+    <div class="row">
+        <div class="col-md-8" id="equationDescription_{{name}}" style="margin-top:10px;" >
+            {{{description}}}
+        </div>
+        <div  class="col-md-4"  id="equationDescriptionImages_{{name}}">
+            {{#images}}
+                    <img style="max-width:175px;max-height:175px" src="{{.}}"></img>      
+            {{/images}}
+        </div>
+    </div>
+</script>
+    
 <script type="x-tmpl-mustache" id="MaterialTemplate">
     <div class="box">
         <a onclick="load_disqus_modal(Materials.get('{{name}}'),'{{name}}')" style="font-size:0.8em;float:right;"  data-toggle="modal" data-target="#myModal">Feedback/Translate </a>
@@ -289,7 +301,16 @@
     
     <div style="display:none;" id="{{id}}_details">
         {{#equation}}
-            {{{renderDescription}}}
+            <div class="row">
+                <div class="col-md-8" id="equationDescription_{{name}}" style="margin-top:10px;" >
+                    {{{renderDescription}}}
+                </div>
+                <div  class="col-md-4"  id="equationDescriptionImages_{{name}}">
+                    {{#images}}
+                        <img style="max-width:175px;max-height:175px" src="{{.}}"></img>      
+                    {{/images}}
+                </div>
+            </div>
         {{/equation}}
     </div>
 
@@ -329,13 +350,13 @@
                 <input class="variableNameInput" value="{{name}}" onKeyUp="Stack.get('{{id}}').setName(this.value)"
                  onclick='flashMappedInputHelper("StackEquationIo_{{id}}");'></input>
             </div>
-            <div class="col-md-3"> 
+            <div class="col-md-6"> 
                 <div class="row">
                     {{#material.properties}}
-                        <div class="col-md-8">
+                        <div class="col-md-4">
                             <input readonly value="{{value}}"  class="valueInput"></input>
                         </div>
-                        <div class="col-md-3 unitOutput">
+                        <div class="col-md-4 unitOutput">
                             {{quantity.name}}<br>
                             {{quantity.unit}}<br>
                         </div>
@@ -373,7 +394,7 @@
 <script>
 
 var SETTINGS = {
-    "EquationsIgnoreMappedElements" : false,  // ignore stack elements that already have a mapping when calculating nr of available mappings in Equation.
+    "EquationsIgnoreMappedElements" : true,  // ignore stack elements that already have a mapping when calculating nr of available mappings in Equation.
 }
     
 var LANGUAGE = "EN" 
@@ -404,7 +425,10 @@ function init(){
     var slider = $("div#SliderTabs").sliderTabs({
         mousewheel: false,
     });
-    
+    //var e=  Equations.get("Cantilever beam deflection, End-loaded");
+    //var se = new StackEquation(undefined,e);
+    //$("#testeditEquation")[0].innerHTML = se.render();
+    //$("#testeditEquation")[0].children[1].style.display=""
 }
 
 </script>
@@ -422,7 +446,7 @@ function init(){
 
 
 <script>
-
+    
     function init_disqus() { 
         disqus_config = function () {
             this.page.url =        "https://dirk-attraktor.github.io/formelsammlung-js/#!general" 
@@ -532,6 +556,10 @@ function init(){
         <div id="disqus_general_thread" class="box">
             <div id="disqus_thread"></div>
         </div>
+ 
+        
+        
+        
         
     </div>
 

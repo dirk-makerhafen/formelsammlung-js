@@ -16,6 +16,7 @@ function Quantity(name,description,unit){
     this.convertto = [];
   
     this.converter = [];
+    this.rawmarkdown = "";
     
     this.cantranslate = function(){ 
         if (LANGUAGE == "EN" || this.translations == undefined || this.translations[LANGUAGE] == undefined){ return false; }else{ return true; } 
@@ -53,7 +54,11 @@ function Quantity(name,description,unit){
     
     // scale value from this. to TargetQuantity
     this.convertValue = function(value,TargetQuantity){
-        return math.unit(value,this.unit.toString()).toNumber(TargetQuantity.unit.toString());
+        var u1= this.unit.toString();
+        var u2= TargetQuantity.unit.toString();
+        if(u1==""){u1="m^0";}// todo better handing of stuff without unit
+        if(u2==""){u2="m^0";}
+        return math.unit(value,u1).toNumber(u2);
     }
     
     //after all quantity/equations are loaded from markdown, call this to init 
@@ -104,14 +109,31 @@ function Quantities(){
             var unitstring = data[3].trim();
             var description = parseableString.split("|---|---|---|---|---|---|")[1].split("-------------")[0];
             var unit = undefined;
-            if(isNaN(unitstring.split(" ")[0])){
-                unit = math.unit(unitstring);
-            }else{
-                math.createUnit(shortnames[0],unitstring)
-                console.log("created unit '" + shortnames[0] + "' from '" + unitstring + "'");
+            
+            // find unit via shortname, if no unit can be found,create one with name=shortname and unitstring parsed by math.js
+            
+            try{
                 unit = math.unit(shortnames[0]);
+            }catch(e){}
+            
+            if(unit==undefined){
+                //var s = unitstring.replace(new RegExp('\\^', 'g'), '**');
+                var factor = parseFloat(unitstring.split(" ")[0]);
+                var unitpart = unitstring.substring(unitstring.indexOf(" "));
+                
+                if(isNaN(factor)){
+                    if(unitstring==""){
+                        unit = math.unit("m^0");
+                    }else{
+                        unit = math.unit(unitstring);
+                    }
+                    
+                }else{
+                    math.createUnit(shortnames[0],factor + " " + unitpart);
+                    console.log("created unit '" + shortnames[0] + "' from '" + unitstring + "'");
+                    unit = math.unit(shortnames[0]);
+                }
             }
-             
             var q = new Quantity(names.splice(0, 1)[0],description,unit);
             
             q.aliasnames = names;
@@ -120,7 +142,7 @@ function Quantities(){
             q.scaledown = data[4].trim();
             q.scaleup = data[5].trim();
             q.convertto = stripArray(data[6]);
-
+            q.rawmarkdown = parseableString;
             Quantities.add( q );
 
         }

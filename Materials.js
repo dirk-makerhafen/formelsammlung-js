@@ -106,7 +106,7 @@ function Materials(){
             var properties = []
             for (var valueindex = 1; valueindex < values.length; valueindex++) {
                 var quantityname = values[valueindex].split(":")[0].trim();
-                var quantityvalue = values[valueindex].split(":")[1].trim();
+                var quantityvalue = parseFloat(values[valueindex].split(":")[1].trim());
                 var materialproperty = new MaterialProperty(Quantities.get(quantityname),quantityvalue)
                 properties.push(materialproperty)
             }

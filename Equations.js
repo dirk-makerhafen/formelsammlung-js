@@ -1,9 +1,10 @@
-function Equation(name,description,equationstring,io){
+function Equation(name,description,images,equationstring,io,rawmarkdown){
     this.name = name;
     this.description = description;
+    this.images = images; // list of img urls
     this.equationstring = equationstring;
     this.io = io;
-    
+    this.rawmarkdown = rawmarkdown;
     for (var index = 0; index < this.io.length; ++index) {
         this.io[index].parentEquation = this;
     }
@@ -28,7 +29,12 @@ function Equation(name,description,equationstring,io){
     }    
     
     this.renderDescription = function(){
-        return markdown.toHTML(this.description_translation());    
+        var r = Mustache.render($('#EquationDescriptionTemplate').html(), {
+            description  : markdown.toHTML(this.description_translation()),
+            name : this.name,
+            images : this.images
+        });
+        return r;    
     }   
     
     this.getMappableIoIndexes = function(){
@@ -90,6 +96,55 @@ function Equation(name,description,equationstring,io){
         }
     }
     
+    this.solve = function(valuemapping,solveto){ 
+        valuekeys = [];
+        for (var key in valuemapping) {
+            if ( valuemapping.hasOwnProperty(key)){
+                if(solveto==key){continue;}
+                valuekeys.push(key);
+            };
+        }
+        valuekeys = valuekeys.sort(function(a, b){
+            return b.length - a.length;
+        });
+        
+        var outPutEquation = this.getIoBySymbol(solveto).equation;                     
+        
+        for(var i=0;i<valuekeys.length;i++){
+            outPutEquation = outPutEquation.replace(new RegExp(valuekeys[i], 'g'), valuemapping[valuekeys[i]]);
+        }
+        outPutEquation = outPutEquation.replace(new RegExp('--', 'g'), '+')
+        eval("var value = " + outPutEquation);
+        return value;    
+    }
+    
+    this.validate = function(){
+        var valuemapping = []
+        for(var pass=0;pass<this.io.length;++pass){
+            for(var i=0;i<this.io.length;++i){
+                valuemapping[this.io[i].symbol] = Math.floor(Math.random() * 100) + 1;
+            }
+            var res = this.solve(valuemapping,this.io[pass].symbol); // calc
+            valuemapping[this.io[pass].symbol] = res; // map first 
+            
+            for(var i=0;i<this.io.length;++i){
+                try{
+                    var rt = this.solve(valuemapping,this.io[i].symbol);
+                    if(rt - valuemapping[this.io[i].symbol] > 0.00001){
+                        console.log("failed smoketest of equation " + this.name + " for output " + this.io[i].symbol);
+                        console.log(rt + " != " + valuemapping[this.io[i].symbol]);
+                        console.log(valuemapping);
+                    }
+                }catch(e){
+                    console.log("failed to test equation " + this.name);
+                    console.log(e);
+                    var rt = this.solve(valuemapping,this.io[i].symbol);
+                }
+                
+            }
+        }
+    }
+    
     this.render = function(){
         var r = Mustache.render($('#EquationTemplate').html(), this);
         return r;
@@ -137,7 +192,7 @@ function EquationIO(quantity,symbol,description){
         if(stackElement.constructor.name == "StackMaterial"){
             var materialproperties =  stackElement.material.properties;
             for (var index1 = 0; index1 < materialproperties.length; ++index1) {
-                if(materialproperties[index1].quantity.unit.equals(this.quantity.unit)){
+                if(materialproperties[index1].quantity == this.quantity){
                     return true;
                 }   
             }
@@ -179,6 +234,15 @@ function Equations(){
 
             var name = markdown_extractValue(parseableString,"__Name__:");
             var description = markdown_extractValue(parseableString,"__Description__:");
+            var imageUrls = [];
+            var tmpparts = description.split("![Image of URI](")
+            for(var i=1;i<tmpparts.length;++i){
+                var url = tmpparts[i].split(")")[0].trim();
+                if(url.indexOf("http")==0){
+                    imageUrls.push(url);
+                }
+            }
+            description = description.split("![Image of URI](")[0];  // description is before the images ! 
             
             var equation = parts[partsIndex].split("__Equation__:")[1].split("__IO__:")[0].trim();
             var ioparts = parts[partsIndex].split("__IO__:")[1].split("--------")[0].trim().split("* __");
@@ -196,9 +260,11 @@ function Equations(){
                 }
                 var io = new EquationIO(q,letter,iodescription)
                 io.equation = ioparts[i].split("_ ]")[1].split("|")[1].split("\n")[0].trim();
+                io.equation = io.equation.replace(new RegExp('\\^', 'g'), '**')
                 ios.push(io);
             }
-            this.add(new Equation(name,description,equation,ios));
+            this.add(new Equation(name,description,imageUrls,equation,ios,parseableString));
+            
         }
     }    
     
@@ -328,6 +394,9 @@ function Equations(){
             if( a.name_translation() == b.name_translation()){ return  0;};
         });
         this.filteredequations = this.allequations;
+        for (var index = 0; index < this.allequations.length; ++index) {               
+            this.allequations[index].validate();
+        }
     }
     
     this.render = function(){
@@ -379,7 +448,10 @@ function StackEquation(stack, equation){
     
     this.dispose = function(){
         while (this.mappedto.length > 0){
-            this.mappedto[0].setMappedTo("UNMAPPED",true);
+            this.mappedto[0].setMappedTo("UNMAPPED",true); // unmap elements that map to this result
+        }
+        for(var index=0;index<this.io.length;++index){
+            this.io[index].setMappedTo("UNMAPPED",true);
         }
     }
        
@@ -498,26 +570,35 @@ function StackEquation(stack, equation){
                         }
                     }
                     if(mappedto.constructor.name == "StackMaterial"){
-                        v=mappedto.material.getPropertyByQuantity(this.io[i].equationio.quantity).value;
+                        var x = mappedto.material.getPropertyByQuantity(this.io[i].equationio.quantity);
+                        v=x.value;
+                        if(!isNaN(v)){
+                            v = x.quantity.convertValue(v,this.io[i].equationio.quantity);
+                        }
+                        
                     }
-                    
-                    
+
                     valuemapping[this.io[i].equationio.symbol] = v;
                 }else{
                     this.io[i].mappedto = "UNMAPPED"; // mappedto no longer exists
                 }
             }
+            var solveToSymbol =  this.io[this.getIndexOfIOByMapping("OUTPUT")[0]].equationio.symbol;
+            
+            var value = this.equation.solve(valuemapping,solveToSymbol)            
+            /*
             valuekeys = valuekeys.sort(function(a, b){
                 return b.length - a.length;
             });
             
-            var outputIoIndex = this.getIndexOfIOByMapping("OUTPUT")[0]
-            var outPutEquation = this.io[outputIoIndex].equationio.equation;                     
+            var outputIoIndex = 
+            var outPutEquation =;                     
             
             for(var i=0;i<valuekeys.length;i++){
                 outPutEquation = outPutEquation.replace(new RegExp(valuekeys[i], 'g'), valuemapping[valuekeys[i]]);
             }
             eval("var value = " + outPutEquation);
+            */
             
             return this.io[this.getIndexOfIOByMapping("OUTPUT")[0]].equationio.quantity.convertValue(value,this.resultQuantity());
         }
@@ -648,7 +729,8 @@ function StackEquationIO(stackequation,equationio){
         var mapableElements =  this.mapableStackElements(); 
         if(mapableElements.length > 0 && this.mappedto == "UNMAPPED"){  
             for(var i=0;i < mapableElements.length;i++){   // for each mappable element
-                var mapableElement = mapableElements[i];
+                var mapableElement = mapableElements[i];    
+                if(SETTINGS["EquationsIgnoreMappedElements"] == true && mapableElement.mappedto.length>0){ continue;}
                 var isAlreadyMappedToParentStackEquation = false;
                 for(var j=0;j < mapableElement.mappedto.length;j++){ // for each equationIO this element already maps to 
                     if(mapableElement.mappedto[j].parentStackEquation == this.parentStackEquation){
