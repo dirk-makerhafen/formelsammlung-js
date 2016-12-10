@@ -301,16 +301,7 @@
     
     <div style="display:none;" id="{{id}}_details">
         {{#equation}}
-            <div class="row">
-                <div class="col-md-8" id="equationDescription_{{name}}" style="margin-top:10px;" >
-                    {{{renderDescription}}}
-                </div>
-                <div  class="col-md-4"  id="equationDescriptionImages_{{name}}">
-                    {{#images}}
-                        <img style="max-width:175px;max-height:175px" src="{{.}}"></img>      
-                    {{/images}}
-                </div>
-            </div>
+            {{{renderDescription}}}
         {{/equation}}
     </div>
 
