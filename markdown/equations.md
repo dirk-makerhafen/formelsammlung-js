@@ -311,8 +311,8 @@ Biegung durch Kraft F in mm
 Belastung
 * __L__ [ _Meter_ ] |  ((3 * E * f * I * 10^4) / F)^(1/3)  
 Laenge
-* __E__ [ _E-Modul_ ] |  ( F * L^3 ) / ( 3 * f * I * 10^4)  
-E-Modul
+* __E__ [ _Youngs modulus_ ] |  ( F * L^3 ) / ( 3 * f * I * 10^4)  
+Youngs modulus
 * __I__ [ _Second moment of area_ ] |  ( F * L^3 ) / ( 3 * E * f * 10^4 )  
 Second moment of area
    
@@ -339,8 +339,8 @@ Biegung _Millimeter_
 Eigengewicht in newton
 * __L__ [ _Meter_ ] |  ((8 * E * f * I * 10^4) / Fg)^(1/4)  
 Laenge
-* __E__ [ _E-Modul_ ] |  ( Fg * L^4 ) / ( 8 * f * I * 10^4)  
-E-Modul
+* __E__ [ _Youngs modulus_ ] |  ( Fg * L^4 ) / ( 8 * f * I * 10^4)  
+Youngs modulus
 * __I__ [ _Second moment of area_ ] |  ( Fg * L^4 ) / ( 8 * E * f * 10^4)  
 Second moment of area
    
@@ -367,8 +367,8 @@ Biegung _Millimeter_
 Belastung
 * __L__ [ _Meter_ ] |  (( 48 * E * f * I * 10^4) / F)^(1/3)  
 Laenge
-* __E__ [ _E-Modul_ ] |  ( F * L^3 ) / ( 48 * f * I * 10^4)  
-E-Modul
+* __E__ [ _Youngs modulus_ ] |  ( F * L^3 ) / ( 48 * f * I * 10^4)  
+Youngs modulus
 * __I__ [ _Second moment of area_ ] |  ( F * L^3 ) / ( 48 * E * f * 10^4)  
 Second moment of area
    
@@ -394,7 +394,7 @@ Biegung _Millimeter_
 Force acting on the beam
 * __L__ [ _Meter_ ] | 42  
 Length of the beam between the supports
-* __E__ [ _E-Modul_ ] |  (d * F * (L^2 - d^2)^(3/2)) / (9 * f * I * L * math.sqrt(3))  
+* __E__ [ _Youngs modulus_ ] |  (d * F * (L^2 - d^2)^(3/2)) / (9 * f * I * L * math.sqrt(3))  
 Modulus of elasticity
 * __I__ [ _Second moment of area_ ] |  ( d * F * ( L^2 - d^2 )^(3/2)  ) / ( 9 * E * f * L * math.sqrt(3) )  
 Area moment of inertia of cross section
@@ -423,8 +423,8 @@ Biegung _Millimeter_r
 Eigengewicht in newton
 * __L__ [ _Meter_ ] |  ( ( 384 * E * f * I ) / ( 5 * Fg ) )^(1/4)     
 Laenge
-* __E__ [ _E-Modul_ ] |  ( 5 * Fg * L^4 ) / ( 384 * f * I )  
-E-Modul
+* __E__ [ _Youngs modulus_ ] |  ( 5 * Fg * L^4 ) / ( 384 * f * I )  
+Youngs modulus
 * __I__ [ _Second moment of area_ ] |  ( 5 * Fg * L^4 ) / ( 384 * E * f )   
 Second moment of area
    

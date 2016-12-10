@@ -547,7 +547,10 @@ Torque in newton meter
 | Second moment of area | m^4 | Meter^4 |  |  |  | 
 |---|---|---|---|---|---|
 
-Second moment of area
+The 2nd moment of area, also known as moment of inertia of plane area, area moment of inertia, 
+or second area moment, is a geometrical property of an area which reflects how its points are distributed with regard to an arbitrary axis.
+In the field of structural engineering, the second moment of area of the cross-section of a beam is an important property used in the calculation of the beam's 
+deflection and the calculation of stress caused by a moment applied to the beam.
 
 -------------
 | Liter | l | 10^-3 Meter^3  |  |  |  | 
@@ -588,13 +591,14 @@ milling fill me
 | Chip load |  | mm |  |  |  | 
 |---|---|---|---|---|---|
 
-milling fill me
+Chip load is a measurementof the thickness of material removed by each cutting edge during a cut
 
 -------------  
-| E-Modul |  | N/mm^2 |  |  |  | 
+| Youngs modulus, Elastic Modulus, E-Modul |  | N/mm^2 |  |  |  | 
 |---|---|---|---|---|---|
 
-milling fill me
+Youngs modulus, also known as the elastic modulus, is a measure of the stiffness of a solid material
+It is a mechanical property of linear elastic solid materials. It defines the relationship between stress (force per unit area) and strain (proportional deformation) in a materia
 
 -------------  
 | Widerstandsmoment |  | cm^3 |  |  |  | 
