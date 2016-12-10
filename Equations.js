@@ -1,14 +1,4 @@
-function Equation(name,description,images,equationstring,io,rawmarkdown){
-    this.name = name;
-    this.description = description;
-    this.images = images; // list of img urls
-    this.equationstring = equationstring;
-    this.io = io;
-    this.rawmarkdown = rawmarkdown;
-    for (var index = 0; index < this.io.length; ++index) {
-        this.io[index].parentEquation = this;
-    }
-    
+function Equation(){
     this.cantranslate = function(){ 
         if (LANGUAGE == "EN" || this.translations == undefined || this.translations[LANGUAGE] == undefined){ return false; }else{ return true; } 
     }
@@ -145,18 +135,70 @@ function Equation(name,description,images,equationstring,io,rawmarkdown){
         }
     }
     
+    this.loadMarkdown = function(markdownString){
+        this.name = markdown_extractValue(markdownString,"__Name__:");
+        this.description = markdown_extractValue(markdownString,"__Description__:");
+        this.rawmarkdown = markdownString;
+        
+        this.images = [];
+        var tmpparts = this.description.split("![Image of URI](")
+        for(var i=1;i<tmpparts.length;++i){
+            var url = tmpparts[i].split(")")[0].trim();
+            if(url.indexOf("http")==0){ this.images.push(url); }
+        }
+        this.description = this.description.split("![Image of URI](")[0];  // description is before the images ! 
+        
+        this.equationstring = markdownString.split("__Equation__:")[1].split("__IO__:")[0].trim();
+        
+        this.io = []
+        var ioparts = markdownString.split("__IO__:")[1].split("--------")[0].trim().split("* __");        
+        for(var i=0;i<ioparts.length;++i){
+            if(ioparts[i].indexOf("__ [ _") == -1){continue;}
+            var eio = new EquationIO();
+            eio = eio.loadMarkdown(ioparts[i]);
+            if(eio!=undefined){
+                this.io.push(eio);
+            }else{
+                alert("failed to parse EquationIO markdown")
+            }
+        }
+        
+        for (var index = 0; index < this.io.length; ++index) {
+            this.io[index].parentEquation = this;
+        }
+        return this;
+
+    }
+
+    this.loadTranslationMarkdown = function(language,markdownString){
+        if(this.translations == undefined){ this.translations = {} }
+        if(this.translations[language] == undefined){ this.translations[language] = {} }
+        
+        this.translations[language].name = markdown_extractValue(markdownString,"__Name__:");
+        this.translations[language].description = markdown_extractValue(markdownString,"__Description__:");  
+
+        var ioparts = markdownString.split("__IO__:")[1].split("--------")[0].trim().split("* __");
+        for(var i=0;i<ioparts.length;++i){
+            if(ioparts[i].indexOf("__") == -1){continue;}
+            var symbol = ioparts[i].split("__")[0].trim();
+            var io = this.getIoBySymbol(symbol);
+            io.loadTranslationMarkdown(language,ioparts[i]);
+        }
+    }
+
+    
     this.render = function(){
         var r = Mustache.render($('#EquationTemplate').html(), this);
         return r;
     }
 }
+function EquationIO(){
+    this.symbol = undefined;
+    this.description = undefined;
+    this.equation = undefined;
+    this.quantity = undefined;
 
-function EquationIO(quantity,symbol,description){
-    this.quantity = quantity;
-    this.symbol = symbol;
-    this.description = description;
-    this.parentEquation = null; // set by parent on constructor
-    this.equation = ""; // to be filled by code, but now filled by hand
+    this.parentEquation = undefined; // set by parent on constructor
     
     this.cantranslate = function(){ 
         if (LANGUAGE == "EN" || this.translations == undefined || this.translations[LANGUAGE] == undefined){ return false; }else{ return true; } 
@@ -211,6 +253,28 @@ function EquationIO(quantity,symbol,description){
         return selectableStackElements;
     }    
     
+    this.loadMarkdown = function(markdownString){
+        this.symbol = markdownString.split("__")[0].trim();
+        this.description =  markdownString.split("_ ]")[1].split("\n")[1].trim();
+        this.equation = markdownString.split("_ ]")[1].split("|")[1].split("\n")[0].trim();
+        this.equation = this.equation.replace(new RegExp('\\^', 'g'), '**')
+        
+        var quantity =  markdownString.split("[ _")[1].split("_ ]")[0].trim();
+        var q = Quantities.get(quantity);
+        if (q == undefined){
+            alert("Quantity " + quantity + " not found");
+            return;
+        }
+        this.quantity = q;
+        return this;
+    }
+
+    this.loadTranslationMarkdown = function(language,markdownString){
+        if(this.translations == undefined){ this.translations = {} }
+        if(this.translations[language] == undefined){ this.translations[language] = {} }
+        this.translations[language].description = markdownString.split("__")[1].split("\n")[1].trim();            
+    }
+    
 }
 
 function Equations(){
@@ -224,80 +288,30 @@ function Equations(){
     
     
     this.loadMarkdown = function(markdown){
-        extractValue = function(string,key){
-            return string.split(key)[1].split("\n__")[0].trim();;
-        }
         var parts = markdown.split("--------");
         for (var partsIndex = 1; partsIndex < parts.length; partsIndex++) {
             if(parts[partsIndex].indexOf("__Name__:") == -1){continue;}
-            var parseableString = parts[partsIndex];
-
-            var name = markdown_extractValue(parseableString,"__Name__:");
-            var description = markdown_extractValue(parseableString,"__Description__:");
-            var imageUrls = [];
-            var tmpparts = description.split("![Image of URI](")
-            for(var i=1;i<tmpparts.length;++i){
-                var url = tmpparts[i].split(")")[0].trim();
-                if(url.indexOf("http")==0){
-                    imageUrls.push(url);
-                }
+            var e = new Equation();
+            e = e.loadMarkdown(parts[partsIndex]);
+            if(e!=undefined){
+                this.add(e);
+            }else{
+                alert("failed to parse Equation markdown");
             }
-            description = description.split("![Image of URI](")[0];  // description is before the images ! 
-            
-            var equation = parts[partsIndex].split("__Equation__:")[1].split("__IO__:")[0].trim();
-            var ioparts = parts[partsIndex].split("__IO__:")[1].split("--------")[0].trim().split("* __");
-            var ios = []
-            for(var i=0;i<ioparts.length;++i){
-                if(ioparts[i].indexOf("__ [ _") == -1){continue;}
-                var letter = ioparts[i].split("__")[0].trim();
-                var quantity =  ioparts[i].split("[ _")[1].split("_ ]")[0].trim();
-                var iodescription=  ioparts[i].split("_ ]")[1].split("\n")[1].trim();
-                
-                var q = Quantities.get(quantity);
-                if (q == undefined){
-                    alert("Quantity " + quantity + " not found");
-                    continue;
-                }
-                var io = new EquationIO(q,letter,iodescription)
-                io.equation = ioparts[i].split("_ ]")[1].split("|")[1].split("\n")[0].trim();
-                io.equation = io.equation.replace(new RegExp('\\^', 'g'), '**')
-                ios.push(io);
-            }
-            this.add(new Equation(name,description,imageUrls,equation,ios,parseableString));
-            
         }
     }    
     
     this.loadTranslationMarkdown = function(language,markdown){
-        extractValue = function(string,key){
-            return string.split(key)[1].split("\n__")[0].trim();;
-        }
         var parts = markdown.split("--------");
         for (var partsIndex = 1; partsIndex < parts.length; partsIndex++) {
             if(parts[partsIndex].indexOf("__Name__:") == -1){continue;}
-            var parseableString = parts[partsIndex];
-
-            var parentname = markdown_extractValue(parseableString,"__ParentName__:");
-            var name = markdown_extractValue(parseableString,"__Name__:");
-            var description = markdown_extractValue(parseableString,"__Description__:");
-            
-            var e = this.get(parentname);            
-            if(e.translations == undefined){ e.translations = {} }
-            if(e.translations[language] == undefined){ e.translations[language] = {} }
-            
-            e.translations[language].name = name
-            e.translations[language].description = description            
-            var ioparts = parts[partsIndex].split("__IO__:")[1].split("--------")[0].trim().split("* __");
-            var ios = []
-            for(var i=0;i<ioparts.length;++i){
-                if(ioparts[i].indexOf("__") == -1){continue;}
-                var letter = ioparts[i].split("__")[0].trim();
-                var iodescription=  ioparts[i].split("__")[1].split("\n")[1].trim();
-                var io = e.getIoBySymbol(letter)
-                if(io.translations == undefined){ io.translations = {} }
-                if(io.translations[language] == undefined){ io.translations[language] = {} }
-                io.translations[language].description = iodescription            
-            }
+            var parentname = markdown_extractValue(parts[partsIndex],"__ParentName__:");
+            var e = this.get(parentname); 
+            if(e!=undefined){
+                e.loadTranslationMarkdown(language,parts[partsIndex]);
+            }else{
+                alert("failed to parse Equation Translation markdown");
+            }                
         }
     }  
     
