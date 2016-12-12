@@ -200,7 +200,20 @@ function StackMaterial(stack,material){
              e[i].innerHTML = this.name;
         }
     }
-       
+    
+     this.save = function(){
+        var data = {};
+        data["name"] = this.name;
+        data["id"] = this.id;
+        data["material_name"] = this.material.name;
+        return data;
+    }
+    
+    this.load = function(data){
+        this.name = data["name"];
+        this.id = data["id"];
+    }
+    
     this.render = function(){
         var r = Mustache.render($('#StackMaterialTemplate').html(), this);
         return r;

@@ -1,9 +1,9 @@
 
 
 function Stack(){
-    this.elements = []    
-    
-    this.add = function(element){
+    this.elements = [];
+
+    this.addNoRender = function(element){
         if(element.constructor.name == "Quantity"){
             this.elements.push(new StackQuantity(this,element));
         }
@@ -13,9 +13,13 @@ function Stack(){
         if(element.constructor.name == "Material"){
             this.elements.push(new StackMaterial(this,element));
         }
+    }
+    
+    this.add = function(element){
+        this.addNoRender(element);
         this.render();
     }
-   
+       
     this.remove = function(elementId){
         this.get(elementId).dispose();
         this.elements.splice(this.getIndexOfElement(elementId), 1);
@@ -70,6 +74,49 @@ function Stack(){
         for (var index = start+1; index < this.elements.length; ++index) {
             this.elements[index].updateRender(this.id);
         }
+    }
+
+    this.clear = function(){
+        for (var index = 0; index < this.elements.length; ++index) {
+            this.elements[index].dispose();
+        }
+        this.elements=[];
+        this.render();
+    }
+    
+    this.save = function(){
+        var result = [];
+        for (var index = 0; index < this.elements.length; ++index) {
+            var stackElement = this.elements[index];
+            result[index] = {};
+            result[index]["type"] = stackElement.constructor.name;
+            result[index]["data"] = stackElement.save();
+        }
+        localStorage.setItem('testObject', JSON.stringify(result));
+
+    }
+    
+    this.load = function(){
+        this.clear();
+        var retrievedObject = JSON.parse(localStorage.getItem('testObject'));
+        for (var index = 0; index < retrievedObject.length; ++index) {
+            if(retrievedObject[index]["type"] == "StackQuantity"){
+                var q=Quantities.get(retrievedObject[index]["data"]["quantity_name"])
+                this.addNoRender(q);
+                this.elements[index].load(retrievedObject[index]["data"])
+            }
+            if(retrievedObject[index]["type"] == "StackMaterial"){
+                var m=Materials.get(retrievedObject[index]["data"]["material_name"])
+                this.addNoRender(m);
+                this.elements[index].load(retrievedObject[index]["data"])
+            }
+            if(retrievedObject[index]["type"] == "StackEquation"){
+                var e=Equations.get(retrievedObject[index]["data"]["equation_name"])
+                this.addNoRender(e);
+                this.elements[index].load(retrievedObject[index]["data"])
+            }            
+        }
+        this.render();
     }
 }
 

@@ -1,4 +1,17 @@
 function Equation(){
+    this.identifier = undefined;
+    
+    this.name = undefined;
+    this.description = undefined;
+    this.rawmarkdown = undefined;
+        
+    this.images = [];
+    this.description = undefined;
+    this.equationString = undefined;
+    this.io = [];
+
+    this.renderDescriptionCache = []
+
     this.cantranslate = function(){ 
         if (LANGUAGE == "EN" || this.translations == undefined || this.translations[LANGUAGE] == undefined){ return false; }else{ return true; } 
     }
@@ -17,15 +30,6 @@ function Equation(){
         if(this.cantranslate() || LANGUAGE == "EN"){ return "None"; }
         return "";
     }    
-    
-    this.renderDescription = function(){
-        var r = Mustache.render($('#EquationDescriptionTemplate').html(), {
-            description  : markdown.toHTML(this.description_translation()),
-            name : this.name,
-            images : this.images
-        });
-        return r;    
-    }   
     
     this.getMappableIoIndexes = function(){
         var wouldmap = [] // prevent doublicate io mapping
@@ -86,29 +90,27 @@ function Equation(){
         }
     }
     
-    this.solve = function(valuemapping,solveto){ 
-        valuekeys = [];
-        for (var key in valuemapping) {
-            if ( valuemapping.hasOwnProperty(key)){
+    this.solve = function(valuemappingin,solveto){ 
+        valuemapping = [];
+        for (var key in valuemappingin) {
+            if ( valuemappingin.hasOwnProperty(key)){
                 if(solveto==key){continue;}
-                valuekeys.push(key);
+                valuemapping[key] = valuemappingin[key];
             };
         }
-        valuekeys = valuekeys.sort(function(a, b){
-            return b.length - a.length;
-        });
         
-        var outPutEquation = this.getIoBySymbol(solveto).equation;                     
-        
-        for(var i=0;i<valuekeys.length;i++){
-            outPutEquation = outPutEquation.replace(new RegExp(valuekeys[i], 'g'), valuemapping[valuekeys[i]]);
+        var outPutEquation = this.getIoBySymbol(solveto).equation;                  
+        var result = "NaN";
+        try {
+            result = outPutEquation.eval(valuemapping);
+        }catch(e){
+            console.log("failed eval of" + this.getIoBySymbol(solveto).equationString) + "   " + e;
         }
-        outPutEquation = outPutEquation.replace(new RegExp('--', 'g'), '+')
-        eval("var value = " + outPutEquation);
-        return value;    
+        
+        return result;
     }
     
-    this.validate = function(){
+    this.smokeTest = function(){
         var valuemapping = []
         for(var pass=0;pass<this.io.length;++pass){
             for(var i=0;i<this.io.length;++i){
@@ -137,6 +139,7 @@ function Equation(){
     
     this.loadMarkdown = function(markdownString){
         this.name = markdown_extractValue(markdownString,"__Name__:");
+        this.identifier = this.name.replace(/\W+/g, "");
         this.description = markdown_extractValue(markdownString,"__Description__:");
         this.rawmarkdown = markdownString;
         
@@ -148,7 +151,7 @@ function Equation(){
         }
         this.description = this.description.split("![Image of URI](")[0];  // description is before the images ! 
         
-        this.equationstring = markdownString.split("__Equation__:")[1].split("__IO__:")[0].trim();
+        this.equationString = markdownString.split("__Equation__:")[1].split("__IO__:")[0].trim();
         
         this.io = []
         var ioparts = markdownString.split("__IO__:")[1].split("--------")[0].trim().split("* __");        
@@ -185,17 +188,42 @@ function Equation(){
             io.loadTranslationMarkdown(language,ioparts[i]);
         }
     }
-
     
+    this.fillCache = function(){
+        if(this.renderDescriptionCache[LANGUAGE]==undefined){
+            this.renderDescriptionCache[LANGUAGE] = document.getElementById("equationDescription_"+this.identifier).innerHTML;
+            for(var i=0;i<this.io.length;++i){
+                this.io[i].fillCache();
+            }
+        }
+    }
+    
+    this.renderDescription = function(){
+        var r = Mustache.render($('#EquationDescriptionTemplate').html(), {
+            description  : markdown.toHTML(this.description_translation()),
+            name : this.name,
+            images : this.images,
+            io : this.io,
+            identifier : this.identifier,
+        });
+        
+        return r;    
+    }   
+        
     this.render = function(){
         var r = Mustache.render($('#EquationTemplate').html(), this);
         return r;
     }
+
+    
 }
+
 function EquationIO(){
     this.symbol = undefined;
+    this.symbolTex = undefined;
     this.description = undefined;
     this.equation = undefined;
+    this.equationTex = undefined;
     this.quantity = undefined;
 
     this.parentEquation = undefined; // set by parent on constructor
@@ -256,8 +284,14 @@ function EquationIO(){
     this.loadMarkdown = function(markdownString){
         this.symbol = markdownString.split("__")[0].trim();
         this.description =  markdownString.split("_ ]")[1].split("\n")[1].trim();
-        this.equation = markdownString.split("_ ]")[1].split("|")[1].split("\n")[0].trim();
-        this.equation = this.equation.replace(new RegExp('\\^', 'g'), '**')
+        this.equationString = markdownString.split("_ ]")[1].split("|")[1].split("\n")[0].trim();
+        try{
+            this.equation = math.parse(this.symbol + " = " +this.equationString);
+        }catch(e){
+            console.log("failed to parse equation for io: " + this.equation + "  " + e);
+        }
+        this.equationTex =  this.equation.toTex();
+        this.symbolTex = math.parse(this.symbol).toTex();
         
         var quantity =  markdownString.split("[ _")[1].split("_ ]")[0].trim();
         var q = Quantities.get(quantity);
@@ -268,13 +302,22 @@ function EquationIO(){
         this.quantity = q;
         return this;
     }
-
+    
     this.loadTranslationMarkdown = function(language,markdownString){
         if(this.translations == undefined){ this.translations = {} }
         if(this.translations[language] == undefined){ this.translations[language] = {} }
         this.translations[language].description = markdownString.split("__")[1].split("\n")[1].trim();            
+    }    
+    
+    this.renderSymbolTex = function(){
+        var targetId = "symbolTexTarget_" + this.parentEquation.identifier + "_" + this.symbol; 
+        return mathjaxCache.add(targetId,this.symbolTex);
     }
     
+    this.renderEquationTex = function(){
+        var targetId = "equationTexTarget_" + this.parentEquation.identifier + "_" + this.symbol; 
+        return mathjaxCache.add(targetId,this.equationTex);
+    }
 }
 
 function Equations(){
@@ -285,7 +328,6 @@ function Equations(){
     
     this.paginationPage = 1;
     this.paginationElementsPerPage = 10;
-    
     
     this.loadMarkdown = function(markdown){
         var parts = markdown.split("--------");
@@ -409,14 +451,21 @@ function Equations(){
         });
         this.filteredequations = this.allequations;
         for (var index = 0; index < this.allequations.length; ++index) {               
-            this.allequations[index].validate();
+            this.allequations[index].smokeTest();
+        }
+    }
+    
+    this.fillCache = function(){
+        var f = this.filteredEquationsPagination();
+        for (var index = 0; index < f.length; ++index) {               
+            f[index].fillCache();
         }
     }
     
     this.render = function(){
         this.filteredequations.sort(function(a, b) {
             var d = b.distance() - a.distance();
-            if(d==200){
+            if(d==0){
                 if( a.name_translation().toLowerCase() >  b.name_translation().toLowerCase()){ return  1;};
                 if( a.name_translation().toLowerCase() <  b.name_translation().toLowerCase()){ return -1;};
                 if( a.name_translation().toLowerCase() == b.name_translation().toLowerCase()){ return  0;};
@@ -425,8 +474,10 @@ function Equations(){
         });
         var r = Mustache.render($('#EquationsTemplate').html(), this);
         document.getElementById(this.targetdiv).innerHTML = r;
+        mathjaxCache.render();
         
     }
+
 }
 
 function StackEquation(stack, equation){
@@ -496,13 +547,6 @@ function StackEquation(stack, equation){
         }
         return outputIos;
     }
-    
-    this._canCalc = function(){
-        if (this.getIndexOfIOByMapping("UNMAPPED").length == 0 && this.getIndexOfIOByMapping("OUTPUT").length == 1){
-            return true;
-        }
-        return false;
-    }
         
     this.toggleShowConverter = function(){
         if(this.showConverter == "None"){
@@ -560,9 +604,16 @@ function StackEquation(stack, equation){
         }
         return "";
     }   
-       
+
+    this.canCalc = function(){
+        if (this.getIndexOfIOByMapping("UNMAPPED").length == 0 && this.getIndexOfIOByMapping("OUTPUT").length == 1){
+            return true;
+        }
+        return false;
+    }    
+  
     this.resultValue = function(){
-        if(this._canCalc() == true){
+        if(this.canCalc() == true){
             var valuemapping = [];
             var valuekeys = []
             for(var i=0;i<this.io.length;i++){
@@ -618,9 +669,29 @@ function StackEquation(stack, equation){
         }
         return "Na";    
     }
+ 
+    this.save = function(){
+        var data = {};
+        data["name"] = this.name;
+        data["id"] = this.id;
+        data["io"] = {};
+        for (var index = 0; index < this.io.length; ++index) {
+             data["io"][this.io[index].equationio.symbol] = this.io[index].save();
+        }
+        data["equation_name"] = this.equation.name;
+        return data;
+    }
     
+    this.load = function(data){
+        this.name = data["name"];
+        this.id = data["id"];
+        for (var index = 0; index < this.io.length; ++index) {
+            this.io[index].load(data["io"][this.io[index].equationio.symbol]);
+        }
+    }
+ 
     this.resultQuantity = function(){
-        if(this._canCalc() == true){
+        if(this.canCalc() == true){
             if(this.resultScaler != undefined){
                 return this.resultScaler;
             }
@@ -629,6 +700,17 @@ function StackEquation(stack, equation){
         }
         return undefined;
     }
+
+    this.renderDescription = function(){
+        var r = Mustache.render($('#EquationDescriptionTemplate').html(), {
+            description  : markdown.toHTML(this.equation.description_translation()),
+            name : this.equation.name,
+            images : this.equation.images,
+            io : this.equation.io,
+            identifier : "Stack"+this.identifier,
+        });
+        return r;    
+    }  
     
     this.render = function(){
         for(var i=0;i<this.io.length;i++){
@@ -674,7 +756,7 @@ function StackEquationIO(stackequation,equationio){
     this.mappedto = "UNMAPPED"; // "OUTPUT" , "UNMAPPED"
     
     this.selectableDivClass = function(){
-        if(this.parentStackEquation._canCalc()){
+        if(this.parentStackEquation.canCalc()){
             if(this.mappedto == "OUTPUT"){
                 return "StackEquationIoGreen";
             }
@@ -729,9 +811,18 @@ function StackEquationIO(stackequation,equationio){
             this.parentStackEquation.parentStack.updateRender(this.parentStackEquation.id);
         }
     }
-        
+    
+    this.save = function(){
+        var data = {};
+        data["mappedto"] = this.mappedto;
+        return data;
+    }
+    this.load = function(data){
+        this.setMappedTo(data["mappedto"],true);
+    }
+    
     this.render = function(){
-        var r = Mustache.render($('#StackEquationIoTemplate').html(), this);
+        r = Mustache.render($('#StackEquationIoTemplate').html(), this);
         return r;
     }   
     

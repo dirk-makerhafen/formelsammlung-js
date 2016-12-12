@@ -17,6 +17,8 @@
     <script src="lib/mustache.js"></script>
     <script src="lib/markdown.min.js"></script>
 
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_SVG"> </script>
+
     <script src="helpers.js"></script>
     
     <script src="Quantitys.js"></script>
@@ -28,9 +30,12 @@
     <script async defer src="https://platform.twitter.com/widgets.js"></script>
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <script async defer src="https://apis.google.com/js/platform.js"></script>
-
+    
+    
     <style type="text/css">
-
+    .MathJax_SVG_Display {
+        margin: 0em 0em  !important;
+    }
     .limitedbox {
         min-height:250px;
     }
@@ -125,10 +130,24 @@
                     
 <script type="x-tmpl-mustache" id="QuantityTemplate">
     <div class="box">
-        <a onclick="load_disqus_modal(Quantities.get('{{name}}'),'{{name}}')" style="font-size:0.8em;float:right;"   data-toggle="modal" data-target="#myModal"> Feedback/Translate </a>
-        <span style="color:green;cursor: pointer;" class="glyphicon glyphicon-plus" onclick="Stack.add(Quantities.get('{{name}}'))">use</span>
-        <b>{{name_translation}}</b>,{{aliasnames_translation}} - {{shortname_translation}},{{aliasshortnames_translation}} - {{unit}}
-        <br>
+        <div class="row">
+            <div class="col-md-1" style="width:42px;">
+                <span style="color:green;cursor: pointer;" class="glyphicon glyphicon-plus" onclick="Stack.add(Quantities.get('{{name}}'))">use</span>
+            </div>
+            <div class="col-md-2" style="text-align:center;" >
+                <b>{{name_translation}}</b>  {{aliasnames_translation}}
+            </div>
+            <div class="col-md-1" >
+                {{{renderUnitTex}}}
+            </div>
+            <div class="col-md-7"></div>
+            <div class="col-md-1">
+                <a onclick="load_disqus_modal(Quantities.get('{{name}}'),'{{name}}')" style="font-size:0.8em;float:right;"   data-toggle="modal" data-target="#myModal"> Feedback/Translate </a>
+            </div>
+            
+        
+        </div>
+
         <div id="quantityDescription_{{name}}">
             {{{renderDescription}}}
         </div>
@@ -148,9 +167,30 @@
 
 
 <script type="x-tmpl-mustache" id="EquationDescriptionTemplate">
+  <div id="equationDescription_{{identifier}}">
     <div class="row">
-        <div class="col-md-8" id="equationDescription_{{name}}" style="margin-top:10px;" >
-            {{{description}}}
+        <div class="col-md-8" style="margin-top:10px;" >
+            <div class="col-md-12" style="margin-top:10px;" >
+                {{{description}}}
+            </div>
+            <div class="col-md-12" id="equationDescriptionIO_{{identifier}}" style="margin-top:10px;" >
+                {{#io}}
+                    <div class="row"  style="">
+                        <div class="col-md-1" onclick='$(this.parentNode).next().slideToggle();' style="text-align:center;padding-right:0px">
+                            <a>{{{renderSymbolTex}}}</a>
+                        </div>
+                        <div class="col-md-3" style="text-align:center;padding-left:0px;padding-right:0px">
+                            {{quantity.name}}
+                        </div>
+                        <div class="col-md-8" style=";padding-left:0px;padding-right:0px" >
+                            {{description}}
+                        </div>
+                    </div>
+                    <div class="row" style='margin-left:40px;margin-top:10px;margin-bottom:20px;display:none'>
+                       {{{renderEquationTex}}}
+                    </div>
+                {{/io}}
+            </div>            
         </div>
         <div  class="col-md-4"  id="equationDescriptionImages_{{name}}">
             {{#images}}
@@ -158,6 +198,7 @@
             {{/images}}
         </div>
     </div>
+  </div>
 </script>
     
 <script type="x-tmpl-mustache" id="MaterialTemplate">
@@ -300,9 +341,7 @@
     </div>
     
     <div style="display:none;" id="{{id}}_details">
-        {{#equation}}
-            {{{renderDescription}}}
-        {{/equation}}
+        {{{renderDescription}}}
     </div>
 
 </script>
@@ -319,7 +358,11 @@
             </select>
         </div>
         <div class="iostuff" style="width:15%;">
-            <b>{{equationio.symbol}}</b> 
+            
+            {{#equationio}}
+                <b>{{{renderSymbolTex}}}</b>
+            {{/equationio}}
+
         </div>
         <div class="iostuff" style="width:50%;">
             {{#equationio}}
@@ -344,13 +387,20 @@
             <div class="col-md-6"> 
                 <div class="row">
                     {{#material.properties}}
-                        <div class="col-md-4">
+                    <div class="row">
+                   
+                        <div class="col-md-3">
                             <input readonly value="{{value}}"  class="valueInput"></input>
                         </div>
                         <div class="col-md-4 unitOutput">
-                            {{quantity.name}}<br>
-                            {{quantity.unit}}<br>
+                            {{#quantity}} 
+                                <a onclick='jQuery("#QuantitiesSearchInput").val("{{name_translation}}").trigger("keyup");$("#QuantitiesBoxTabSelect").click()'> {{name_translation}} </a>
+                            {{/quantity}}
                         </div>
+                        <div style="display:none" class="col-md-4">
+                            {{#quantity}} {{{renderUnitTex}}} {{/quantity}}
+                        </div>
+                    </div>
                     {{/material.properties}}
                 </div>
             </div>
@@ -416,10 +466,11 @@ function init(){
     var slider = $("div#SliderTabs").sliderTabs({
         mousewheel: false,
     });
-    //var e=  Equations.get("Cantilever beam deflection, End-loaded");
-    //var se = new StackEquation(undefined,e);
-    //$("#testeditEquation")[0].innerHTML = se.render();
-    //$("#testeditEquation")[0].children[1].style.display=""
+
+    MathJax.Hub.Config({ displayAlign: "left" });
+  
+    
+    
 }
 
 </script>
@@ -478,15 +529,19 @@ function init(){
 </script>
 
 
+<script>
+  
+</script>
 
 </head>
 <body onload="init()">
-
     <div class="container">
 
         <div class="box"> 
             <div id="Stack"> 
             </div>
+            <a onclick="Stack.save();">save</a>
+            <a onclick="Stack.load();">load</a>
         </div>
                  
         <div id="SliderTabs" class="box" >
@@ -547,9 +602,6 @@ function init(){
         <div id="disqus_general_thread" class="box">
             <div id="disqus_thread"></div>
         </div>
- 
-        
-        
         
         
     </div>
@@ -574,6 +626,6 @@ function init(){
           </div>
         </div>
     </div>
-        
+    <div id="renderCache" style="display:none"></div>    
   </body>
 </html>

@@ -1,3 +1,20 @@
+* Electric 
+  * URI
+  * PUI
+  * Cap
+  * RC
+  * RL
+  * CL
+  * RCL 
+  * coils
+* Engineering
+  * second moment area of
+  * Deflection
+  * Eigenbiegung
+  * Torsion
+* Fluids/Hydraulic
+  
+  
 --------
 __Name__: URI
 
@@ -101,7 +118,7 @@ C * C - F = 0
 
 __IO__:
 
-* __C__ [ _Meter_ ] | math.sqrt(F)  
+* __C__ [ _Meter_ ] | sqrt(F)  
 Length
 * __F__ [ _Square Meter_ ] | C * C  
 Area
@@ -124,7 +141,7 @@ __IO__:
 Power in watt
 * __Pressure__ [ _Bar_ ] |  (Power * 0.6) / Flow  
 Pressure in Bar
-* __Flow__ [ _Liter per minute_ ] | (Power * 0.6) / Pressure  
+* __Flow__ [ _lpm_ ] | (Power * 0.6) / Pressure  
 Low in Liter per minute
 
 --------
@@ -158,16 +175,16 @@ In physics and electrical engineering, a cutoff frequency, corner frequency, or 
 
 __Equation__:
 
-1 / (2 * math.pi * R * C)  = F
+1 / (2 * PI * R * C)  = F
 
 
 __IO__:
 
-* __F__ [ _Hertz_ ] | 1 / (2 * math.pi * R * C)  
+* __F__ [ _Hertz_ ] | 1 / (2 * PI * R * C)  
 Frequency
-* __R__ [ _Ohm_ ] |  1 / (2 * math.pi * C * F)  
+* __R__ [ _Ohm_ ] |  1 / (2 * PI * C * F)  
 Resistor
-* __C__ [ _Farad_ ] | 1 / (2 * math.pi * R * F)  
+* __C__ [ _Farad_ ] | 1 / (2 * PI * R * F)  
 Capacitance
 
 --------
@@ -184,15 +201,15 @@ https://en.wikipedia.org/wiki/List_of_second_moments_of_area
 
 __Equation__:
 
-Ix = Iy = (math.pi / 4) * ( r2^4 - r1^4 )
+Ix = Iy = (PI / 4) * ( r2^4 - r1^4 )
 
 __IO__:
 
-* __r1__ [ _Meter_ ] |  (r2^4 - ((4 * I) / math.pi))^(1/4)  
+* __r1__ [ _Meter_ ] |  (r2^4 - ((4 * I) / PI))^(1/4)  
 inner radius, or 0
-* __r2__ [ _Meter_ ] |  (r1^4 + ((4 * I) / math.pi))^(1/4)  
+* __r2__ [ _Meter_ ] |  (r1^4 + ((4 * I) / PI))^(1/4)  
 Outer Radius
-* __I__ [ _Second moment of area_ ] |  (math.pi / 4) * ( r2^4 - r1^4 )  
+* __I__ [ _Second moment of area_ ] |  (PI / 4) * ( r2^4 - r1^4 )  
 Second moment of area
 
 --------
@@ -225,21 +242,21 @@ Capacitor Charge/Discharge
 __Equation__:
 
 
-Vc = Vs + ( (Vi - Vs) * math.e**(-T/R*C) )  
+Vc = Vs + ( (Vi - Vs) * e**(-T/R*C) )  
 
 __IO__:
 
-* __Vi__ [ _Volt_ ] |   (( Vc - Vs ) /  math.e**(-T/R*C))+Vs
+* __Vi__ [ _Volt_ ] |   (( Vc - Vs ) /  e^(-T/(R*C)))+Vs
 From voltage - Initial voltage of the capacitor
-* __Vc__ [ _Volt_ ] |  Vs + ( (Vi - Vs) * math.e**(-T/R*C) )  
+* __Vc__ [ _Volt_ ] |  Vs + ( (Vi - Vs) * e^(-T/(R*C)) )  
 To voltage - Voltage of the capacitor after time has passed
-* __Vs__ [ _Volt_ ] |  Vc - (Vi * math.e**(-T/R*C)) / ( 1 - math.e**(-T/R*C) ) 
+* __Vs__ [ _Volt_ ] |  Vc - (Vi * e^(-T/R*C)) / ( 1 - e^(-T/(R*C)) ) 
 Supply voltage - Voltage of the power supply. This can also be zero to represent a short
-* __C__ [ _Farad_ ] |  (-T / math.log((Vc - Vs) / (Vi-Vs))) / R
+* __C__ [ _Farad_ ] |  (-T / log((Vc - Vs) / (Vi-Vs))) / R
 Capacitance - Capacitance of the capacitor
-* __R__ [ _Ohm_ ] |  (-T / (math.log((Vc - Vs) / (Vi-Vs)))) / C
+* __R__ [ _Ohm_ ] |  (-T / (log((Vc - Vs) / (Vi-Vs)))) / C
 Resistance - Resistance of the resistor
-* __T__ [ _Second_ ] |  ( C * R ) * math.log((Vc - Vs) / (Vi-Vs))  *-1   
+* __T__ [ _Second_ ] |  ( C * R ) * log((Vc - Vs) / (Vi-Vs))  *-1   
 Time - Charging or discharging time period
 
 
@@ -253,18 +270,18 @@ __Description__:
 
 __Equation__:
 
-S / (math.pi * Dt / 1000) - RPM = 0
+S / (PI * Dt / 1000) - RPM = 0
 
 __IO__:
 
-* __Dt__ [ _Millimeter_ ] | (S / (RPM * math.pi)) * 1000
+* __Dt__ [ _mm_ ] | (S / (RPM * PI)) * 1000
 Tool diamter
-* __RPM__ [ _Rotations per minute_ ] |  S / (math.pi * Dt / 1000)  
+* __RPM__ [ _rpm_ ] |  S / (PI * Dt / 1000)  
 Tool RPM
-* __S__ [ _Surface cutting speed_ ] |  RPM * (math.pi * Dt / 1000)
+* __S__ [ _Surface cutting speed_ ] |  RPM * (PI * Dt / 1000)
 Surface cutting speed
 
-S / (math.pi * Dt) = RPM
+S / (PI * Dt) = RPM
 
 --------
 
@@ -384,19 +401,19 @@ https://en.wikipedia.org/wiki/Deflection_(engineering)
 
 __Equation__:
 
-f = (F * d * ( L^2 - d^2 )^(3/2)) /  ( 9 * L * E * I * math.sqrt(3) )
+f = (F * d * ( L^2 - d^2 )^(3/2)) /  ( 9 * L * E * I * sqrt(3) )
 
 __IO__:
 
-* __f__ [ _Millimeter_ ] |  (F * d * ( L^2 - d^2 )^(3/2)) /  ( 9 * L * E * I * math.sqrt(3) )  
+* __f__ [ _Millimeter_ ] |  (F * d * ( L^2 - d^2 )^(3/2)) /  ( 9 * L * E * I * sqrt(3) )  
 Biegung _Millimeter_
-* __F__ [ _Newton_ ] |  (9 * E * f * I * L * math.sqrt(3) ) / (d * (L^2 - d^2)^(3/2)  )  
+* __F__ [ _Newton_ ] |  (9 * E * f * I * L * sqrt(3) ) / (d * (L^2 - d^2)^(3/2)  )  
 Force acting on the beam
 * __L__ [ _Meter_ ] | 42  
 Length of the beam between the supports
-* __E__ [ _Youngs modulus_ ] |  (d * F * (L^2 - d^2)^(3/2)) / (9 * f * I * L * math.sqrt(3))  
+* __E__ [ _Youngs modulus_ ] |  (d * F * (L^2 - d^2)^(3/2)) / (9 * f * I * L * sqrt(3))  
 Modulus of elasticity
-* __I__ [ _Second moment of area_ ] |  ( d * F * ( L^2 - d^2 )^(3/2)  ) / ( 9 * E * f * L * math.sqrt(3) )  
+* __I__ [ _Second moment of area_ ] |  ( d * F * ( L^2 - d^2 )^(3/2)  ) / ( 9 * E * f * L * sqrt(3) )  
 Area moment of inertia of cross section
 * __d__ [ _Meter_ ] |  23  
 Distance from the load to the closest support 

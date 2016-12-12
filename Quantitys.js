@@ -1,5 +1,6 @@
 function Quantity(name,description,unit){
     this.name = name;
+    this.identifier =  this.name.replace(/\W+/g, "");
     this.aliasnames = [];
 
     this.shortname = "";
@@ -10,7 +11,8 @@ function Quantity(name,description,unit){
         alter("undefined unit in Quantity " + name);
     }
     this.unit = unit;
-    
+    this.unitTex = math.parse(unit.toString()).toTex();
+        
     this.scaleup = undefined;
     this.scaledown = undefined;
     this.convertto = [];
@@ -73,6 +75,11 @@ function Quantity(name,description,unit){
         }
         this.scaleup = Quantities.get(this.scaleup);
         this.scaledown = Quantities.get(this.scaledown);
+    }
+    
+    this.renderUnitTex = function(){
+        var targetId = "QuantityUnitTexTarget_" + this.identifier; 
+        return mathjaxCache.add(targetId,this.unitTex);
     }
     
     this.renderDescription = function(){
@@ -202,9 +209,10 @@ function Quantities(){
         this.allquantities.push(quantity);
     };
     
-    this.get = function(name){
+    this.get = function(nameOrShortname){   
+        if(nameOrShortname == ""){ return undefined;}
         for (var index = 0; index < this.allquantities.length; ++index) {
-            if(this.allquantities[index].name == name){
+            if(this.allquantities[index].name == nameOrShortname || this.allquantities[index].shortname == nameOrShortname){
                 return this.allquantities[index];
             }
         }
@@ -272,6 +280,8 @@ function Quantities(){
     this.render = function(){
         var r = Mustache.render($('#QuantitiesTemplate').html(), this);
         document.getElementById(this.targetdiv).innerHTML = r;
+        mathjaxCache.render();
+
 
     }
 }
@@ -375,6 +385,20 @@ function StackQuantity(stack,quantity){
             );
         }
         return str;
+    }
+    
+    this.save = function(){
+        var data = {};
+        data["value"] = this.value;
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["quantity_name"] = this.quantity.name;
+        return data;
+    }
+    this.load = function(data){
+        this.value = data["value"];
+        this.name = data["name"];
+        this.id = data["id"];
     }
     
     this.render = function(){
