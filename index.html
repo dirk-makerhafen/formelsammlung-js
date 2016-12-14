@@ -186,8 +186,26 @@
                             {{description}}
                         </div>
                     </div>
-                    <div class="row" style='margin-left:40px;margin-top:10px;margin-bottom:20px;display:none'>
-                       {{{renderEquationTex}}}
+                    <div class="row" style='margin-top:10px;margin-bottom:20px;display:none'>
+                       <div class="col-md-1">
+                       </div>
+                       <div class="col-md-11">
+                           <div style="display:block;min-height:60px;">{{{renderEquationTex}}}</div>
+                           <div style="display:none;min-height:60px;"><pre><code>{{symbol}} = {{equationString}}</pre></code></div>                           
+                           <div style="display:none;min-height:60px;"><pre><code>{{equationTex}}</pre></code></div>
+                           <div style="display:none;min-height:60px;"><pre><code>{{{equationJavascript}}}</pre></code></div>                           
+                           <span>
+                               <a onclick='var x=$(this.parentNode.parentNode).children(); x.eq(1).hide(150);x.eq(2).hide(150);x.eq(3).hide(150);x.eq(0).show(150);' >render</a>
+                                - 
+                               <a onclick='var x=$(this.parentNode.parentNode).children(); x.eq(2).hide(150);x.eq(3).hide(150);x.eq(0).hide(150);x.eq(1).show(150);' >raw</a> 
+                                - 
+                               <a onclick='var x=$(this.parentNode.parentNode).children(); x.eq(3).hide(150);x.eq(0).hide(150);x.eq(1).hide(150);x.eq(2).show(150);' >LaTEX</a>
+                               -
+                               <a onclick='var x=$(this.parentNode.parentNode).children(); x.eq(0).hide(150);x.eq(1).hide(150);x.eq(2).hide(150);x.eq(3).show(150);' >JS</a>
+
+                            </span>
+                       </div>
+                       
                     </div>
                 {{/io}}
             </div>            

@@ -189,15 +189,6 @@ function Equation(){
         }
     }
     
-    this.fillCache = function(){
-        if(this.renderDescriptionCache[LANGUAGE]==undefined){
-            this.renderDescriptionCache[LANGUAGE] = document.getElementById("equationDescription_"+this.identifier).innerHTML;
-            for(var i=0;i<this.io.length;++i){
-                this.io[i].fillCache();
-            }
-        }
-    }
-    
     this.renderDescription = function(){
         var r = Mustache.render($('#EquationDescriptionTemplate').html(), {
             description  : markdown.toHTML(this.description_translation()),
@@ -292,7 +283,6 @@ function EquationIO(){
         }
         this.equationTex =  this.equation.toTex();
         this.symbolTex = math.parse(this.symbol).toTex();
-        
         var quantity =  markdownString.split("[ _")[1].split("_ ]")[0].trim();
         var q = Quantities.get(quantity);
         if (q == undefined){
@@ -308,6 +298,61 @@ function EquationIO(){
         if(this.translations[language] == undefined){ this.translations[language] = {} }
         this.translations[language].description = markdownString.split("__")[1].split("\n")[1].trim();            
     }    
+    
+    this.equationJavascript = function(){
+        if(this.jsCache!=undefined){return this.jsCache;}
+        var js = this.equation.compile().eval.toString();
+        js = js.split(" = ")[2];
+        var ionames = [];
+        for(var i=0;i<this.parentEquation.io.length;++i){
+            if(this.symbol != this.parentEquation.io[i].symbol){
+                ionames.push(this.parentEquation.io[i].symbol);
+            }
+        }
+
+        for(var i=0;i<ionames.length;i++){
+            var ioname = ionames[i];
+            var toreplace1 = '("'+ioname+'" in scope ? scope["'+ioname+'"] : new Unit(null, "'+ioname+'"))';
+            var toreplace2 = '("'+ioname+'" in scope ? scope["'+ioname+'"] : undef("'+ioname+'"))';
+            var toreplace3 = '("'+ioname+'" in scope ? scope["'+ioname+'"] : math["'+ioname+'"])';        
+            while(js.indexOf('scope ? scope["'+ioname+'"]') != -1){
+                js = js.replace(toreplace1,ioname);
+                js = js.replace(toreplace2,ioname);
+                js = js.replace(toreplace3,ioname);
+            }
+        }
+        
+        
+        var varnames = [];
+        var tmpparts = js.split('scope ? scope["');
+        for(var i=1;i<tmpparts.length;i++){
+            var varname = tmpparts[i].split('"')[0];
+            if(ionames.indexOf(varname) == -1){
+                varnames.push(varname);
+            }
+        }
+        for(var i=0;i<varnames.length;i++){
+            var varname = varnames[i];       
+            var toreplace1 =  '("'+varname+'" in scope ? scope["'+varname+'"] : math["'+varname+'"])';
+            js = js.replace(toreplace1,'math.'+varname+'');
+
+        }
+        js = this.symbol + " = function("+ionames+"){ return "+js;
+        
+        var comment_io = '';
+        var comment_return = ''
+        for(var i=0;i<this.parentEquation.io.length;++i){
+            if(this.symbol != this.parentEquation.io[i].symbol){
+                comment_io += this.parentEquation.io[i].symbol + " : " + this.parentEquation.io[i].quantity.name_translation() + " - "  + this.parentEquation.io[i].description_translation() + "\n";
+            }else{
+                comment_return += "return" + " : " + this.parentEquation.io[i].quantity.name_translation() + " - "  + this.parentEquation.io[i].description_translation() + "\n";
+            }
+        }
+        var comment = "/*\n" + comment_io + "" + comment_return + "*/\n";
+        js = comment + js;
+        this.jsCache = js;
+        return js;
+    }
     
     this.renderSymbolTex = function(){
         var targetId = "symbolTexTarget_" + this.parentEquation.identifier + "_" + this.symbol; 
@@ -452,13 +497,6 @@ function Equations(){
         this.filteredequations = this.allequations;
         for (var index = 0; index < this.allequations.length; ++index) {               
             this.allequations[index].smokeTest();
-        }
-    }
-    
-    this.fillCache = function(){
-        var f = this.filteredEquationsPagination();
-        for (var index = 0; index < f.length; ++index) {               
-            f[index].fillCache();
         }
     }
     
@@ -817,6 +855,7 @@ function StackEquationIO(stackequation,equationio){
         data["mappedto"] = this.mappedto;
         return data;
     }
+    
     this.load = function(data){
         this.setMappedTo(data["mappedto"],true);
     }
