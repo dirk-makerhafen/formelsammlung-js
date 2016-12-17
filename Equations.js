@@ -264,9 +264,9 @@ function EquationIO(){
 
     this.mapableStackElements = function(){
         var selectableStackElements = [];
-        for (var index = 0; index < Stack.elements.length; ++index) {
-            if (this.canMap(Stack.elements[index])){
-                selectableStackElements.push(Stack.elements[index]);
+        for (var index = 0; index < CurrentStack.elements.length; ++index) {
+            if (this.canMap(CurrentStack.elements[index])){
+                selectableStackElements.push(CurrentStack.elements[index]);
             }
         }
         return selectableStackElements;
@@ -522,7 +522,7 @@ function StackEquation(stack, equation){
 
     this.parentStack = stack;
     this.equation = equation;
-    this.id = "StackEquation_" + getUniqNumber();
+    this.id = "SE_" + getUniqNumber();
 
     this.name = "result " + getUniqNumber();
     this.showConverter = "None";
@@ -656,7 +656,7 @@ function StackEquation(stack, equation){
             var valuekeys = []
             for(var i=0;i<this.io.length;i++){
                 if(this.io[i].mappedto == "OUTPUT"){continue;}
-                var mappedto = Stack.get(this.io[i].mappedto)
+                var mappedto = CurrentStack.get(this.io[i].mappedto)
                 
                 if (mappedto != undefined){
                     valuekeys.push(this.io[i].equationio.symbol)
@@ -716,7 +716,7 @@ function StackEquation(stack, equation){
         for (var index = 0; index < this.io.length; ++index) {
              data["io"][this.io[index].equationio.symbol] = this.io[index].save();
         }
-        data["equation_name"] = this.equation.name;
+        data["eqn"] = this.equation.name;
         return data;
     }
     
@@ -738,7 +738,19 @@ function StackEquation(stack, equation){
         }
         return undefined;
     }
+    
+    this.renderPrint = function(){  
+        var resultSymbol =  this.io[this.getIndexOfIOByMapping("OUTPUT")[0]].equationio.symbol;
+        var eqTex = this.equation.getIoBySymbol(resultSymbol).equationTex;
 
+        var rq = this.resultQuantity()
+        var equation = " $$"+ eqTex + " \\qquad ( " + rq.unitTex + " ) \\qquad "+rq.name+" $$ ";;
+        var r = Mustache.render($('#StackEquationPrintTemplate').html(),{
+            "equation" : equation,
+        });
+        return r;
+    }
+    
     this.renderDescription = function(){
         var r = Mustache.render($('#EquationDescriptionTemplate').html(), {
             description  : markdown.toHTML(this.equation.description_translation()),
@@ -767,7 +779,7 @@ function StackEquation(stack, equation){
      
     this.renderConverter = function(){
         var str = "";
-        var rq = this.resultQuantity()
+        var rq = this.resultQuantity();
         if (rq != undefined){
             
             for(var i =0;i<rq.converter.length;++i){ 
@@ -789,7 +801,7 @@ function StackEquation(stack, equation){
 function StackEquationIO(stackequation,equationio){
     this.parentStackEquation = stackequation;
     this.equationio = equationio;
-    this.id = "StackEquationIO" + getUniqNumber();
+    this.id = "SEIO" + getUniqNumber();
 
     this.mappedto = "UNMAPPED"; // "OUTPUT" , "UNMAPPED"
     
@@ -809,12 +821,12 @@ function StackEquationIO(stackequation,equationio){
     this.mapableStackElements = function(){
         var selectableStackElements = [];
         
-        var myindex = Stack.getIndexOfElement(this.parentStackEquation.id);        
+        var myindex = CurrentStack.getIndexOfElement(this.parentStackEquation.id);        
         if(myindex == -1){
-            myindex =  Stack.elements.length; // item does not exist on stack yet
+            myindex =  CurrentStack.elements.length; // item does not exist on stack yet
         }    
         for (var index = myindex - 1 ; index >= 0 ; --index) {
-            var element = Stack.elements[index];
+            var element = CurrentStack.elements[index];
             if(element.id == this.mappedto){
                 element.selected = "selected";
             }else{
@@ -830,7 +842,7 @@ function StackEquationIO(stackequation,equationio){
     }
     
     this.setMappedTo = function(key,norender){
-        var e = Stack.get(this.mappedto)
+        var e = CurrentStack.get(this.mappedto)
         if (e!=undefined){
             e.removeMappedTo(this);
         }
@@ -839,7 +851,7 @@ function StackEquationIO(stackequation,equationio){
             this.parentStackEquation.resultScaler = undefined;
         }
         this.mappedto = key;
-        var e = Stack.get(this.mappedto)
+        var e = CurrentStack.get(this.mappedto)
         if (e!=undefined){
             e.addMappedTo(this);
         }
@@ -852,12 +864,12 @@ function StackEquationIO(stackequation,equationio){
     
     this.save = function(){
         var data = {};
-        data["mappedto"] = this.mappedto;
+        data["m"] = this.mappedto;
         return data;
     }
     
     this.load = function(data){
-        this.setMappedTo(data["mappedto"],true);
+        this.setMappedTo(data["m"],true);
     }
     
     this.render = function(){

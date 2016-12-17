@@ -13,6 +13,10 @@
     <link rel="stylesheet" href="lib/styles/jquery.sliderTabs.min.css">
     <script src="lib/jquery.sliderTabs.js"></script>
     
+    <script src="https://cdn.jsdelivr.net/clipboard.js/1.5.16/clipboard.min.js"></script>
+    
+    <script language="javascript" src="lib/lz-string.js"></script>
+
     <script src="lib/math.js"></script>
     <script src="lib/mustache.js"></script>
     <script src="lib/markdown.min.js"></script>
@@ -125,29 +129,42 @@
     .ui-slider-tabs-list-wrapper {
         width: 80%;
     }
+    .glyphicon {
+        font-family: inherit;
+    }
+    .glyphicon:before{
+        font-family:'Glyphicons Halflings';
+    }
+
+    
 </style>
                     
                     
 <script type="x-tmpl-mustache" id="QuantityTemplate">
     <div class="box">
         <div class="row">
-            <div class="col-md-1" style="width:42px;">
-                <span style="color:green;cursor: pointer;" class="glyphicon glyphicon-plus" onclick="Stack.add(Quantities.get('{{name}}'))">use</span>
-            </div>
-            <div class="col-md-2" style="text-align:center;" >
-                <b>{{name_translation}}</b>  {{aliasnames_translation}}
-            </div>
-            <div class="col-md-1" >
-                {{{renderUnitTex}}}
-            </div>
-            <div class="col-md-7"></div>
-            <div class="col-md-1">
-                <a onclick="load_disqus_modal(Quantities.get('{{name}}'),'{{name}}')" style="font-size:0.8em;float:right;"   data-toggle="modal" data-target="#myModal"> Feedback/Translate </a>
+            <div class="col-md-4">
+                <div class="col-md-1" style="padding-left:5px;">
+                    <span style="color:green;cursor: pointer;" class="glyphicon glyphicon-plus" onclick="CurrentStack.add(Quantities.get('{{name}}'))">use</span>
+                </div>
+                <div class="col-md-6" style="text-align:left;" >
+                    <b>{{name_translation}}</b>  {{aliasnames_translation}}
+                </div>
+                <div class="col-md-5" >
+                    {{{renderUnitTex}}}
+                </div>
             </div>
             
-        
+            <div class="col-md-6"></div>
+            <div class="col-md-2">
+                <div class="col-md-8">
+                    <a onclick="load_disqus_modal(Quantities.get('{{name}}'),'{{name}}')" style="font-size:0.8em;float:right;"   data-toggle="modal" data-target="#disqusModal"> Feedback/Translate </a>
+                </div>
+                <div class="col-md-4">
+                    <a onclick="create_link('quantity:{{name}}')" style="font-size:0.8em;float:right;" data-toggle="modal" data-target="#shareLinkModal"><span class="glyphicon glyphicon-link">Link</span></a>
+                </div>
+            </div>
         </div>
-
         <div id="quantityDescription_{{name}}">
             {{{renderDescription}}}
         </div>
@@ -156,11 +173,34 @@
 
 <script type="x-tmpl-mustache" id="EquationTemplate">
     <div class="box">
-        <a onclick="load_disqus_modal(Equations.get('{{name}}'),'{{name}}')" style="font-size:0.8em;float:right;"  data-toggle="modal" data-target="#myModal">Feedback/Translate </a>
-        <span style="color:{{color}};cursor: pointer;" class="glyphicon glyphicon-plus" onclick="Stack.add(Equations.get('{{name}}'))">use</span>
-        <b>{{name_translation}}</b>  -  {{nrOfMappableIos}}/{{io.length}} - 
-        <span style="display:no{{outputName}}ne;">Could calculate: </span><b>{{outputName}}</b>
-        <br>
+    
+    
+            <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-2" style="padding-left:5px;">
+                    <span style="color:{{color}};cursor: pointer;" class="glyphicon glyphicon-plus" onclick="CurrentStack.add(Equations.get('{{name}}'))">use</span>
+                </div>
+                <div class="col-md-10" style="text-align:left;" >
+                    <b>{{name_translation}}</b>
+                    
+                    {{nrOfMappableIos}}/{{io.length}}
+                
+                    <span style="display:no{{outputName}}ne;">Could calculate: </span><b>{{outputName}}</b>
+
+                    
+                </div>
+            </div>
+                
+            <div class="col-md-1"></div>
+            <div class="col-md-2">
+                <div class="col-md-8">
+                    <a onclick="load_disqus_modal(Equations.get('{{name}}'),'{{name}}')" style="font-size:0.8em;float:right;"   data-toggle="modal" data-target="#disqusModal"> Feedback/Translate </a>
+                </div>
+                <div class="col-md-4">
+                    <a onclick="create_link('equation:{{name}}')" style="font-size:0.8em;float:right;" data-toggle="modal" data-target="#shareLinkModal"><span class="glyphicon glyphicon-link">Link</span></a>
+                </div>
+            </div>
+        </div>
         {{{renderDescription}}}
     </div>
 </script>
@@ -190,18 +230,18 @@
                        <div class="col-md-1">
                        </div>
                        <div class="col-md-11">
-                           <div style="display:block;min-height:60px;">{{{renderEquationTex}}}</div>
-                           <div style="display:none;min-height:60px;"><pre><code>{{symbol}} = {{equationString}}</pre></code></div>                           
-                           <div style="display:none;min-height:60px;"><pre><code>{{equationTex}}</pre></code></div>
-                           <div style="display:none;min-height:60px;"><pre><code>{{{equationJavascript}}}</pre></code></div>                           
-                           <span>
-                               <a onclick='var x=$(this.parentNode.parentNode).children(); x.eq(1).hide(150);x.eq(2).hide(150);x.eq(3).hide(150);x.eq(0).show(150);' >render</a>
+                           <div style="display:block;">{{{renderEquationTex}}}</div>
+                           <div style="display:none;"><pre><code>{{symbol}} = {{equationString}}</pre></code></div>                           
+                           <div style="display:none;"><pre><code>{{equationTex}}</pre></code></div>
+                           <div style="display:none;"><pre><code>{{{equationJavascript}}}</pre></code></div>                           
+                           <span style="line-height: 40px;">
+                               <a style="font-weight:bold;" onclick='selectOutputRendering(this,0);' >render</a>
                                 - 
-                               <a onclick='var x=$(this.parentNode.parentNode).children(); x.eq(2).hide(150);x.eq(3).hide(150);x.eq(0).hide(150);x.eq(1).show(150);' >raw</a> 
+                               <a onclick='selectOutputRendering(this,1);' >raw</a> 
                                 - 
-                               <a onclick='var x=$(this.parentNode.parentNode).children(); x.eq(3).hide(150);x.eq(0).hide(150);x.eq(1).hide(150);x.eq(2).show(150);' >LaTEX</a>
+                               <a onclick='selectOutputRendering(this,2);' >LaTEX</a>
                                -
-                               <a onclick='var x=$(this.parentNode.parentNode).children(); x.eq(0).hide(150);x.eq(1).hide(150);x.eq(2).hide(150);x.eq(3).show(150);' >JS</a>
+                               <a onclick='selectOutputRendering(this,3);' >JS</a>
 
                             </span>
                        </div>
@@ -221,15 +261,37 @@
     
 <script type="x-tmpl-mustache" id="MaterialTemplate">
     <div class="box">
-        <a onclick="load_disqus_modal(Materials.get('{{name}}'),'{{name}}')" style="font-size:0.8em;float:right;"  data-toggle="modal" data-target="#myModal">Feedback/Translate </a>
-        <span style="color:green;cursor: pointer;" class="glyphicon glyphicon-plus" onclick="Stack.add(Materials.get('{{name}}'))">use</span>
+        <a onclick="load_disqus_modal(Materials.get('{{name}}'),'{{name}}')" style="font-size:0.8em;float:right;"  data-toggle="modal" data-target="#disqusModal">Feedback/Translate </a>
+       <a onclick="create_link('material:{{name}}')" style="font-size:0.8em;float:right;" data-toggle="modal" data-target="#shareLinkModal"><span class="glyphicon glyphicon-link">Link</span></a>
+
+        <span style="color:green;cursor: pointer;" class="glyphicon glyphicon-plus" onclick="CurrentStack.add(Materials.get('{{name}}'))">use</span>
         <b>{{name_translation}}</b><br>
         {{{renderDescription}}}
     </div>
 </script>
 
+<script type="x-tmpl-mustache" id="SavedStackTemplate">
+    <div class="box">
+        <div class="row">
+            <div class="col-md-5">
+                <b>{{name}}</b><br>
+                {{{description}}}
+            </div>
+            <div class="col-md-2">
+                <span onclick="Stacks.loadCurrentStack('{{name}}')">Load</span>
+                <span onclick="Stacks.remove('{{name}}')">Delete</span>
+            </div>
+        </div>
+        <a onclick="create_link('stack:'+ Stacks.get('{{name}}').getLinkData());" style="font-size:0.8em;float:right;" class="glyphicon glyphicon-link"  data-toggle="modal" data-target="#shareLinkModal"></a>
+        
+        
+        
+        
+    </div>
+</script>
+
 <script type="x-tmpl-mustache" id="NaturalConstantTemplate">
-    <b>{{item.name}}</b> - {{item.description}} - <button onclick="Stack.add(NatualConstants.get('{{item.name}}'))">use</button><br>
+    <b>{{item.name}}</b> - {{item.description}} - <button onclick="CurrentStack.add(NatualConstants.get('{{item.name}}'))">use</button><br>
 </script>
 
 
@@ -240,7 +302,7 @@
         {{/filteredQuantitiesPagination}}
         <ul class="pagination">          
             {{#paginationPageLinks}}
-                <li class="{{selected}}"><a href="#" onclick="Quantities.setPaginationPage({{nr}})">{{nr}}</a></li>
+                <li class="{{selected}}"><a onclick="Quantities.setPaginationPage({{nr}})">{{nr}}</a></li>
             {{/paginationPageLinks}}
         </ul>        
     </div>
@@ -253,7 +315,7 @@
         {{/filteredEquationsPagination}}
         <ul class="pagination">          
             {{#paginationPageLinks}}
-                <li class="{{selected}}"><a href="#" onclick="Equations.setPaginationPage({{nr}})">{{nr}}</a></li>
+                <li class="{{selected}}"><a onclick="Equations.setPaginationPage({{nr}})">{{nr}}</a></li>
             {{/paginationPageLinks}}
         </ul>
         
@@ -267,9 +329,26 @@
         {{/filteredmaterials}}
         <ul class="pagination">          
             {{#paginationPageLinks}}
-                <li class="{{selected}}"><a href="#" onclick="Materials.setPaginationPage({{nr}})">{{nr}}</a></li>
+                <li class="{{selected}}"><a onclick="Materials.setPaginationPage({{nr}})">{{nr}}</a></li>
             {{/paginationPageLinks}}
         </ul>        
+    </div>
+</script>
+
+<script type="x-tmpl-mustache" id="StacksTemplate">
+    <div  id="StacksPagination"  class="limitedbox">    
+        {{#elements}}
+            {{{render}}}
+        {{/elements}}
+        <ul class="pagination">          
+            {{#paginationPageLinks}}
+                <li class="{{selected}}"><a onclick="Stacks.setPaginationPage({{nr}})">{{nr}}</a></li>
+            {{/paginationPageLinks}}
+        </ul>       
+           <a onclick="Stacks.download();" >download</a>
+           <input type="file" id="StackUploadFile" multiple size="50" onchange="Stacks.upload()">
+
+           
     </div>
 </script>
 
@@ -286,13 +365,13 @@
     <div id="{{id}}" class="col-md-offset-1">
         <div class="row">
             <div class="col-md-2" >
-                <input class="variableNameInput" value="{{name}}" onKeyUp="Stack.get('{{id}}').setName(this.value)" 
+                <input class="variableNameInput" value="{{name}}" onKeyUp="CurrentStack.get('{{id}}').setName(this.value)" 
                 onclick='flashMappedInputHelper("StackEquationIo_{{id}}");'></input>
             </div>
             <div class="col-md-3"> 
                 <div class="row">
                     <div class="col-md-8">
-                        <input value="{{value}}" onKeyUp="Stack.get('{{id}}').setValue(this.value)" class="valueInput"></input>
+                        <input value="{{value}}" onKeyUp="CurrentStack.get('{{id}}').setValue(this.value)" class="valueInput"></input>
                     </div>
                     <div class="col-md-3 unitOutput">
                         {{quantity.name}}
@@ -303,9 +382,9 @@
                 </div>
             </div>
             <div class="col-md-1 scapeTransformGlyph">
-                <span style="color:lightgray;color:bla{{displayScaleUp}}ck" class="glyphicon glyphicon-arrow-up" onclick="Stack.get('{{id}}').scaleUp();"></span>
-                <span style="color:lightgray;color:bla{{displayScaleDown}}ck" class="glyphicon glyphicon-arrow-down" onclick="Stack.get('{{id}}').scaleDown();"></span>
-                <span style="color:lightgray;color:bla{{displayShowConvert}}ck"  class="glyphicon glyphicon-random" onclick="Stack.get('{{id}}').toggleShowConverter();"></span>
+                <span style="color:lightgray;color:bla{{displayScaleUp}}ck" class="glyphicon glyphicon-arrow-up" onclick="CurrentStack.get('{{id}}').scaleUp();"></span>
+                <span style="color:lightgray;color:bla{{displayScaleDown}}ck" class="glyphicon glyphicon-arrow-down" onclick="CurrentStack.get('{{id}}').scaleDown();"></span>
+                <span style="color:lightgray;color:bla{{displayShowConvert}}ck"  class="glyphicon glyphicon-random" onclick="CurrentStack.get('{{id}}').toggleShowConverter();"></span>
             </div>
         </div>
     </div>
@@ -325,7 +404,7 @@
     <div id="{{id}}" class="col-md-offset-1">
         <div class="row">
             <div class="col-md-2">        
-                <input class="variableNameInput" value="{{name}}" onKeyUp="Stack.get('{{id}}').setName(this.value)" 
+                <input class="variableNameInput" value="{{name}}" onKeyUp="CurrentStack.get('{{id}}').setName(this.value)" 
                 onclick='flashMappedInputHelper("StackEquationIo_{{id}}");'></input>
             </div>
             <div class="col-md-3"> 
@@ -345,9 +424,9 @@
                 </div>
             </div>
             <div class="col-md-1 scapeTransformGlyph">
-                <span style="color:lightgray;color:bla{{displayScaleUp}}ck" class="glyphicon glyphicon-arrow-up" onclick="Stack.get('{{id}}').scaleUp();"></span>
-                <span style="color:lightgray;color:bla{{displayScaleDown}}ck" class="glyphicon glyphicon-arrow-down" onclick="Stack.get('{{id}}').scaleDown();"></span>
-                <span style="color:lightgray;color:bla{{displayShowConvert}}ck"  class="glyphicon glyphicon-random" onclick="Stack.get('{{id}}').toggleShowConverter();"></span>
+                <span style="color:lightgray;color:bla{{displayScaleUp}}ck" class="glyphicon glyphicon-arrow-up" onclick="CurrentStack.get('{{id}}').scaleUp();"></span>
+                <span style="color:lightgray;color:bla{{displayScaleDown}}ck" class="glyphicon glyphicon-arrow-down" onclick="CurrentStack.get('{{id}}').scaleDown();"></span>
+                <span style="color:lightgray;color:bla{{displayShowConvert}}ck"  class="glyphicon glyphicon-random" onclick="CurrentStack.get('{{id}}').toggleShowConverter();"></span>
             </div>
             <div class="col-md-5">
                 {{#io}}
@@ -368,7 +447,7 @@
 <script type="x-tmpl-mustache" id="StackEquationIoTemplate" >
     <div class="row" style="padding: 2px;">
         <div style="width:34%">
-            <select class="iostuff iostuffselect {{selectableDivClass}}" onchange="Stack.get('{{parentStackEquation.id}}').getIO('{{id}}').setMappedTo(this.value,false)">
+            <select class="iostuff iostuffselect {{selectableDivClass}}" onchange="CurrentStack.get('{{parentStackEquation.id}}').getIO('{{id}}').setMappedTo(this.value,false)">
                 <option value="OUTPUT">Output</option>
                 {{#mapableStackElements}}
                     <option {{selected}} class="selected_{{name}} StackEquationIo_{{id}}" value="{{id}}">{{name}}</option>
@@ -386,7 +465,7 @@
             {{#equationio}}
                 {{description_translation}}<br>
                 {{#quantity}}
-                    <a onclick='jQuery("#QuantitiesSearchInput").val("{{name_translation}}").trigger("keyup");$("#QuantitiesBoxTabSelect").click()'> {{name_translation}} </a>
+                    <a onclick='jQuery("#QuantitiesSearchInput").val("{{name_translation}}").trigger("keyup");$("#QuantitiesBoxTabSelect").click();'> {{name_translation}} </a>
                 {{/quantity}}
             {{/equationio}}
         </div>
@@ -399,7 +478,7 @@
 
         <div class="row">
             <div class="col-md-2">        
-                <input class="variableNameInput" value="{{name}}" onKeyUp="Stack.get('{{id}}').setName(this.value)"
+                <input class="variableNameInput" value="{{name}}" onKeyUp="CurrentStack.get('{{id}}').setName(this.value)"
                  onclick='flashMappedInputHelper("StackEquationIo_{{id}}");'></input>
             </div>
             <div class="col-md-6"> 
@@ -432,6 +511,23 @@
     {{value}}
 </script>
 
+<script type="x-tmpl-mustache" id="StackPrintTemplate">
+    {{#elements}}
+        {{#renderPrint}}
+        {{.}}
+         <br>    
+        {{/renderPrint}}
+    {{/elements}}
+</script>
+<script type="x-tmpl-mustache" id="StackQuantityPrintTemplate">
+ {{{equation}}}
+</script>
+<script type="x-tmpl-mustache" id="StackEquationPrintTemplate">
+ {{{equation}}}
+</script>
+        
+
+
 <script type="x-tmpl-mustache" id="StackTemplate">
     {{#elements}}
         <div class="box">
@@ -441,16 +537,33 @@
                 <a style="display:none;" id="{{id}}_less" onclick='jQuery("#{{id}}_details").toggle("show");jQuery("#{{id}}_less").hide();jQuery("#{{id}}_more").show();'>Hide Details</a>     
             </div>         
             <div class="updowndeleteGlyph">
-                <span class="glyphicon glyphicon-arrow-up" onclick="Stack.moveUp('{{id}}')"></span>
-                <span class="glyphicon glyphicon-arrow-down" onclick="Stack.moveDown('{{id}}')"></span>
-                <span class="glyphicon glyphicon-remove-circle" onclick="Stack.remove('{{id}}')"></span>
+                <span class="glyphicon glyphicon-arrow-up" onclick="CurrentStack.moveUp('{{id}}')"></span>
+                <span class="glyphicon glyphicon-arrow-down" onclick="CurrentStack.moveDown('{{id}}')"></span>
+                <span class="glyphicon glyphicon-remove-circle" onclick="CurrentStack.remove('{{id}}')"></span>
             </div>
             {{{render}}}
         </div>
     {{/elements}}
+    <div class="row" style="display:{{showSubmenu}};text-align:center;">
+        <div class="col-md-3"> <a onclick="CurrentStack.renderPrint();">Print</a></div>
+        <div class="col-md-3">
+            <a onclick="create_link('stack:'+CurrentStack.getLinkData());" data-toggle="modal" data-target="#shareLinkModal">
+                <span class="glyphicon glyphicon-link">Link</span>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a onclick="if(CurrentStack.elements.length < 10 || confirm('Are you sure ?')){CurrentStack.clear()};">Clear</a>
+        </div>
+        <div class="col-md-3">
+            <a onclick="Stacks.saveCurrentStack();">Save</a>
+        </div>
+    </div>
+                
 </script>
   
 <script>
+
+
 
 var SETTINGS = {
     "EquationsIgnoreMappedElements" : true,  // ignore stack elements that already have a mapping when calculating nr of available mappings in Equation.
@@ -460,13 +573,20 @@ var LANGUAGE = "EN"
 
 setLanguage = function(lang){
     LANGUAGE = lang;
-    Stack.render();
+    CurrentStack.render();
     Quantities.render();
     Equations.render();
     Materials.render();
 }    
+
+
+
+
+
+
 function init(){
- 
+
+    
     $.ajax({ async: false, url:"markdown/quantities.md",success: function (data){ Quantities.loadMarkdown(data); } });   
     $.ajax({ async: false, url:"markdown/equations.md" ,success: function (data){ Equations.loadMarkdown(data); } }); 
     $.ajax({ async: false, url:"markdown/materials.md" ,success: function (data){ Materials.loadMarkdown(data); } }); 
@@ -477,17 +597,51 @@ function init(){
 
     Quantities.init();    
     Equations.init();    
+    Stacks.init();
     
     Quantities.setFilter("");
     Equations.setFilter("");
     Materials.setFilter("");
-    var slider = $("div#SliderTabs").sliderTabs({
-        mousewheel: false,
-    });
+
 
     MathJax.Hub.Config({ displayAlign: "left" });
   
+    var urlParams;
+    (window.onpopstate = function () {
+        var match,
+            pl     = /\+/g,  // Regex for replacing addition symbol with a space
+            search = /([^&=]+)=?([^&]*)/g,
+            decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+            query  = window.location.search.substring(1);
+        urlParams = {};
+        while (match = search.exec(query))
+           urlParams[decode(match[1])] = decode(match[2]);
+    })();
     
+    var sliderTabsDefaultTab = 1;    
+    if(urlParams["link"] != undefined){
+        var p = urlParams["link"].split(":");
+        if(p[0]=="quantity"){
+            jQuery("#QuantitiesSearchInput").val(p[1]).trigger("keyup");
+            sliderTabsDefaultTab = 1;
+        }   
+        if(p[0]=="material"){
+            jQuery("#MaterialsSearchInput").val(p[1]).trigger("keyup");
+            sliderTabsDefaultTab = 2;
+        }  
+        if(p[0]=="equation"){
+            jQuery("#EquationsSearchInput").val(p[1]).trigger("keyup");
+            sliderTabsDefaultTab = 3;
+        }   
+        if(p[0]=="stack"){
+            CurrentStack.load(JSON.parse(LZString.decompressFromEncodedURIComponent(p[1])));
+        }
+    }
+    
+    var slider = $("div#SliderTabs").sliderTabs({
+        mousewheel: false,
+        defaultTab : sliderTabsDefaultTab,
+    });    
     
 }
 
@@ -530,17 +684,17 @@ function init(){
     }
     
     function load_disqus_modal(element,identifier){
-        $('#modal_description_preview')[0].innerHTML = element.renderDescription();
-        $('#modal-title')[0].innerHTML = "<b>" + element.name_translation() + "</b>";
-        $('#modal-body')[0].innerHTML =  '<div id="disqus_thread"></div>';
+        $('#disqusModalPreview')[0].innerHTML = element.renderDescription();
+        $('#disqusModalTitle')[0].innerHTML = "<b>" + element.name_translation() + "</b>";
+        $('#disqusModalBody')[0].innerHTML =  '<div id="disqus_thread"></div>';
         $('#disqus_general_thread')[0].innerHTML =  '';
         reload_disqus(element.constructor.name + "_" + identifier);
     }
      function load_disqus_footer(){
-        $('#modal_description_preview')[0].innerHTML = "";
-        $('#modal-title')[0].innerHTML = "";
+        $('#disqusModalPreview')[0].innerHTML = "";
+        $('#disqusModalTitle')[0].innerHTML = "";
         $('#disqus_general_thread')[0].innerHTML =  '<div id="disqus_thread"></div>';
-        $('#modal-body')[0].innerHTML =  "";
+        $('#disqusModalBody')[0].innerHTML =  "";
         reload_disqus("general");
     }   
 
@@ -553,21 +707,24 @@ function init(){
 
 </head>
 <body onload="init()">
+minimise stack elements<br>
+stack render as render or latex<br>
+
     <div class="container">
 
         <div class="box"> 
             <div id="Stack"> 
             </div>
-            <a onclick="Stack.save();">save</a>
-            <a onclick="Stack.load();">load</a>
+
         </div>
                  
         <div id="SliderTabs" class="box" >
       
             <ul>
-                <li><a id="QuantitiesBoxTabSelect"    href="#QuantitiesBox">Quantities</a></li>
+                <li><a id="QuantitiesBoxTabSelect" href="#QuantitiesBox">Quantities</a></li>
                 <li><a id="MaterialsBoxTabSelect"  href="#MaterialsBox">Materials</a></li>
                 <li><a id="EquationsBoxTabSelect"  href="#EquationsBox">Equations</a></li>
+                <li id="MyStacksTab" style="display:none"><a id="MyStacksTabSelect"  href="#MyStacksBox">My Stuff</a></li>
             </ul>
             
             <select style="float:right;margin-top:4px;" onchange="setLanguage(this.value);">
@@ -594,6 +751,9 @@ function init(){
                     <input id="MaterialsSearchInput" class="seachInput" onKeyUp="Materials.setFilter(this.value)" placeholder="Search Materials"></input><br>
                 </div>
                 <div id="MaterialsList"></div>
+            </div>
+            <div id="MyStacksBox">
+               <div id="StacksList"></div>
             </div>
         </div>
         
@@ -624,18 +784,18 @@ function init(){
         
     </div>
 
-    <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal fade" id="disqusModal" role="dialog">
         <div class="modal-dialog modal-lg">
           <!-- Modal content-->
           <div class="modal-content">
             <div class="modal-header">
               <button onclick="load_disqus_footer()" type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 id="modal-title" class="modal-title">Enhance this description</h4>
-              <div id="modal_description_preview" class="box">  
+              <h4 id="disqusModalTitle" class="modal-title">Enhance this description</h4>
+              <div id="disqusModalPreview" class="box">  
               
               </div>
             </div>
-            <div id="modal-body" class="modal-body">
+            <div id="disqusModalBody" class="modal-body">
                 
             </div>
             <div class="modal-footer">
@@ -644,6 +804,34 @@ function init(){
           </div>
         </div>
     </div>
+    <div class="modal fade" id="shareLinkModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button onclick="load_disqus_footer()" type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 id="shareLinkModalTitle" class="modal-title">Share Link</h4>
+            </div>
+            <div id="shareLinkModalBody" class="modal-body">
+            
+<div class="input-group" style="width: 100%;">
+<textarea id="shareLinkModalURL" type="text" style="width: 100%;resize:vertical"></textarea>
+<span class="input-group-button">
+<button class="btn" type="button" data-clipboard-demo="" data-clipboard-target="#foo">
+<img class="clippy" src="lib/clippy.svg" width="13" alt="Copy to clipboard"> Copy to Clipboard
+</button>
+</span>
+</div>
+            </div>
+            <div class="modal-footer">
+              <button onclick="load_disqus_footer()" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+    </div>    
+    
     <div id="renderCache" style="display:none"></div>    
+    <div id="printerCache" style="display:block"></div>    
+    
   </body>
 </html>

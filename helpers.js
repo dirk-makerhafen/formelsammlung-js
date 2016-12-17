@@ -96,3 +96,27 @@ stripArray = function(valuesString){
     };
     return values;
 }
+
+selectOutputRendering = function(node,number){
+    var x=$(node.parentNode.parentNode).children(); 
+    for(var i=0;i<4;i++ ){
+        if(i==number){continue;}
+        x.eq(i).hide(150);
+    }
+    x.eq(number).show(150);
+     
+    var y=$(node.parentNode).children(); 
+    for(var i=0;i<4;i++ ){
+        if(i==number){
+            y.eq(i).css("font-weight","bold");
+        }else{
+            y.eq(i).css("font-weight","inherit");
+        }
+    }
+}
+
+create_link = function(target){
+    pathArray = location.href.split( '/' );
+    url = pathArray[0] + '//' + pathArray[2] + "/?link=" + target;
+    jQuery("#shareLinkModalURL")[0].value = url;
+}

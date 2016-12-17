@@ -289,11 +289,11 @@ function Quantities(){
 function StackQuantity(stack,quantity){
     this.parentStack = stack;
     this.quantity = quantity;    
-    this.id = "StackQuantity_" + getUniqNumber();
+    this.id = "SQ_" + getUniqNumber();
     
     this.value = 1;
     
-    this.name = "variable " + getUniqNumber();
+    this.name = "var " + getUniqNumber();
     this.showConverter = "None";
     
     this.mappedto = []
@@ -375,6 +375,20 @@ function StackQuantity(stack,quantity){
         return "";
     }   
     
+    this.save = function(){
+        var data = {};
+        data["value"] = this.value;
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["qn"] = this.quantity.name;
+        return data;
+    }
+    this.load = function(data){
+        this.value = data["value"];
+        this.name = data["name"];
+        this.id = data["id"];
+    }
+        
     this.renderConverter = function(){
         var str = "";
         for(var i =0;i<this.quantity.converter.length;++i){ 
@@ -386,25 +400,18 @@ function StackQuantity(stack,quantity){
         }
         return str;
     }
-    
-    this.save = function(){
-        var data = {};
-        data["value"] = this.value;
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["quantity_name"] = this.quantity.name;
-        return data;
-    }
-    this.load = function(data){
-        this.value = data["value"];
-        this.name = data["name"];
-        this.id = data["id"];
-    }
-    
+
     this.render = function(){
         var r = Mustache.render($('#StackQuantityTemplate').html(),this);
         return r;
     }   
+    this.renderPrint = function(){  
+        var equation = " $$"+this.name.replace(" ","_")+"=" + this.value + "\\qquad ( " + this.quantity.unitTex + " ) \\qquad "+this.quantity.name+" $$ ";;
+        var r = Mustache.render($('#StackQuantityPrintTemplate').html(),{
+            "equation" : equation,
+        });
+        return r;
+    }
     
     this.updateRender = function(){
         $("#"+this.id).replaceWith(this.render());

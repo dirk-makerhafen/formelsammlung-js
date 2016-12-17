@@ -81,8 +81,8 @@ function Materials(){
             this.filteredmaterials = this.allmaterials;
         }else{
             for (var index = 0; index < this.allmaterials.length; ++index) {
-                if(  this.allmaterials[index].name.toLowerCase().indexOf(this.filter) !== -1 || 
-                     this.allmaterials[index].description.toLowerCase().indexOf(this.filter) !== -1 )
+                if(  this.allmaterials[index].name.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1 || 
+                     this.allmaterials[index].description.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1 )
                     {
                         this.filteredmaterials.push(this.allmaterials[index]);
                     }
@@ -168,7 +168,7 @@ function Materials(){
 function StackMaterial(stack,material){
     this.parentStack = stack;
     this.material = material;
-    this.id = "StackMaterial_" + getUniqNumber();
+    this.id = "SM_" + getUniqNumber();
 
     this.name = "material " + getUniqNumber();
     this.color = "#eee";
@@ -205,7 +205,7 @@ function StackMaterial(stack,material){
         var data = {};
         data["name"] = this.name;
         data["id"] = this.id;
-        data["material_name"] = this.material.name;
+        data["mn"] = this.material.name;
         return data;
     }
     
@@ -213,7 +213,9 @@ function StackMaterial(stack,material){
         this.name = data["name"];
         this.id = data["id"];
     }
-    
+    this.renderPrint = function(){
+        return "hallom";
+    }   
     this.render = function(){
         var r = Mustache.render($('#StackMaterialTemplate').html(), this);
         return r;
