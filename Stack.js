@@ -1,18 +1,22 @@
 
 
 function Stack(){
+    this.constructorName = "Stack";
+
     this.elements = [];
     this.name = "";
     this.description = "";
     
+    this.savedStack = undefined; // reference if stack is loaded from saved stacks    
+    
     this.addNoRender = function(element){
-        if(element.constructor.name == "Quantity"){
+        if(element.constructorName == "Quantity"){
             this.elements.push(new StackQuantity(this,element));
         }
-        if(element.constructor.name == "Equation"){
+        if(element.constructorName == "Equation"){
             this.elements.push(new StackEquation(this,element));
         }
-        if(element.constructor.name == "Material"){
+        if(element.constructorName == "Material"){
             this.elements.push(new StackMaterial(this,element));
         }
     }
@@ -86,6 +90,9 @@ function Stack(){
             this.elements[index].dispose();
         }
         this.elements=[];
+        this.name = "";
+        this.description = "";
+        this.savedStack = undefined;
         this.render();
     }
     
@@ -95,7 +102,7 @@ function Stack(){
             var stackElement = this.elements[index];
             result[index] = {};
             var shorts = {"StackQuantity":"SQ","StackMaterial":"SM","StackEquation":"SE"}
-            result[index]["t"] = shorts[stackElement.constructor.name];
+            result[index]["t"] = shorts[stackElement.constructorName];
             result[index]["d"] = stackElement.save();
         }
         return result;
@@ -120,6 +127,18 @@ function Stack(){
 
     }   
     
+    this.showSaveChanges = function(){
+        if( this.savedStack ==  undefined){
+            return "none"
+        }
+        return "";
+    }
+    this.showSave = function(){
+        if( this.savedStack !=  undefined){
+            return "none"
+        }
+        return "";
+    }
     
     this.load = function(data){
         this.clear();
@@ -152,7 +171,8 @@ SavedStack = function(savedStack,name,description){
     this.savedStack = savedStack;
     this.name = name;
     this.description = description;
-    
+    this.id = "SS_" + getUniqNumber();
+
     this.save = function(){
         return {
             "name" : this.name,
@@ -165,7 +185,18 @@ SavedStack = function(savedStack,name,description){
         this.savedStack = data["savedStack"];
         this.description = data["description"];
         this.name = data["name"];
-        
+    }
+    
+    this.setName = function(name){
+        this.name = name;
+        if(CurrentStack.savedStack == this){
+            CurrentStack.name = name;
+            $("#CurrentStackName")[0].innerHTML = CurrentStack.name;
+        }
+    }
+    
+    this.setDescription = function(description){
+        this.description = description
     }
     
     this.render = function(){
@@ -185,34 +216,106 @@ Stacks = function(){
 
     this.elements = [] // list of stacks
     
-    this.get = function(name){
-        return this.elements[this.getIndexOfElement(name)];
+    this.paginationPage = 1;
+    this.paginationElementsPerPage = 6;
+    this.filteredstacks = this.elements;
+  
+    
+    this.get = function(elementId){
+        return this.elements[this.getIndexOfElement(elementId)];
     }
-    this.getIndexOfElement = function(name){
+
+    this.getIndexOfElement = function(elementId){
         for(var i=0;i<this.elements.length;++i){
-            if(this.elements[i].name==name){
+            if(this.elements[i].id==elementId){
                 return i;
             }
         }
         return undefined;
     }
     
-    this.remove = function(name){
-        this.elements.splice(this.getIndexOfElement(name), 1);
+    this.remove = function(elementId){
+        var i = this.getIndexOfElement(elementId);
+        if(this.elements[i] == CurrentStack.savedStack){
+            CurrentStack.savedStack = undefined;
+            CurrentStack.name = "";
+            CurrentStack.description="";
+        }
+        this.elements.splice(i, 1);
         this.toLocalStorage();
         this.render();
+        if(CurrentStack.savedStack==undefined){
+            $(".saveStackChanges").hide();
+            $(".saveStack").show();
+        }else{
+            $(".saveStackChanges").show();
+            $(".saveStack").hide();        
+        }
+        if($("#CurrentStackName")[0] != undefined){
+            $("#CurrentStackName")[0].innerHTML = CurrentStack.name;
+        } 
+        this.filteredstacks = this.elements;
+
+
     }
-    
-    this.saveCurrentStack = function(){
-        var s = new SavedStack(CurrentStack.save(),"test","foobar");
-        this.elements.push(s);
-        this.toLocalStorage();
+  
+   this.setFilter = function(filter){
+        this.filter = filter;
+        this.filteredstacks = []
+        this.paginationPage = 1;
+        if(filter == ""){
+            this.filteredstacks = this.elements;
+        }else{
+            
+            for (var i = 0; i < this.elements.length; ++i) {               
+                  if(this.elements[i].name.toLowerCase().indexOf(filter.toLowerCase()) != -1 && this.filteredstacks.indexOf(this.elements[i])==-1){this.filteredstacks.push(this.elements[i]); }
+                    if(this.elements[i].description.toLowerCase().indexOf(filter.toLowerCase()) != -1 && this.filteredstacks.indexOf(this.elements[i])==-1){this.filteredstacks.push(this.elements[i]); }            }
+        }
         this.render();
     }
+  
+    this.saveCurrentStack = function(forceNew){
+        $("#MyStacksTabSelect")[0].click()
+        this.setFilter("");
+        $("#StacksSearchInput")[0].value = "";
+        if(CurrentStack.savedStack == undefined || forceNew == true){
+            if(forceNew==true){
+                $("#saveNewButtonOk").show(250).delay(1000).hide(250);
+            }else{
+                $("#saveNewButtonOk").show(250).delay(1000).hide(250);
+            }
+            var s = new SavedStack(CurrentStack.save(),"","");
+            this.elements.unshift(s);
+            this.toLocalStorage();
+            CurrentStack.savedStack = s;
+            CurrentStack.name = "";
+            CurrentStack.description ="";
+        }else{
+            $("#saveChangesButtonOk").show(250).delay(1000).hide(250);
+            for(var i=0;i<this.elements.length;i++){
+                if(CurrentStack.savedStack == this.elements[i]){
+                    var e = this.elements[i];//new last saved element to top
+                    this.elements.splice(i, 1);
+                    this.elements.unshift(e); 
+                    break;
+                }
+            }
+            CurrentStack.savedStack.savedStack = CurrentStack.save();
+        }
+        this.render();
+        $(".saveStack").hide();
+        $(".saveStackChanges").show();
+        $("#StacksPagination").children().eq(1).stop().animate({ borderColor: "green" }, 600).delay(1000).animate({ borderColor: "#ddd" }, 1200);
+        $("#CurrentStackName")[0].innerHTML = CurrentStack.name;
+    }
     
-    this.loadCurrentStack = function(name){
+    this.loadCurrentStack = function(elementId){
         CurrentStack.clear();
-        CurrentStack.load(this.elements[this.getIndexOfElement(name)].savedStack)
+        var e = this.elements[this.getIndexOfElement(elementId)];
+        CurrentStack.load(e.savedStack)
+        CurrentStack.name = e.name;
+        CurrentStack.description = e.description;
+        CurrentStack.savedStack = e;
         CurrentStack.render();
     }
     
@@ -221,13 +324,14 @@ Stacks = function(){
         for(var i=0;i<this.elements.length;++i){
             s[i] = this.elements[i].save();
         }
-        localStorage.setItem('testObject', JSON.stringify(s));
+        localStorage.setItem('formelsammlung-js-data', JSON.stringify(s));
     }
     
     this.fromLocalStorage = function(){
-        this.loadFromString(localStorage.getItem('testObject'));
+        this.loadFromString(localStorage.getItem('formelsammlung-js-data'));
         
     }
+    
     this.loadFromString = function(st){
         var s = JSON.parse(st);
         if(s==null || s==undefined){return;}
@@ -246,7 +350,8 @@ Stacks = function(){
         }else{
             $("#MyStacksTab").show();
         }
-        
+        this.filteredstacks = this.elements;
+       
     }
     
     this.download = function(){
@@ -261,7 +366,7 @@ Stacks = function(){
             + currentdate.getFullYear() + " @ "  
             + currentdate.getHours() + ":"  
             + currentdate.getMinutes() + ":" 
-            + currentdate.getSeconds();
+            + currentdate.getSeconds() + ".fsjs" ;
             
         var element = document.createElement('a');
         element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(s)));
@@ -275,6 +380,7 @@ Stacks = function(){
         document.body.removeChild(element);
 
     }
+    
     this.upload = function(){
         if (!window.FileReader) { alert('Your browser is not supported') }
         var input = $('#StackUploadFile').get(0);        
@@ -285,6 +391,8 @@ Stacks = function(){
         } else {
             alert('Please upload a file before continuing')
         } 
+        this.filteredstacks = this.elements;
+        
     }
     
     this._processUploadedFile = function(e){
@@ -295,9 +403,56 @@ Stacks = function(){
         }
     }
     
+    this.loadExamples = function(){
+        var example = [{"name":"Some name","description":"Some \nSuer \ndesasd\n","savedStack":[{"t":"SQ","d":{"value":1,"id":"SQ_10","name":"var 11","qn":"Ampere"}},{"t":"SQ","d":{"value":1,"id":"SQ_12","name":"var 13","qn":"Volt"}},{"t":"SE","d":{"name":"result 15","id":"SE_14","io":{"P":{"m":"OUTPUT"},"U":{"m":"SQ_12"},"I":{"m":"SQ_10"}},"eqn":"PUI"}}]}];
+        for(var i=0;i<example.length;++i){
+            var ss = new SavedStack();
+            ss.load(example[i]);
+            this.elements.push(ss);
+        }
+        this.filteredstacks = this.elements;
+        
+        this.render();
+    }
+    
+    this.filteredStacksPagination = function(){
+        var index = this.paginationElementsPerPage*(this.paginationPage-1);
+        return this.filteredstacks.slice(index,index+ this.paginationElementsPerPage);
+    }
+    
+    this.paginationMaxPages = function(){
+        return math.ceil(this.filteredstacks.length / this.paginationElementsPerPage); 
+    }
+    
+    this.setPaginationPage = function(newpage){
+        this.paginationPage = newpage;
+        this.render();
+    }
+
+    this.paginationPageLinks = function(){
+        var r = []
+        if(this.paginationMaxPages()==1){return [];};
+        for(var i =1;i<this.paginationMaxPages()+1;i++){  
+            if(i==this.paginationPage){ var selected = "active";}else{ var selected = ""};
+            r.push({"nr":i,"selected":selected});}
+        return r;
+    }  
+    
     this.render = function(){
-        var r = Mustache.render($('#StacksTemplate').html(), this);
+        var r = Mustache.render($('#SavedStacksTemplate').html(), this);
         document.getElementById(this.targetdiv).innerHTML = r;
+        var x = $(".variableTextArea")
+        for(var i=0;i<x.length;i++){
+            var o = x[i];
+            o.style.height = "1px";
+            o.style.height = (12+o.scrollHeight)+"px";
+        }
+        if(this.elements.length>0){
+            $("#EmptyStackLoadExamples").hide();
+        }else{
+            $("#EmptyStackLoadExamples").show();
+        }
+        
     }   
     
 }

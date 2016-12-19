@@ -115,8 +115,29 @@ selectOutputRendering = function(node,number){
     }
 }
 
+function textAreaAdjust(o) {
+  o.style.height = "1px";
+  o.style.height = (12+o.scrollHeight)+"px";
+}
+
 create_link = function(target){
     pathArray = location.href.split( '/' );
     url = pathArray[0] + '//' + pathArray[2] + "/?link=" + target;
     jQuery("#shareLinkModalURL")[0].value = url;
+}
+
+
+getUrlParams = function(){
+    var urlParams;
+    (window.onpopstate = function () {
+        var match,
+            pl     = /\+/g,  // Regex for replacing addition symbol with a space
+            search = /([^&=]+)=?([^&]*)/g,
+            decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+            query  = window.location.search.substring(1);
+        urlParams = {};
+        while (match = search.exec(query))
+           urlParams[decode(match[1])] = decode(match[2]);
+    })();
+    return urlParams;
 }

@@ -1,4 +1,6 @@
 function Equation(){
+    this.constructorName = "Equation";
+
     this.identifier = undefined;
     
     this.name = undefined;
@@ -235,13 +237,13 @@ function EquationIO(){
     
     // test if this io can be mapped to a stack element
     this.canMap = function(stackElement){
-        if(stackElement.constructor.name == "StackQuantity"){
+        if(stackElement.constructorName == "StackQuantity"){
             if(stackElement.quantity.unit.equals(this.quantity.unit)){
                 return true;
             }
         }
         
-        if(stackElement.constructor.name == "StackEquation"){
+        if(stackElement.constructorName == "StackEquation"){
             var q = stackElement.resultQuantity();
             if(q!=undefined){
                 if(q.unit.equals(this.quantity.unit)){
@@ -250,7 +252,7 @@ function EquationIO(){
             }
         }
         
-        if(stackElement.constructor.name == "StackMaterial"){
+        if(stackElement.constructorName == "StackMaterial"){
             var materialproperties =  stackElement.material.properties;
             for (var index1 = 0; index1 < materialproperties.length; ++index1) {
                 if(materialproperties[index1].quantity == this.quantity){
@@ -519,6 +521,7 @@ function Equations(){
 }
 
 function StackEquation(stack, equation){
+    this.constructorName = "StackEquation";
 
     this.parentStack = stack;
     this.equation = equation;
@@ -662,17 +665,17 @@ function StackEquation(stack, equation){
                     valuekeys.push(this.io[i].equationio.symbol)
                     
                     var v="";
-                    if(mappedto.constructor.name == "StackQuantity"){
+                    if(mappedto.constructorName == "StackQuantity"){
                         v = parseFloat((""+mappedto.value));
                         v = mappedto.quantity.convertValue(v,this.io[i].equationio.quantity)
                     }
-                    if(mappedto.constructor.name == "StackEquation"){
+                    if(mappedto.constructorName == "StackEquation"){
                         v = parseFloat((""+mappedto.resultValue()));
                         if(!isNaN(v)){
                             v = mappedto.resultQuantity().convertValue(v,this.io[i].equationio.quantity);
                         }
                     }
-                    if(mappedto.constructor.name == "StackMaterial"){
+                    if(mappedto.constructorName == "StackMaterial"){
                         var x = mappedto.material.getPropertyByQuantity(this.io[i].equationio.quantity);
                         v=x.value;
                         if(!isNaN(v)){
@@ -686,24 +689,11 @@ function StackEquation(stack, equation){
                     this.io[i].mappedto = "UNMAPPED"; // mappedto no longer exists
                 }
             }
-            var solveToSymbol =  this.io[this.getIndexOfIOByMapping("OUTPUT")[0]].equationio.symbol;
+            var outputEquationIO = this.io[this.getIndexOfIOByMapping("OUTPUT")[0]].equationio;
             
-            var value = this.equation.solve(valuemapping,solveToSymbol)            
-            /*
-            valuekeys = valuekeys.sort(function(a, b){
-                return b.length - a.length;
-            });
+            var value = this.equation.solve(valuemapping,outputEquationIO.symbol)            
             
-            var outputIoIndex = 
-            var outPutEquation =;                     
-            
-            for(var i=0;i<valuekeys.length;i++){
-                outPutEquation = outPutEquation.replace(new RegExp(valuekeys[i], 'g'), valuemapping[valuekeys[i]]);
-            }
-            eval("var value = " + outPutEquation);
-            */
-            
-            return this.io[this.getIndexOfIOByMapping("OUTPUT")[0]].equationio.quantity.convertValue(value,this.resultQuantity());
+            return outputEquationIO.quantity.convertValue(value,this.resultQuantity());
         }
         return "Na";    
     }

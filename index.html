@@ -5,31 +5,29 @@
     <title>Formelsammlung-js</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
- 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    
     <script src="https://code.jquery.com/jquery-latest.js"></script>
+    <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/clipboard.js/1.5.16/clipboard.min.js"></script>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_SVG"> </script>
  
     <link rel="stylesheet" href="lib/styles/jquery.sliderTabs.min.css">
+    
     <script src="lib/jquery.sliderTabs.js"></script>
-    
-    <script src="https://cdn.jsdelivr.net/clipboard.js/1.5.16/clipboard.min.js"></script>
-    
-    <script language="javascript" src="lib/lz-string.js"></script>
-
+    <script src="lib/lz-string.js"></script>
     <script src="lib/math.js"></script>
     <script src="lib/mustache.js"></script>
     <script src="lib/markdown.min.js"></script>
-
-    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_SVG"> </script>
-
+    
     <script src="helpers.js"></script>
+    <script src="Disqus.js"></script>    
     
     <script src="Quantitys.js"></script>
     <script src="Materials.js"></script>
     <script src="Equations.js"></script>
     <script src="Stack.js"></script>
-
 
     <script async defer src="https://platform.twitter.com/widgets.js"></script>
     <script async defer src="https://buttons.github.io/buttons.js"></script>
@@ -109,10 +107,10 @@
     }
     
     .StackEquationIoWarn {
-        border-color: red;
+        color: red;
     }
     .StackEquationIoGreen {
-        border-color: green;
+        color: green;
     }    
     .seachInput {
         margin-right : 10px;
@@ -135,7 +133,26 @@
     .glyphicon:before{
         font-family:'Glyphicons Halflings';
     }
-
+    .description {
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-top: 5px;
+    }
+    .ui-slider-tabs-list {
+        width : 100% !important;
+    }
+    .flexrow {
+        width: 100%;
+        display: table;
+        table-layout: fixed;
+    }
+    
+    .flexcol {
+        display: table-cell;
+    }
+    a {
+        cursor : pointer;
+    }
     
 </style>
                     
@@ -143,29 +160,29 @@
 <script type="x-tmpl-mustache" id="QuantityTemplate">
     <div class="box">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-10">
                 <div class="col-md-1" style="padding-left:5px;">
                     <span style="color:green;cursor: pointer;" class="glyphicon glyphicon-plus" onclick="CurrentStack.add(Quantities.get('{{name}}'))">use</span>
                 </div>
-                <div class="col-md-6" style="text-align:left;" >
-                    <b>{{name_translation}}</b>  {{aliasnames_translation}}
-                </div>
-                <div class="col-md-5" >
-                    {{{renderUnitTex}}}
+                <div class="col-md-11">
+                    <div class="col-md-4" style="text-align:left;" >
+                        <b>{{name_translation}}</b>{{aliasnames_translation}}
+                    </div>
+                    <div class="col-md-4" >{{{renderUnitTex}}}</div>
+                    <div class="col-md-4"></div>
                 </div>
             </div>
             
-            <div class="col-md-6"></div>
             <div class="col-md-2">
-                <div class="col-md-8">
-                    <a onclick="load_disqus_modal(Quantities.get('{{name}}'),'{{name}}')" style="font-size:0.8em;float:right;"   data-toggle="modal" data-target="#disqusModal"> Feedback/Translate </a>
-                </div>
                 <div class="col-md-4">
-                    <a onclick="create_link('quantity:{{name}}')" style="font-size:0.8em;float:right;" data-toggle="modal" data-target="#shareLinkModal"><span class="glyphicon glyphicon-link">Link</span></a>
+                    <a onclick="create_link('quantity:{{name}}')" style="font-size:0.8em;" data-toggle="modal" data-target="#shareLinkModal" class="glyphicon glyphicon-link">&nbsp;Link</a>
+                </div>
+                <div class="col-md-8">
+                    <a onclick="load_disqus_modal(Quantities.get('{{name}}'),'{{name}}')" style="font-size:0.8em;" class="glyphicon glyphicon-comment"  data-toggle="modal" data-target="#disqusModal">&nbsp;Discussion</a>
                 </div>
             </div>
         </div>
-        <div id="quantityDescription_{{name}}">
+        <div id="quantityDescription_{{name}}" class="row description">
             {{{renderDescription}}}
         </div>
     </div>
@@ -175,33 +192,33 @@
     <div class="box">
     
     
-            <div class="row">
-            <div class="col-md-6">
-                <div class="col-md-2" style="padding-left:5px;">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="col-md-1" style="padding-left:5px;">
                     <span style="color:{{color}};cursor: pointer;" class="glyphicon glyphicon-plus" onclick="CurrentStack.add(Equations.get('{{name}}'))">use</span>
                 </div>
-                <div class="col-md-10" style="text-align:left;" >
-                    <b>{{name_translation}}</b>
+                <div class="col-md-11">
+                    <div class="col-md-12" style="text-align:left;" >
+                        <b>{{name_translation}}</b>
+                        
+                        {{nrOfMappableIos}}/{{io.length}}
                     
-                    {{nrOfMappableIos}}/{{io.length}}
-                
-                    <span style="display:no{{outputName}}ne;">Could calculate: </span><b>{{outputName}}</b>
-
-                    
-                </div>
-            </div>
-                
-            <div class="col-md-1"></div>
+                        <span style="display:no{{outputName}}ne;">Could calculate: </span><b>{{outputName}}</b>
+                    </div>
+                </div>                
+            </div>                
             <div class="col-md-2">
-                <div class="col-md-8">
-                    <a onclick="load_disqus_modal(Equations.get('{{name}}'),'{{name}}')" style="font-size:0.8em;float:right;"   data-toggle="modal" data-target="#disqusModal"> Feedback/Translate </a>
-                </div>
                 <div class="col-md-4">
-                    <a onclick="create_link('equation:{{name}}')" style="font-size:0.8em;float:right;" data-toggle="modal" data-target="#shareLinkModal"><span class="glyphicon glyphicon-link">Link</span></a>
+                    <a onclick="create_link('equation:{{name}}')" style="font-size:0.8em;" data-toggle="modal" data-target="#shareLinkModal" class="glyphicon glyphicon-link">&nbsp;Link</a>
+                </div>
+                <div class="col-md-8">
+                    <a onclick="load_disqus_modal(Equations.get('{{name}}'),'{{name}}')" style="font-size:0.8em;"  class="glyphicon glyphicon-comment"   data-toggle="modal" data-target="#disqusModal">&nbsp;Discussion </a>
                 </div>
             </div>
         </div>
-        {{{renderDescription}}}
+        <div class="row description">            
+            {{{renderDescription}}}
+        </div>
     </div>
 </script>
 
@@ -261,32 +278,61 @@
     
 <script type="x-tmpl-mustache" id="MaterialTemplate">
     <div class="box">
-        <a onclick="load_disqus_modal(Materials.get('{{name}}'),'{{name}}')" style="font-size:0.8em;float:right;"  data-toggle="modal" data-target="#disqusModal">Feedback/Translate </a>
-       <a onclick="create_link('material:{{name}}')" style="font-size:0.8em;float:right;" data-toggle="modal" data-target="#shareLinkModal"><span class="glyphicon glyphicon-link">Link</span></a>
-
-        <span style="color:green;cursor: pointer;" class="glyphicon glyphicon-plus" onclick="CurrentStack.add(Materials.get('{{name}}'))">use</span>
-        <b>{{name_translation}}</b><br>
+        <div class="row">            
+            <div class="col-md-10">
+                <div class="col-md-1" style="padding-left:5px;">
+                    <span style="color:green;cursor: pointer;" class="glyphicon glyphicon-plus" onclick="CurrentStack.add(Materials.get('{{name}}'))">use</span>
+                </div>
+                <div class="col-md-11">
+                    <b>{{name_translation}}</b>
+                </div>
+            </div>
+            
+            <div class="col-md-2">
+                <div class="col-md-4">
+                    <a onclick="create_link('material:{{name}}')" style="font-size:0.8em;" data-toggle="modal" data-target="#shareLinkModal" class="glyphicon glyphicon-link">&nbsp;Link</a>
+                </div>
+                <div class="col-md-8">
+                    <a onclick="load_disqus_modal(Materials.get('{{name}}'),'{{name}}')" style="font-size:0.8em;"  class="glyphicon glyphicon-comment"   data-toggle="modal" data-target="#disqusModal">&nbsp;Discussion </a>
+                </div>
+            </div>    
+        </div>
+        <div class="row description">            
         {{{renderDescription}}}
+        </div>
     </div>
 </script>
 
 <script type="x-tmpl-mustache" id="SavedStackTemplate">
     <div class="box">
         <div class="row">
-            <div class="col-md-5">
-                <b>{{name}}</b><br>
-                {{{description}}}
+            <div class="col-md-10">
+                <div class="col-md-1" style="padding-left:5px;">
+                    <span style="color:green;cursor: pointer;" class="glyphicon glyphicon-plus" onclick="Stacks.loadCurrentStack('{{id}}');">Load</span>
+                </div>
+                <div class="col-md-11">
+                    <b><input placeholder="Select a Name" value="{{name}}" style="border:none;" 
+                        onKeyUp="Stacks.get('{{id}}').setName(this.value)"
+                        onChange="Stacks.get('{{id}}').setName(this.value);Stacks.toLocalStorage();"
+                        > </input></b>
+                </div>
             </div>
+            
             <div class="col-md-2">
-                <span onclick="Stacks.loadCurrentStack('{{name}}')">Load</span>
-                <span onclick="Stacks.remove('{{name}}')">Delete</span>
+                <div class="col-md-4">
+                    <a onclick="create_link('stack:'+ Stacks.get('{{id}}').getLinkData());" style="font-size:0.8em;" data-toggle="modal" data-target="#shareLinkModal" class="glyphicon glyphicon-link">&nbsp;Link</a>
+                </div>
+                <div class="col-md-8">
+                    <a onclick="myconfirm(this,function(){Stacks.remove('{{id}}');});" style="font-size:0.8em;" class="glyphicon glyphicon-remove">&nbsp;Delete</a>
+                </div>
             </div>
         </div>
-        <a onclick="create_link('stack:'+ Stacks.get('{{name}}').getLinkData());" style="font-size:0.8em;float:right;" class="glyphicon glyphicon-link"  data-toggle="modal" data-target="#shareLinkModal"></a>
-        
-        
-        
-        
+        <div class="row description">
+            <textarea placeholder="Description" style="border:none;width:80%;resize:vertical;overflow:hidden;" class="row description variableTextArea"  
+                onKeyUp="Stacks.get('{{id}}').setDescription(this.value);textAreaAdjust(this);" 
+                onChange="Stacks.get('{{id}}').setDescription(this.value);textAreaAdjust(this);Stacks.toLocalStorage();"
+                >{{description}}</textarea>
+        </div>
     </div>
 </script>
 
@@ -335,21 +381,30 @@
     </div>
 </script>
 
-<script type="x-tmpl-mustache" id="StacksTemplate">
+<script type="x-tmpl-mustache" id="SavedStacksTemplate">
     <div  id="StacksPagination"  class="limitedbox">    
-        {{#elements}}
-            {{{render}}}
-        {{/elements}}
-        <ul class="pagination">          
-            {{#paginationPageLinks}}
-                <li class="{{selected}}"><a onclick="Stacks.setPaginationPage({{nr}})">{{nr}}</a></li>
-            {{/paginationPageLinks}}
-        </ul>       
-           <a onclick="Stacks.download();" >download</a>
-           <input type="file" id="StackUploadFile" multiple size="50" onchange="Stacks.upload()">
-
-           
+    <div id="EmptyStackLoadExamples" class="row" style="line-height:250px;text-align:center;font-size:1.25em"><a onclick="Stacks.loadExamples();" style="color:gray"><b>load examples</b></a></div>
+    {{#filteredStacksPagination}}
+        {{{render}}}
+    {{/filteredStacksPagination}}   
     </div>
+    <ul class="pagination" >          
+        {{#paginationPageLinks}}
+            <li class="{{selected}}"><a onclick="Stacks.setPaginationPage({{nr}})">{{nr}}</a></li>
+        {{/paginationPageLinks}}
+    </ul>        
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-3" style="text-align:center;">
+            <a onclick="Stacks.download();" class="glyphicon glyphicon-download">&nbsp;Download</a>
+        </div>        
+        <div class="col-md-3" style="text-align:center;">
+            <input type="file" id="StackUploadFile" accept=".fsjs" multiple size="50" onchange="Stacks.upload();" style="display:none"></input>
+            <a onclick="$('#StackUploadFile').click();" class="glyphicon glyphicon-upload">&nbsp;Upload</a>
+        </div>        
+        <div class="col-md-3"></div>
+    </div>        
+  
 </script>
 
 <script id="NaturalConstantsTemplate" type="x-tmpl-mustache">
@@ -447,19 +502,17 @@
 <script type="x-tmpl-mustache" id="StackEquationIoTemplate" >
     <div class="row" style="padding: 2px;">
         <div style="width:34%">
-            <select class="iostuff iostuffselect {{selectableDivClass}}" onchange="CurrentStack.get('{{parentStackEquation.id}}').getIO('{{id}}').setMappedTo(this.value,false)">
+            <select class="iostuff iostuffselect" onchange="CurrentStack.get('{{parentStackEquation.id}}').getIO('{{id}}').setMappedTo(this.value,false)">
                 <option value="OUTPUT">Output</option>
                 {{#mapableStackElements}}
                     <option {{selected}} class="selected_{{name}} StackEquationIo_{{id}}" value="{{id}}">{{name}}</option>
                 {{/mapableStackElements}}                
             </select>
         </div>
-        <div class="iostuff" style="width:15%;">
-            
+        <div class="iostuff {{selectableDivClass}}" style="width:15%;">
             {{#equationio}}
                 <b>{{{renderSymbolTex}}}</b>
             {{/equationio}}
-
         </div>
         <div class="iostuff" style="width:50%;">
             {{#equationio}}
@@ -529,6 +582,8 @@
 
 
 <script type="x-tmpl-mustache" id="StackTemplate">
+    <div id="CurrentStackName" class="row" style="text-align:center;color:gray">{{name}}</div>
+    
     {{#elements}}
         <div class="box">
             <div style="padding-left:5px"><b>{{material.name}}</b></div>   
@@ -544,25 +599,32 @@
             {{{render}}}
         </div>
     {{/elements}}
-    <div class="row" style="display:{{showSubmenu}};text-align:center;">
-        <div class="col-md-3"> <a onclick="CurrentStack.renderPrint();">Print</a></div>
-        <div class="col-md-3">
-            <a onclick="create_link('stack:'+CurrentStack.getLinkData());" data-toggle="modal" data-target="#shareLinkModal">
-                <span class="glyphicon glyphicon-link">Link</span>
-            </a>
+    <div class="row flexrow" style="display:{{showSubmenu}};text-align:center;">
+        <div class="flexcol"  style="display:none">
+            <a onclick="CurrentStack.renderPrint();" class="glyphicon glyphicon-print">&nbsp;Print</a>
         </div>
-        <div class="col-md-3">
-            <a onclick="if(CurrentStack.elements.length < 10 || confirm('Are you sure ?')){CurrentStack.clear()};">Clear</a>
+        <div class="flexcol">
+            <a onclick="create_link('stack:'+CurrentStack.getLinkData());" class="glyphicon glyphicon-link" data-toggle="modal" data-target="#shareLinkModal">&nbsp;Link</a>
         </div>
-        <div class="col-md-3">
-            <a onclick="Stacks.saveCurrentStack();">Save</a>
+        <div class="flexcol">
+            <a onclick="var x=function(){CurrentStack.clear();}; if(CurrentStack.elements.length > 4){ myconfirm(this,x); }else{x();}"  class="glyphicon glyphicon-erase">&nbsp;Clear</a>
         </div>
-    </div>
-                
+        <div class="flexcol saveStack" style="display:{{showSave}}">
+            <a id="saveButton" onclick="Stacks.saveCurrentStack();" class="glyphicon glyphicon-floppy-disk">&nbsp;Save</a>
+            <div id="saveButtonOk" style="color:green;display:none;" class="glyphicon glyphicon-ok" ></div>       
+        </div>
+        <div class="flexcol saveStackChanges" style="display:{{showSaveChanges}}">
+            <a id="saveButton" onclick="Stacks.saveCurrentStack();" class="glyphicon glyphicon-floppy-disk">&nbsp;Save&nbsp;Changes</a>
+            <div id="saveChangesButtonOk" style="color:green;display:none;" class="glyphicon glyphicon-ok" ></div>      
+        </div>
+        <div class="flexcol saveStackChanges" style="display:{{showSaveChanges}}">
+            <a id="saveButton" onclick="Stacks.saveCurrentStack(true);" class="glyphicon glyphicon-floppy-disk">&nbsp;As new</a>
+            <div id="saveNewButtonOk" style="color:green;display:none;" class="glyphicon glyphicon-ok" ></div>      
+        </div>
+    
 </script>
   
 <script>
-
 
 
 var SETTINGS = {
@@ -578,15 +640,37 @@ setLanguage = function(lang){
     Equations.render();
     Materials.render();
 }    
+var currentElement = undefined;
+myconfirm = function(element,callback){
+    if(currentElement != undefined){
+        $(currentElement[0]).show(250);
+        $(currentElement[0]).next().remove(0);            
+    }
+    currentElement = [element,callback];
+    $(element).hide();
+    var node = document.createElement("div"); 
+    node.style.textAlign = "center";
+    node.style.display = "none";
+    node.innerHTML = '<div class="col-md-6" style=\'padding: 0px;\'><a onclick="myconfirmno();" >no!</a></div> <div class="col-md-6"   style=\'padding: 0px\'><a onclick="myconfirmyes();">yes</a></div>';
+    $(element).parent().append(node);
+    $(node).show(250);
+}
 
+myconfirmno = function(id){
+    $(currentElement[0]).show(250);
+    $(currentElement[0]).next().remove(0);
+    currentElement = undefined;
+}
 
-
-
+myconfirmyes = function(id){
+    currentElement[1]();
+    $(currentElement[0]).show();
+    currentElement = undefined;
+}
 
 
 function init(){
 
-    
     $.ajax({ async: false, url:"markdown/quantities.md",success: function (data){ Quantities.loadMarkdown(data); } });   
     $.ajax({ async: false, url:"markdown/equations.md" ,success: function (data){ Equations.loadMarkdown(data); } }); 
     $.ajax({ async: false, url:"markdown/materials.md" ,success: function (data){ Materials.loadMarkdown(data); } }); 
@@ -606,18 +690,7 @@ function init(){
 
     MathJax.Hub.Config({ displayAlign: "left" });
   
-    var urlParams;
-    (window.onpopstate = function () {
-        var match,
-            pl     = /\+/g,  // Regex for replacing addition symbol with a space
-            search = /([^&=]+)=?([^&]*)/g,
-            decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
-            query  = window.location.search.substring(1);
-        urlParams = {};
-        while (match = search.exec(query))
-           urlParams[decode(match[1])] = decode(match[2]);
-    })();
-    
+    var urlParams = getUrlParams();
     var sliderTabsDefaultTab = 1;    
     if(urlParams["link"] != undefined){
         var p = urlParams["link"].split(":");
@@ -641,8 +714,16 @@ function init(){
     var slider = $("div#SliderTabs").sliderTabs({
         mousewheel: false,
         defaultTab : sliderTabsDefaultTab,
-    });    
-    
+        tabArrows : false,
+    });   
+    var clipboard = new Clipboard('.toClipboard');
+
+    clipboard.on('success', function(e) {
+        $("#copySuccess").show(250).delay(1000).hide(250);
+    });
+    clipboard.on('error', function(e) {
+        $("#copyError").show(250).delay(1000).hide(250);
+    });
 }
 
 </script>
@@ -658,73 +739,19 @@ function init(){
     }(document, 'script', 'facebook-jssdk'));
 </script>
 
-
-<script>
-    
-    function init_disqus() { 
-        disqus_config = function () {
-            this.page.url =        "https://dirk-attraktor.github.io/formelsammlung-js/#!general" 
-            this.page.identifier = "https://dirk-attraktor.github.io/formelsammlung-js/#!general" 
-        }
-        var d = document, s = d.createElement('script');
-        s.src = '//formelsammlung-js.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    };
-    init_disqus();
-    
-    function reload_disqus(newidentifier){
-        DISQUS.reset({
-          reload: true,
-          config:  function () {
-            this.page.url =        "https://dirk-attraktor.github.io/formelsammlung-js/#!"+newidentifier;   
-            this.page.identifier = "https://dirk-attraktor.github.io/formelsammlung-js/#!"+newidentifier;
-          }
-        });
-    }
-    
-    function load_disqus_modal(element,identifier){
-        $('#disqusModalPreview')[0].innerHTML = element.renderDescription();
-        $('#disqusModalTitle')[0].innerHTML = "<b>" + element.name_translation() + "</b>";
-        $('#disqusModalBody')[0].innerHTML =  '<div id="disqus_thread"></div>';
-        $('#disqus_general_thread')[0].innerHTML =  '';
-        reload_disqus(element.constructor.name + "_" + identifier);
-    }
-     function load_disqus_footer(){
-        $('#disqusModalPreview')[0].innerHTML = "";
-        $('#disqusModalTitle')[0].innerHTML = "";
-        $('#disqus_general_thread')[0].innerHTML =  '<div id="disqus_thread"></div>';
-        $('#disqusModalBody')[0].innerHTML =  "";
-        reload_disqus("general");
-    }   
-
-</script>
-
-
-<script>
-  
-</script>
-
 </head>
 <body onload="init()">
-minimise stack elements<br>
-stack render as render or latex<br>
-
     <div class="container">
-
-        <div class="box"> 
-            <div id="Stack"> 
-            </div>
-
+        <div class="box" style="margin-bottom:15px;"> 
+            <div id="Stack"></div>
         </div>
                  
         <div id="SliderTabs" class="box" >
-      
             <ul>
                 <li><a id="QuantitiesBoxTabSelect" href="#QuantitiesBox">Quantities</a></li>
                 <li><a id="MaterialsBoxTabSelect"  href="#MaterialsBox">Materials</a></li>
                 <li><a id="EquationsBoxTabSelect"  href="#EquationsBox">Equations</a></li>
-                <li id="MyStacksTab" style="display:none"><a id="MyStacksTabSelect"  href="#MyStacksBox">My Stuff</a></li>
+                <li><a id="MyStacksTabSelect"      href="#MyStacksBox">My Stacks</a></li>
             </ul>
             
             <select style="float:right;margin-top:4px;" onchange="setLanguage(this.value);">
@@ -752,7 +779,11 @@ stack render as render or latex<br>
                 </div>
                 <div id="MaterialsList"></div>
             </div>
+            
             <div id="MyStacksBox">
+                 <div class="searchbox">
+                    <input id="StacksSearchInput" class="seachInput" onKeyUp="Stacks.setFilter(this.value)" placeholder="Search Stacks"></input><br>
+                </div>
                <div id="StacksList"></div>
             </div>
         </div>
@@ -778,7 +809,9 @@ stack render as render or latex<br>
         </div>
         
         <div id="disqus_general_thread" class="box">
-            <div id="disqus_thread"></div>
+            <div id="disqus_thread">
+                <div onclick="init_disqus();" style="text-align:center;line-height:40px;font-size:20px;font-weight:600;color:gray;cursor: pointer;">load comments</div>
+            </div>
         </div>
         
         
@@ -786,11 +819,10 @@ stack render as render or latex<br>
 
     <div class="modal fade" id="disqusModal" role="dialog">
         <div class="modal-dialog modal-lg">
-          <!-- Modal content-->
           <div class="modal-content">
             <div class="modal-header">
               <button onclick="load_disqus_footer()" type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 id="disqusModalTitle" class="modal-title">Enhance this description</h4>
+              <h4 id="disqusModalTitle" class="modal-title">Comment, Translate, Enhance </h4>
               <div id="disqusModalPreview" class="box">  
               
               </div>
@@ -804,28 +836,28 @@ stack render as render or latex<br>
           </div>
         </div>
     </div>
+    
     <div class="modal fade" id="shareLinkModal" role="dialog">
         <div class="modal-dialog modal-lg">
-          <!-- Modal content-->
           <div class="modal-content">
             <div class="modal-header">
-              <button onclick="load_disqus_footer()" type="button" class="close" data-dismiss="modal">&times;</button>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
               <h4 id="shareLinkModalTitle" class="modal-title">Share Link</h4>
             </div>
             <div id="shareLinkModalBody" class="modal-body">
-            
-<div class="input-group" style="width: 100%;">
-<textarea id="shareLinkModalURL" type="text" style="width: 100%;resize:vertical"></textarea>
-<span class="input-group-button">
-<button class="btn" type="button" data-clipboard-demo="" data-clipboard-target="#foo">
-<img class="clippy" src="lib/clippy.svg" width="13" alt="Copy to clipboard"> Copy to Clipboard
-</button>
-</span>
-</div>
-            </div>
-            <div class="modal-footer">
-              <button onclick="load_disqus_footer()" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
+                <div class="row" style="margin:0px;">
+                    <textarea id="shareLinkModalURL" type="text" style="width: 100%;resize:vertical"></textarea>
+                </div>
+                <div class="row" style="margin-top:10px; line-height: 35px;">
+                   <div class="col-md-3 input-group-button">
+                        <button class="btn toClipboard" type="button" data-clipboard-target="#shareLinkModalURL">
+                            <img class="clippy" src="lib/clippy.svg" width="13" alt="Copy to clipboard">&nbsp;Copy to Clipboard
+                        </button>
+                   </div>
+                   <div class="col-md-3"><span id="copySuccess" class="glyphicon glyphicon-ok" style="color:green;display:none">&nbsp;Copied!</span></div>
+                   <div class="col-md-3"><span id="copyError"   class="glyphicon glyphicon-remove" style="color:red;display:none">&nbsp;Failed to copy, sorry</span></div>
+                   <div class="col-md-3" style="text-align:right"><button  type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>
+                </div>
           </div>
         </div>
     </div>    

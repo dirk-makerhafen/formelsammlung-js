@@ -1,4 +1,6 @@
 function Quantity(name,description,unit){
+    this.constructorName = "Quantity";
+
     this.name = name;
     this.identifier =  this.name.replace(/\W+/g, "");
     this.aliasnames = [];
@@ -287,6 +289,7 @@ function Quantities(){
 }
 
 function StackQuantity(stack,quantity){
+    this.constructorName = "StackQuantity";
     this.parentStack = stack;
     this.quantity = quantity;    
     this.id = "SQ_" + getUniqNumber();

@@ -1,4 +1,6 @@
 function Material(name,description,properties){
+    this.constructorName = "Material";
+
     this.name = name;
     this.description = description;
     this.properties = properties; // list of MaterialProperty
@@ -166,6 +168,8 @@ function Materials(){
 }
 
 function StackMaterial(stack,material){
+    this.constructorName = "StackMaterial";
+
     this.parentStack = stack;
     this.material = material;
     this.id = "SM_" + getUniqNumber();
