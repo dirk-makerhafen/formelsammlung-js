@@ -761,28 +761,32 @@ function init(){
             
             <div id="QuantitiesBox">
                 <div class="searchbox">
-                    <input id="QuantitiesSearchInput" class="seachInput" onKeyUp="Quantities.setFilter(this.value)" placeholder="Search Quantities"></input><br>
+                    <input id="QuantitiesSearchInput" class="seachInput" onKeyUp="Quantities.setFilter(this.value);if(this.value==''){$(this).next().hide(350);}else{$(this).next().show(350);}" placeholder="Search Quantities"></input>
+                    <a onclick="$(this).prev()[0].value='';Quantities.setFilter('');$(this).hide(350);" class="glyphicon glyphicon-erase" style="color:gray;display:none;"></a>
                 </div>
                 <div id="QuantitiesList"></div>
             </div>
             
             <div id="EquationsBox">
                 <div class="searchbox">
-                    <input id="EquationsSearchInput" class="seachInput" onKeyUp="Equations.setFilter(this.value)" placeholder="Search Equations"></input><br>
+                   <input id="EquationsSearchInput" class="seachInput" onKeyUp="Equations.setFilter(this.value);if(this.value==''){$(this).next().hide(350);}else{$(this).next().show(350);}" placeholder="Search Equations"></input>
+                    <a onclick="$(this).prev()[0].value='';Equations.setFilter('');$(this).hide(350);" class="glyphicon glyphicon-erase" style="color:gray;display:none;"></a>
                 </div>
                 <div id="EquationsList"></div>
             </div>
             
             <div id="MaterialsBox">
                 <div class="searchbox">
-                    <input id="MaterialsSearchInput" class="seachInput" onKeyUp="Materials.setFilter(this.value)" placeholder="Search Materials"></input><br>
+                    <input id="MaterialsSearchInput" class="seachInput" onKeyUp="Materials.setFilter(this.value);if(this.value==''){$(this).next().hide(350);}else{$(this).next().show(350);}" placeholder="Search Materials"></input>
+                    <a onclick="$(this).prev()[0].value='';Materials.setFilter('');$(this).hide(350);" class="glyphicon glyphicon-erase" style="color:gray;display:none;"></a>
                 </div>
                 <div id="MaterialsList"></div>
             </div>
             
             <div id="MyStacksBox">
                  <div class="searchbox">
-                    <input id="StacksSearchInput" class="seachInput" onKeyUp="Stacks.setFilter(this.value)" placeholder="Search Stacks"></input><br>
+                    <input id="StacksSearchInput" class="seachInput" onKeyUp="Stacks.setFilter(this.value);if(this.value==''){$(this).next().hide(350);}else{$(this).next().show(350);}" placeholder="Search Stacks"></input>
+                    <a onclick="$(this).prev()[0].value='';Stacks.setFilter('');$(this).hide(350);" class="glyphicon glyphicon-erase" style="color:gray;display:none;"></a>                    
                 </div>
                <div id="StacksList"></div>
             </div>
