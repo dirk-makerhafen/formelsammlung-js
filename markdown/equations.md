@@ -447,6 +447,57 @@ Second moment of area
    
 --------
 
+__Name__: Op-Amp Non-Inverting
+
+__Description__:
+
+https://en.wikipedia.org/wiki/Operational_amplifier_applications#Non-inverting_amplifier
+
+![Image of URI](https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Op-Amp_Non-Inverting_Amplifier.svg/450px-Op-Amp_Non-Inverting_Amplifier.svg.png)
+__Equation__:
+
+Vo = ( 1 + ( R2 / R1 ) ) * Vi
+
+__IO__:
+
+* __Vi__ [ _Volt_ ] |  ( R1 * V ) / ( R1 + R2 )   
+Input Voltage
+* __Vo__ [ _Volt_ ] |   ( 1 + ( R2 / R1 ) ) * Vi  
+Output Voltage
+* __R1__ [ _Ohm_ ] |  ( Vi * R2 ) / ( Vo - Vi )  
+R1
+* __R2__ [ _Ohm_ ] |  Vi * R1 * ( Vo - Vi)  
+R2
+
+   
+--------
+
+__Name__: Op-Amp Inverting
+
+__Description__:
+
+https://en.wikipedia.org/wiki/Operational_amplifier_applications#Inverting_amplifier
+
+![Image of URI](https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Op-Amp_Inverting_Amplifier.svg/450px-Op-Amp_Inverting_Amplifier.svg.png)
+__Equation__:
+
+Vo = -1 * ( Rf / Ri ) * Vi
+
+__IO__:
+
+* __Vi__ [ _Volt_ ] |  -1 * (( Vo * R ) / Rf )
+Input Voltage
+* __Vo__ [ _Volt_ ] |  -1 * (( Rf / Ri ) * Vi ) 
+Output Voltage
+* __Rf__ [ _Ohm_ ] |  Vi * Vo * Ri
+Rf
+* __Ri__ [ _Ohm_ ] |  -1 * (( Vo * Rf ) / Vo )
+Ri input resistance
+
+   
+--------
+
+
             
    
    
