@@ -454,6 +454,7 @@ __Description__:
 https://en.wikipedia.org/wiki/Operational_amplifier_applications#Non-inverting_amplifier
 
 ![Image of URI](https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Op-Amp_Non-Inverting_Amplifier.svg/450px-Op-Amp_Non-Inverting_Amplifier.svg.png)
+
 __Equation__:
 
 Vo = ( 1 + ( R2 / R1 ) ) * Vi
