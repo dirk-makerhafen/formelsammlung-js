@@ -45,7 +45,6 @@ mathjaxCache = function(){
         this.ids.push(targetId);
         return '<div id="'+targetId+'" ></div>';
     }
-    
 }
 
 var mathjaxCache = new mathjaxCache();
@@ -61,9 +60,11 @@ flashMappedInputHelper = function(divname){
     }
 }
 
+
 markdown_extractValue = function(string,key){
     return string.split(key)[1].split("\n__")[0].trim();
 }
+
 
 markdown_extractValues = function(string,key){
     var valuesString = markdown_extractValue(string,key); 
@@ -84,6 +85,7 @@ markdown_extractValues = function(string,key){
     return values;
 } 
 
+
 stripArray = function(valuesString){
     var values = undefined;
     if(valuesString.indexOf(",")!=-1){
@@ -96,6 +98,7 @@ stripArray = function(valuesString){
     };
     return values;
 }
+
 
 selectOutputRendering = function(node,number){
     var x=$(node.parentNode.parentNode).children(); 
@@ -115,10 +118,12 @@ selectOutputRendering = function(node,number){
     }
 }
 
+
 function textAreaAdjust(o) {
-  o.style.height = "1px";
-  o.style.height = (12+o.scrollHeight)+"px";
+    o.style.height = "1px";
+    o.style.height = (12+o.scrollHeight)+"px";
 }
+
 
 create_link = function(target){
     pathArray = location.href.split( '/' );
@@ -140,4 +145,33 @@ getUrlParams = function(){
            urlParams[decode(match[1])] = decode(match[2]);
     })();
     return urlParams;
+}
+
+
+var currentElement = undefined;
+myconfirm = function(element,callback){
+    if(currentElement != undefined){
+        $(currentElement[0]).show(250);
+        $(currentElement[0]).next().remove(0);            
+    }
+    currentElement = [element,callback];
+    $(element).hide();
+    var node = document.createElement("div"); 
+    node.style.textAlign = "center";
+    node.style.display = "none";
+    node.innerHTML = '<div class="col-md-6" style=\'padding: 0px;\'><a onclick="myconfirmno();" >no!</a></div> <div class="col-md-6"   style=\'padding: 0px\'><a onclick="myconfirmyes();">yes</a></div>';
+    $(element).parent().append(node);
+    $(node).show(250);
+}
+
+myconfirmno = function(id){
+    $(currentElement[0]).show(250);
+    $(currentElement[0]).next().remove(0);
+    currentElement = undefined;
+}
+
+myconfirmyes = function(id){
+    currentElement[1]();
+    $(currentElement[0]).show();
+    currentElement = undefined;
 }

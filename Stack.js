@@ -66,6 +66,7 @@ function Stack(){
         }
         return -1;
     }
+    
     this.showSubmenu = function(){
         if(this.elements.length==0){return "none";}else{return "";}
     }
@@ -133,6 +134,7 @@ function Stack(){
         }
         return "";
     }
+    
     this.showSave = function(){
         if( this.savedStack !=  undefined){
             return "none"
@@ -160,7 +162,6 @@ function Stack(){
             }            
         }
         this.render();
-        
     }
 }
 
@@ -179,8 +180,8 @@ SavedStack = function(savedStack,name,description){
             "description" : this.description, 
             "savedStack" : this.savedStack,
         }
-    
     }
+    
     this.load = function(data){
         this.savedStack = data["savedStack"];
         this.description = data["description"];
@@ -214,12 +215,11 @@ SavedStack = function(savedStack,name,description){
 Stacks = function(){
     this.targetdiv = "StacksList";
 
-    this.elements = [] // list of stacks
+    this.elements = []; // list of stacks
     
     this.paginationPage = 1;
     this.paginationElementsPerPage = 6;
     this.filteredstacks = this.elements;
-  
     
     this.get = function(elementId){
         return this.elements[this.getIndexOfElement(elementId)];
@@ -255,8 +255,6 @@ Stacks = function(){
             $("#CurrentStackName")[0].innerHTML = CurrentStack.name;
         } 
         this.filteredstacks = this.elements;
-
-
     }
   
    this.setFilter = function(filter){
@@ -439,7 +437,7 @@ Stacks = function(){
     }  
     
     this.render = function(){
-        var r = Mustache.render($('#SavedStacksTemplate').html(), this);
+        var r = Mustache.render($('#StacksTemplate').html(), this);
         document.getElementById(this.targetdiv).innerHTML = r;
         var x = $(".variableTextArea")
         for(var i=0;i<x.length;i++){
