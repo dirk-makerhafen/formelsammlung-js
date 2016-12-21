@@ -174,7 +174,15 @@
       width: 300px;
     }
     
-    
+    .loading_placeholder {
+        color:lightgray;
+        vertical-align:middle;
+        text-align:center;
+        width:100%;
+        position:absolute;
+        top:50px;
+        z-index:9999;
+    }
 </style>
                     
                     
@@ -743,6 +751,12 @@ function init(){
     clipboard.on('error', function(e) {
         $("#copyError").show(250).delay(1000).hide(250);
     });
+    
+    $(".container").delay(750).queue(function () {
+        $("#loading_placeholder").fadeOut(750);
+        $(this).dequeue();
+    }).fadeIn(750);
+    
 }
 
 </script>
@@ -759,8 +773,15 @@ function init(){
 </script>
 
 </head>
+
+
+
 <body onload="init()">
-    <div class="container">
+    <div id="loading_placeholder" class="loading_placeholder" style="">
+        <img src="lib/loading.gif"></img>
+        <h1><b>loading</b></h1>
+    </div>
+    <div class="container" style="display:none">
         <div class="box" style="margin-bottom:15px;"> 
             <div id="Stack"></div>
         </div>
@@ -873,7 +894,7 @@ function init(){
                 </div>
                 <div class="row" style="margin-top:10px; line-height: 35px;">
                    <div class="col-md-3 input-group-button">
-                        <button class="btn toClipboard" type="button" data-clipboard-target="#shareLinkModalURL">
+                        <button class="btn toClipboard" type="button" data-clipboard-target="#shareLinkModalURL" style="background-color:lightgray">
                             <img class="clippy" src="lib/clippy.svg" width="13" alt="Copy to clipboard">&nbsp;Copy to Clipboard
                         </button>
                    </div>
