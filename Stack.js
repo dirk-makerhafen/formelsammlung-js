@@ -257,7 +257,7 @@ Stacks = function(){
         this.filteredstacks = this.elements;
     }
   
-   this.setFilter = function(filter){
+    this.setFilter = function(filter){
         this.filter = filter;
         this.filteredstacks = []
         this.paginationPage = 1;
@@ -284,7 +284,6 @@ Stacks = function(){
             }
             var s = new SavedStack(CurrentStack.save(),"","");
             this.elements.unshift(s);
-            this.toLocalStorage();
             CurrentStack.savedStack = s;
             CurrentStack.name = "";
             CurrentStack.description ="";
@@ -301,6 +300,7 @@ Stacks = function(){
             CurrentStack.savedStack.savedStack = CurrentStack.save();
         }
         this.render();
+        this.toLocalStorage();
         $(".saveStack").hide();
         $(".saveStackChanges").show();
         $("#StacksPagination").children().eq(1).stop().animate({ borderColor: "green" }, 600).delay(1000).animate({ borderColor: "#ddd" }, 1200);
@@ -402,7 +402,7 @@ Stacks = function(){
     }
     
     this.loadExamples = function(){
-        var example = [{"name":"Some name","description":"Some \nSuer \ndesasd\n","savedStack":[{"t":"SQ","d":{"value":1,"id":"SQ_10","name":"var 11","qn":"Ampere"}},{"t":"SQ","d":{"value":1,"id":"SQ_12","name":"var 13","qn":"Volt"}},{"t":"SE","d":{"name":"result 15","id":"SE_14","io":{"P":{"m":"OUTPUT"},"U":{"m":"SQ_12"},"I":{"m":"SQ_10"}},"eqn":"PUI"}}]}];
+        var example = [{"name":"Some name","description":"Some \nSuer \ndesasd\n","savedStack":[{"t":"SQ","d":{"value":1,"id":"SQ_10","name":"var 11","qn":"Ampere"}},{"t":"SQ","d":{"value":1,"id":"SQ_12","name":"var 13","qn":"Volt"}},{"t":"SE","d":{"m":false,"name":"result 15","id":"SE_14","io":{"P":{"m":"OUTPUT"},"U":{"m":"SQ_12"},"I":{"m":"SQ_10"}},"eqn":"PUI"}}]}];
         for(var i=0;i<example.length;++i){
             var ss = new SavedStack();
             ss.load(example[i]);

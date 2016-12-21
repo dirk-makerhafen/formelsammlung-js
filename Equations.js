@@ -252,7 +252,7 @@ function EquationIO(){
         }
         
         if(stackElement.constructorName == "StackMaterial"){
-            var materialproperties =  stackElement.material.properties;
+            var materialproperties =  stackElement.properties;
             for (var index1 = 0; index1 < materialproperties.length; ++index1) {
                 if(materialproperties[index1].quantity == this.quantity){
                     return true;
@@ -537,6 +537,21 @@ function StackEquation(stack, equation){
     }
        
     this.mappedto = []
+    this.minimised = false;
+    
+    this.MoveUpColor = function(){ 
+        if (CurrentStack.elements[0].id == this.id){
+            return "lightgray";
+        }
+        return "black";
+    }
+    
+    this.MoveDownColor = function(){ 
+        if (CurrentStack.elements[CurrentStack.elements.length-1].id == this.id){
+            return "lightgray";
+        }
+        return "black";
+    }       
     
     this.addMappedTo = function(StackEquationIo){
         if(this.mappedto.indexOf(StackEquationIo) == -1){
@@ -550,6 +565,20 @@ function StackEquation(stack, equation){
             this.mappedto.splice(index,1);
         }
     }
+    
+    this.setMinimised = function(value){
+        this.minimised = value;
+    }
+    
+    this.showCanMinimise = function(){
+        if(this.minimised==true){return "none";}
+        return "";
+    }
+    
+    this.showCanMaximise = function(){
+        if(this.minimised==false){return "none";}
+        return "";
+    } 
     
     this.dispose = function(){
         while (this.mappedto.length > 0){
@@ -675,7 +704,7 @@ function StackEquation(stack, equation){
                         }
                     }
                     if(mappedto.constructorName == "StackMaterial"){
-                        var x = mappedto.material.getPropertyByQuantity(this.io[i].equationio.quantity);
+                        var x = mappedto.getPropertyByQuantity(this.io[i].equationio.quantity);
                         v=x.value;
                         if(!isNaN(v)){
                             v = x.quantity.convertValue(v,this.io[i].equationio.quantity);
@@ -701,6 +730,7 @@ function StackEquation(stack, equation){
         var data = {};
         data["name"] = this.name;
         data["id"] = this.id;
+        data["m"] = this.minimised;
         data["io"] = {};
         for (var index = 0; index < this.io.length; ++index) {
              data["io"][this.io[index].equationio.symbol] = this.io[index].save();
@@ -712,6 +742,7 @@ function StackEquation(stack, equation){
     this.load = function(data){
         this.name = data["name"];
         this.id = data["id"];
+        this.minimised = data["m"];
         for (var index = 0; index < this.io.length; ++index) {
             this.io[index].load(data["io"][this.io[index].equationio.symbol]);
         }
@@ -774,6 +805,7 @@ function StackEquation(stack, equation){
         
     this.updateRender = function(){
         $("#"+this.id).replaceWith(this.render());
+        mathjaxCache.render();
     }
      
     this.renderConverter = function(){

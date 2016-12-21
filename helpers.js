@@ -25,8 +25,11 @@ mathjaxCache = function(){
         var rc =  document.getElementById("renderCache");
         for(var i=0;i<this.renderIds.length;++i){
             try{
-                var c = document.getElementById("cache_"+this.renderIds[i])
-                document.getElementById(this.renderIds[i]).innerHTML = c.innerHTML;
+                var c = document.getElementById("cache_"+this.renderIds[i]);
+                var elements = document.getElementsByClassName(this.renderIds[i])
+                for(var x=0;x<elements.length;++x){
+                    elements[x].innerHTML = c.innerHTML;
+                }
                 this.cache[this.renderIds[i]] = c.innerHTML;
                 rc.removeChild(c);
             }catch(e){}
@@ -36,14 +39,14 @@ mathjaxCache = function(){
     
     this.add = function(targetId,content){
         if(this.cache[targetId] != undefined){
-            return '<div id="'+targetId+'" >'+this.cache[targetId]+'</div>';
+            return '<div class="'+targetId+'" >'+this.cache[targetId]+'</div>';
         }
         var div = document.createElement('div');
         div.id = "cache_" + targetId;
         div.innerHTML = '$$'+content+'$$';
         document.getElementById("renderCache").appendChild(div);
         this.ids.push(targetId);
-        return '<div id="'+targetId+'" ></div>';
+        return '<div class="'+targetId+'" ></div>';
     }
 }
 

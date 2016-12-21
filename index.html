@@ -86,21 +86,23 @@
         border-radius: 2px;
     }
     .unitOutput {
-        margin: 4px;
+        margin-top: 4px;
     }
     
     .updowndeleteGlyph  {
         float: left;
         margin:5px;
+        padding-left: 0px;
+        padding-right: 0px;        
     }
     .scapeTransformGlyph  {
         float: left;
         margin:5px;
     }
     .iostuff {
-        float:left;
-        padding: 5px;
-        margin-top: -10px;
+        //float:left;
+        //padding: 5px;
+        //margin-top: -10px;
     }
     .iostuffselect {
         width:100%
@@ -153,6 +155,25 @@
     a {
         cursor : pointer;
     }
+    
+    .centerrow {
+      white-space: nowrap;
+    }
+     
+    .centerrow:before {
+      content: '';
+      display: inline-block;
+      height: 100%;
+      vertical-align: middle;
+      margin-right: -0.25em; /* Adjusts for spacing */
+    }
+
+    .centeredcol {
+      display: inline-block;
+      vertical-align: middle;
+      width: 300px;
+    }
+    
     
 </style>
                     
@@ -381,7 +402,7 @@
     </div>
 </script>
 
-<script type="x-tmpl-mustache" id="SavedStacksTemplate">
+<script type="x-tmpl-mustache" id="StacksTemplate">
     <div  id="StacksPagination"  class="limitedbox">    
     <div id="EmptyStackLoadExamples" class="row" style="line-height:250px;text-align:center;font-size:1.25em"><a onclick="Stacks.loadExamples();" style="color:gray"><b>load examples</b></a></div>
     {{#filteredStacksPagination}}
@@ -417,8 +438,14 @@
 
 
 <script type="x-tmpl-mustache" id="StackQuantityTemplate" >
-    <div id="{{id}}" class="col-md-offset-1">
-        <div class="row">
+    <div id="{{id}}"> 
+        <div class="row"  >
+            <div class="updowndeleteGlyph col-md-1" >
+                <span class="glyphicon glyphicon-arrow-up" onclick="CurrentStack.moveUp('{{id}}')" style="color:{{MoveUpColor}}"></span>
+                <span class="glyphicon glyphicon-arrow-down" onclick="CurrentStack.moveDown('{{id}}')"style="color:{{MoveDownColor}}"></span>
+                <span class="glyphicon glyphicon-remove-circle" onclick="CurrentStack.remove('{{id}}')"></span>
+            </div>
+
             <div class="col-md-2" >
                 <input class="variableNameInput" value="{{name}}" onKeyUp="CurrentStack.get('{{id}}').setName(this.value)" 
                 onclick='flashMappedInputHelper("StackEquationIo_{{id}}");'></input>
@@ -429,7 +456,7 @@
                         <input value="{{value}}" onKeyUp="CurrentStack.get('{{id}}').setValue(this.value)" class="valueInput"></input>
                     </div>
                     <div class="col-md-3 unitOutput">
-                        {{quantity.name}}
+                        {{#quantity}} {{{renderUnitTex}}} {{/quantity}}
                     </div>
                 </div>
                 <div id="Converter_{{id}}" style="display:{{showConverter}}">
@@ -441,8 +468,14 @@
                 <span style="color:lightgray;color:bla{{displayScaleDown}}ck" class="glyphicon glyphicon-arrow-down" onclick="CurrentStack.get('{{id}}').scaleDown();"></span>
                 <span style="color:lightgray;color:bla{{displayShowConvert}}ck"  class="glyphicon glyphicon-random" onclick="CurrentStack.get('{{id}}').toggleShowConverter();"></span>
             </div>
+            <div class="col-md-3 scapeTransformGlyph">
+               {{quantity.name}}
+            </div>
+            
+            
         </div>
     </div>
+            
 </script>
 
 <script type="x-tmpl-mustache" id="StackQuantityConverterTemplate" >
@@ -456,8 +489,19 @@
 
 
 <script type="x-tmpl-mustache" id="StackEquationTemplate" >
-    <div id="{{id}}" class="col-md-offset-1">
+    <div id="{{id}}">
+        <div class="row" style="padding-left:5px;">
+            <b>{{#equation}}{{name_translation}}{{/equation}}</b>
+        </div>
         <div class="row">
+            <div class="updowndeleteGlyph col-md-1" >
+                <span class="glyphicon glyphicon-arrow-up" onclick="CurrentStack.moveUp('{{id}}')" style="color:{{MoveUpColor}}"></span>
+                <span class="glyphicon glyphicon-arrow-down" onclick="CurrentStack.moveDown('{{id}}')" style="color:{{MoveDownColor}}"></span>
+                <span class="glyphicon glyphicon-remove-circle" onclick="CurrentStack.remove('{{id}}')"></span>
+                <span class="glyphicon glyphicon-resize-small" onclick="$(this).hide();$(this).next().show();$(this).parent().parent().next().hide(350);CurrentStack.get('{{id}}').setMinimised(true);" style="display:{{showCanMinimise}}"></span>
+                <span class="glyphicon glyphicon-resize-full" onclick="$(this).hide();$(this).prev().show();$(this).parent().parent().next().show(350);CurrentStack.get('{{id}}').setMinimised(false);" style="display:{{showCanMaximise}}"></span>
+            </div>    
+    
             <div class="col-md-2">        
                 <input class="variableNameInput" value="{{name}}" onKeyUp="CurrentStack.get('{{id}}').setName(this.value)" 
                 onclick='flashMappedInputHelper("StackEquationIo_{{id}}");'></input>
@@ -468,10 +512,7 @@
                         <input readonly value="{{resultValue}}"  class="valueInput"></input>
                     </div>
                     <div class="col-md-3 unitOutput">
-                        {{#resultQuantity}}
-                            {{name_translation}}<br>
-                            {{unit}}
-                        {{/resultQuantity}}
+                        {{#resultQuantity}}{{{renderUnitTex}}}{{/resultQuantity}}
                     </div>
                 </div>
                 <div id="Converter_{{id}}" style="display:{{showConverter}}">
@@ -483,15 +524,18 @@
                 <span style="color:lightgray;color:bla{{displayScaleDown}}ck" class="glyphicon glyphicon-arrow-down" onclick="CurrentStack.get('{{id}}').scaleDown();"></span>
                 <span style="color:lightgray;color:bla{{displayShowConvert}}ck"  class="glyphicon glyphicon-random" onclick="CurrentStack.get('{{id}}').toggleShowConverter();"></span>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-3 scapeTransformGlyph">
+               {{#resultQuantity}}{{{name_translation}}}{{/resultQuantity}}
+            </div>            
+        </div>
+        <div class="row" style="display:{{showCanMinimise}}">
+            <div class="col-md-5 col-md-offset-6">
                 {{#io}}
                     {{{render}}}
                 {{/io}}
-            </div>
-            
+            </div>        
         </div>
-    </div>
-    
+    </div>    
     <div style="display:none;" id="{{id}}_details">
         {{{renderDescription}}}
     </div>
@@ -500,26 +544,30 @@
 
 
 <script type="x-tmpl-mustache" id="StackEquationIoTemplate" >
-    <div class="row" style="padding: 2px;">
-        <div style="width:34%">
-            <select class="iostuff iostuffselect" onchange="CurrentStack.get('{{parentStackEquation.id}}').getIO('{{id}}').setMappedTo(this.value,false)">
+    <div class="row" style="padding-top:5px;">
+        <div class="col-md-4" style=";line-height: 40px;" >
+            <select class="iostuff iostuffselect " onchange="CurrentStack.get('{{parentStackEquation.id}}').getIO('{{id}}').setMappedTo(this.value,false)">
                 <option value="OUTPUT">Output</option>
                 {{#mapableStackElements}}
                     <option {{selected}} class="selected_{{name}} StackEquationIo_{{id}}" value="{{id}}">{{name}}</option>
                 {{/mapableStackElements}}                
             </select>
         </div>
-        <div class="iostuff {{selectableDivClass}}" style="width:15%;">
+        <div class="{{selectableDivClass}} col-md-2" style="line-height: 40px;">
             {{#equationio}}
                 <b>{{{renderSymbolTex}}}</b>
             {{/equationio}}
         </div>
-        <div class="iostuff" style="width:50%;">
+        <div class="col-md-6" style="line-height: 40px;">
             {{#equationio}}
-                {{description_translation}}<br>
-                {{#quantity}}
-                    <a onclick='jQuery("#QuantitiesSearchInput").val("{{name_translation}}").trigger("keyup");$("#QuantitiesBoxTabSelect").click();'> {{name_translation}} </a>
-                {{/quantity}}
+                <div class="row" style="line-height: 20px;">
+                    {{description_translation}}
+                </div>
+                <div class="row" style="line-height: 20px;">
+                    {{#quantity}}
+                        <a onclick='jQuery("#QuantitiesSearchInput").val("{{name_translation}}").trigger("keyup");$("#QuantitiesBoxTabSelect").click();'> {{name_translation}} </a>
+                    {{/quantity}}
+                </div>
             {{/equationio}}
         </div>
     </div>
@@ -527,32 +575,39 @@
 
 
 <script type="x-tmpl-mustache" id="StackMaterialTemplate" >
-    <div id="{{id}}" class="col-md-offset-1">
-
+    <div id="{{id}}">
         <div class="row">
+            <div class="updowndeleteGlyph col-md-1" >
+                <span class="glyphicon glyphicon-arrow-up" onclick="CurrentStack.moveUp('{{id}}')" style="color:{{MoveUpColor}}"></span>
+                <span class="glyphicon glyphicon-arrow-down" onclick="CurrentStack.moveDown('{{id}}')" style="color:{{MoveDownColor}}"></span>
+                <span class="glyphicon glyphicon-remove-circle" onclick="CurrentStack.remove('{{id}}')"></span>
+                <span class="glyphicon glyphicon-resize-small" onclick="$(this).hide();$(this).next().show();$(this).parent().parent().next().hide(350);CurrentStack.get('{{id}}').setMinimised(true);" style="display:{{showCanMinimise}}"></span>
+                <span class="glyphicon glyphicon-resize-full" onclick="$(this).hide();$(this).prev().show();$(this).parent().parent().next().show(350);CurrentStack.get('{{id}}').setMinimised(false);" style="display:{{showCanMaximise}}"></span>
+            </div>   
+        
             <div class="col-md-2">        
                 <input class="variableNameInput" value="{{name}}" onKeyUp="CurrentStack.get('{{id}}').setName(this.value)"
                  onclick='flashMappedInputHelper("StackEquationIo_{{id}}");'></input>
             </div>
-            <div class="col-md-6"> 
-                <div class="row">
-                    {{#material.properties}}
-                    <div class="row">
-                   
-                        <div class="col-md-3">
-                            <input readonly value="{{value}}"  class="valueInput"></input>
-                        </div>
-                        <div class="col-md-4 unitOutput">
-                            {{#quantity}} 
-                                <a onclick='jQuery("#QuantitiesSearchInput").val("{{name_translation}}").trigger("keyup");$("#QuantitiesBoxTabSelect").click()'> {{name_translation}} </a>
-                            {{/quantity}}
-                        </div>
-                        <div style="display:none" class="col-md-4">
-                            {{#quantity}} {{{renderUnitTex}}} {{/quantity}}
-                        </div>
+            <div class="col-md-2" style="margin-top: 4px;"><b>{{material.name}}</b></div>            
+        </div>
+        <div class="row" style="display:{{showCanMinimise}}"> 
+            <div class="col-md-8 col-md-offset-3">
+                {{#properties}}
+                <div class="row centerrow">
+                    <div style="width:30%;padding-left: 20px;" class="centeredcol">
+                        {{#quantity}} 
+                            <a onclick='jQuery("#QuantitiesSearchInput").val("{{name_translation}}").trigger("keyup");$("#QuantitiesBoxTabSelect").click()'> {{name_translation}} </a>
+                        {{/quantity}}
                     </div>
-                    {{/material.properties}}
+                    <div style="width:20%;" class="centeredcol">
+                        <input value="{{value}}"  class="valueInput" onKeyUp="CurrentStack.get('{{parentStackMaterial.id}}').getPropertyById('{{id}}').setValue(this.value)" ></input>
+                    </div>
+                    <div style="width:20%;padding-left: 20px;" class=" unitOutput centeredcol">
+                        {{#quantity}} {{{renderUnitTex}}} {{/quantity}}
+                    </div>
                 </div>
+                {{/properties}}
             </div>
         </div>
     </div>
@@ -567,8 +622,7 @@
 <script type="x-tmpl-mustache" id="StackPrintTemplate">
     {{#elements}}
         {{#renderPrint}}
-        {{.}}
-         <br>    
+        {{.}}<br>    
         {{/renderPrint}}
     {{/elements}}
 </script>
@@ -583,19 +637,8 @@
 
 <script type="x-tmpl-mustache" id="StackTemplate">
     <div id="CurrentStackName" class="row" style="text-align:center;color:gray">{{name}}</div>
-    
     {{#elements}}
-        <div class="box">
-            <div style="padding-left:5px"><b>{{material.name}}</b></div>   
-            <div style="padding-left:5px;display:No{{equation.name}}ne"><b>{{equation.name}}</b>
-                <a id="{{id}}_more" onclick='jQuery("#{{id}}_details").toggle("show");jQuery("#{{id}}_more").hide();jQuery("#{{id}}_less").show();'>Details</a>
-                <a style="display:none;" id="{{id}}_less" onclick='jQuery("#{{id}}_details").toggle("show");jQuery("#{{id}}_less").hide();jQuery("#{{id}}_more").show();'>Hide Details</a>     
-            </div>         
-            <div class="updowndeleteGlyph">
-                <span class="glyphicon glyphicon-arrow-up" onclick="CurrentStack.moveUp('{{id}}')"></span>
-                <span class="glyphicon glyphicon-arrow-down" onclick="CurrentStack.moveDown('{{id}}')"></span>
-                <span class="glyphicon glyphicon-remove-circle" onclick="CurrentStack.remove('{{id}}')"></span>
-            </div>
+        <div class="box" style="padding-left: 20px;">
             {{{render}}}
         </div>
     {{/elements}}
@@ -640,33 +683,6 @@ setLanguage = function(lang){
     Equations.render();
     Materials.render();
 }    
-var currentElement = undefined;
-myconfirm = function(element,callback){
-    if(currentElement != undefined){
-        $(currentElement[0]).show(250);
-        $(currentElement[0]).next().remove(0);            
-    }
-    currentElement = [element,callback];
-    $(element).hide();
-    var node = document.createElement("div"); 
-    node.style.textAlign = "center";
-    node.style.display = "none";
-    node.innerHTML = '<div class="col-md-6" style=\'padding: 0px;\'><a onclick="myconfirmno();" >no!</a></div> <div class="col-md-6"   style=\'padding: 0px\'><a onclick="myconfirmyes();">yes</a></div>';
-    $(element).parent().append(node);
-    $(node).show(250);
-}
-
-myconfirmno = function(id){
-    $(currentElement[0]).show(250);
-    $(currentElement[0]).next().remove(0);
-    currentElement = undefined;
-}
-
-myconfirmyes = function(id){
-    currentElement[1]();
-    $(currentElement[0]).show();
-    currentElement = undefined;
-}
 
 
 function init(){
@@ -688,7 +704,10 @@ function init(){
     Materials.setFilter("");
 
 
-    MathJax.Hub.Config({ displayAlign: "left" });
+    MathJax.Hub.Config({ 
+        displayAlign: "left", 
+        messageStyle: "none",
+    });
   
     var urlParams = getUrlParams();
     var sliderTabsDefaultTab = 1;    

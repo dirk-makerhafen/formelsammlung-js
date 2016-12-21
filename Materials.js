@@ -27,14 +27,6 @@ function Material(name,description,properties){
         return "";
     } 
     
-    this.getPropertyByQuantity = function(quantity){
-        for (var index = 0; index < this.properties.length; ++index) {
-            if(this.properties[index].quantity == quantity){
-                return this.properties[index];
-            }
-        }
-        return undefined;
-    }
            
     this.renderDescription = function(){
         return markdown.toHTML(this.description_translation());    
@@ -49,7 +41,6 @@ function Material(name,description,properties){
 
 function MaterialProperty(quantity,value){
     this.quantity = quantity;
-    
     this.value = value;
     this.parentMaterial = null; // set by parent material on constructor
 }
@@ -178,6 +169,12 @@ function StackMaterial(stack,material){
     this.color = "#eee";
     
     this.mappedto = []
+    this.minimised = false;
+    
+    this.properties = []; // list of StackMaterialProperty
+    for (var index = 0; index < this.material.properties.length; ++index) {
+        this.properties[index] = new StackMaterialProperty(this,this.material.properties[index]);
+    }
     
     this.addMappedTo = function(StackEquationIo){
         if(this.mappedto.indexOf(StackEquationIo) == -1){
@@ -189,6 +186,36 @@ function StackMaterial(stack,material){
         if(index != -1){
             this.mappedto.splice(index,1);
         }
+    }
+  
+    this.setMinimised = function(value){
+        this.minimised = value;
+    }
+    
+    this.showCanMinimise = function(){
+        if(this.minimised==true){return "none";}
+        return "";
+    }
+    
+    this.showCanMaximise = function(){
+        if(this.minimised==false){return "none";}
+        return "";
+    } 
+        
+    this.getPropertyById = function(id){
+        for (var index = 0; index < this.properties.length; ++index) {
+            if(this.properties[index].id == id){return this.properties[index];}
+        }
+        return undefined;
+    }
+    
+    this.getPropertyByQuantity = function(quantity){
+        for (var index = 0; index < this.properties.length; ++index) {
+            if(this.properties[index].quantity == quantity){
+                return this.properties[index];
+            }
+        }
+        return undefined;
     }
     
     this.dispose = function(){
@@ -209,14 +236,30 @@ function StackMaterial(stack,material){
         var data = {};
         data["name"] = this.name;
         data["id"] = this.id;
+        data["m"] = this.minimised;
         data["mn"] = this.material.name;
+        data["p"] = [] // q.name , value
+        for (var index = 0; index < this.properties.length; ++index) {
+            if(this.properties[index].hasCustomValue()){
+                data["p"].push([this.properties[index].quantity.name,this.properties[index].value]);
+            }
+        }
         return data;
     }
     
     this.load = function(data){
         this.name = data["name"];
         this.id = data["id"];
+        this.minimised = data["m"];
+        
+        for (var index = 0; index < data["p"].length; ++index) {
+                var q = Quantities.get(data["p"][index][0]);
+                var v = data["p"][index][1];
+                var p = this.getPropertyByQuantity(q);
+                p.value = v;
+        }
     }
+    
     this.renderPrint = function(){
         return "hallom";
     }   
@@ -228,6 +271,25 @@ function StackMaterial(stack,material){
     this.updateRender = function(){
         $("#"+this.id).replaceWith(this.render());
     }
+}
+
+function StackMaterialProperty(stackmaterial,materialproperty){
+    this.parentStackMaterial = stackmaterial;
+    this.materialproperty = materialproperty;
+    this.id = "SMP_" + getUniqNumber();
+    
+    this.value = materialproperty.value;
+    this.quantity = materialproperty.quantity;
+    
+    this.setValue = function(value){
+        this.value = value;
+        this.parentStackMaterial.parentStack.updateRender(this.parentStackMaterial.id);
+    }
+    
+    this.hasCustomValue = function(){
+        return this.value != this.materialproperty.value;
+    }
+    
 }
 
 var Materials = new Materials();

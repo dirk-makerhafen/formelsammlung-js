@@ -300,6 +300,7 @@ function StackQuantity(stack,quantity){
     this.showConverter = "None";
     
     this.mappedto = []
+
     
     this.addMappedTo = function(StackEquationIo){
         if(this.mappedto.indexOf(StackEquationIo) == -1){
@@ -378,6 +379,19 @@ function StackQuantity(stack,quantity){
         return "";
     }   
     
+    this.MoveUpColor = function(){ 
+        if (CurrentStack.elements[0].id == this.id){
+            return "lightgray";
+        }
+        return "black";
+    }
+    this.MoveDownColor = function(){ 
+        if (CurrentStack.elements[CurrentStack.elements.length-1].id == this.id){
+            return "lightgray";
+        }
+        return "black";
+    }        
+    
     this.save = function(){
         var data = {};
         data["value"] = this.value;
@@ -386,6 +400,7 @@ function StackQuantity(stack,quantity){
         data["qn"] = this.quantity.name;
         return data;
     }
+    
     this.load = function(data){
         this.value = data["value"];
         this.name = data["name"];
@@ -418,6 +433,7 @@ function StackQuantity(stack,quantity){
     
     this.updateRender = function(){
         $("#"+this.id).replaceWith(this.render());
+        mathjaxCache.render();
     }
     
     this.updateRenderConverter = function(){
