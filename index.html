@@ -204,7 +204,7 @@
             
             <div class="col-md-2">
                 <div class="col-md-4">
-                    <a onclick="create_link('quantity:{{name}}')" style="font-size:0.8em;" data-toggle="modal" data-target="#shareLinkModal" class="glyphicon glyphicon-link">&nbsp;Link</a>
+                    <a onclick="create_link('quantity','{{name}}')" style="font-size:0.8em;" data-toggle="modal" data-target="#shareLinkModal" class="glyphicon glyphicon-link">&nbsp;Link</a>
                 </div>
                 <div class="col-md-8">
                     <a onclick="load_disqus_modal(Quantities.get('{{name}}'),'{{name}}')" style="font-size:0.8em;" class="glyphicon glyphicon-comment"  data-toggle="modal" data-target="#disqusModal">&nbsp;Discussion</a>
@@ -238,7 +238,7 @@
             </div>                
             <div class="col-md-2">
                 <div class="col-md-4">
-                    <a onclick="create_link('equation:{{name}}')" style="font-size:0.8em;" data-toggle="modal" data-target="#shareLinkModal" class="glyphicon glyphicon-link">&nbsp;Link</a>
+                    <a onclick="create_link('equation','{{name}}')" style="font-size:0.8em;" data-toggle="modal" data-target="#shareLinkModal" class="glyphicon glyphicon-link">&nbsp;Link</a>
                 </div>
                 <div class="col-md-8">
                     <a onclick="load_disqus_modal(Equations.get('{{name}}'),'{{name}}')" style="font-size:0.8em;"  class="glyphicon glyphicon-comment"   data-toggle="modal" data-target="#disqusModal">&nbsp;Discussion </a>
@@ -319,7 +319,7 @@
             
             <div class="col-md-2">
                 <div class="col-md-4">
-                    <a onclick="create_link('material:{{name}}')" style="font-size:0.8em;" data-toggle="modal" data-target="#shareLinkModal" class="glyphicon glyphicon-link">&nbsp;Link</a>
+                    <a onclick="create_link('material','{{name}}')" style="font-size:0.8em;" data-toggle="modal" data-target="#shareLinkModal" class="glyphicon glyphicon-link">&nbsp;Link</a>
                 </div>
                 <div class="col-md-8">
                     <a onclick="load_disqus_modal(Materials.get('{{name}}'),'{{name}}')" style="font-size:0.8em;"  class="glyphicon glyphicon-comment"   data-toggle="modal" data-target="#disqusModal">&nbsp;Discussion </a>
@@ -349,7 +349,7 @@
             
             <div class="col-md-2">
                 <div class="col-md-4">
-                    <a onclick="create_link('stack:'+ Stacks.get('{{id}}').getLinkData());" style="font-size:0.8em;" data-toggle="modal" data-target="#shareLinkModal" class="glyphicon glyphicon-link">&nbsp;Link</a>
+                    <a onclick="create_link('stack',Stacks.get('{{id}}').getLinkData());" style="font-size:0.8em;" data-toggle="modal" data-target="#shareLinkModal" class="glyphicon glyphicon-link">&nbsp;Link</a>
                 </div>
                 <div class="col-md-8">
                     <a onclick="myconfirm(this,function(){Stacks.remove('{{id}}');});" style="font-size:0.8em;" class="glyphicon glyphicon-remove">&nbsp;Delete</a>
@@ -655,7 +655,7 @@
             <a onclick="CurrentStack.renderPrint();" class="glyphicon glyphicon-print">&nbsp;Print</a>
         </div>
         <div class="flexcol">
-            <a onclick="create_link('stack:'+CurrentStack.getLinkData());" class="glyphicon glyphicon-link" data-toggle="modal" data-target="#shareLinkModal">&nbsp;Link</a>
+            <a onclick="create_link('stack',CurrentStack.getLinkData());" class="glyphicon glyphicon-link" data-toggle="modal" data-target="#shareLinkModal">&nbsp;Link</a>
         </div>
         <div class="flexcol">
             <a onclick="var x=function(){CurrentStack.clear();}; if(CurrentStack.elements.length > 4){ myconfirm(this,x); }else{x();}"  class="glyphicon glyphicon-erase">&nbsp;Clear</a>

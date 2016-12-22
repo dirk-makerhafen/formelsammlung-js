@@ -90,7 +90,7 @@ function Stack(){
         for (var index = 0; index < this.elements.length; ++index) {
             this.elements[index].dispose();
         }
-        this.elements=[];
+        this.elements = [];
         this.name = "";
         this.description = "";
         this.savedStack = undefined;

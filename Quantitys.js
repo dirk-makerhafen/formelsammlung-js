@@ -127,7 +127,7 @@ function Quantities(){
             
             if(unit==undefined){
                 //var s = unitstring.replace(new RegExp('\\^', 'g'), '**');
-                var factor = parseFloat(unitstring.split(" ")[0]);
+                var factor   = parseFloat(unitstring.split(" ")[0]);
                 var unitpart = unitstring.substring(unitstring.indexOf(" "));
                 
                 if(isNaN(factor)){
@@ -136,7 +136,6 @@ function Quantities(){
                     }else{
                         unit = math.unit(unitstring);
                     }
-                    
                 }else{
                     math.createUnit(shortnames[0],factor + " " + unitpart);
                     console.log("created unit '" + shortnames[0] + "' from '" + unitstring + "'");

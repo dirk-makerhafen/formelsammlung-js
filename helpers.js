@@ -121,16 +121,15 @@ selectOutputRendering = function(node,number){
     }
 }
 
-
-function textAreaAdjust(o) {
-    o.style.height = "1px";
-    o.style.height = (12+o.scrollHeight)+"px";
+textAreaAdjust = function(target) {
+    target.style.height = "1px";
+    target.style.height = (12+target.scrollHeight)+"px";
 }
 
 
-create_link = function(target){
+create_link = function(type,target){
     pathArray = location.href.split( '/' );
-    url = pathArray[0] + '//' + pathArray[2] + "/?link=" + target;
+    url = pathArray[0] + '//' + pathArray[2] + "/?link=" + type + ":" + encodeURIComponent(target);;
     jQuery("#shareLinkModalURL")[0].value = url;
 }
 
