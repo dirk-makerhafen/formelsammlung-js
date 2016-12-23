@@ -57,7 +57,7 @@ function Quantity(name,description,unit){
         var u2= TargetQuantity.unit.toString();
         if(u1==""){u1="m^0";}// todo better handing of stuff without unit
         if(u2==""){u2="m^0";}
-        return math.unit(value,u1).toNumber(u2);
+        return +math.unit(value,u1).toNumber(u2).toFixed(4);
     }
     
     //after all quantity/equations are loaded from markdown, call this to init 
