@@ -92,6 +92,7 @@
     .updowndeleteGlyph  {
         float: left;
         margin:5px;
+        width:50px;
         padding-left: 0px;
         padding-right: 0px;        
     }
@@ -99,11 +100,7 @@
         float: left;
         margin:5px;
     }
-    .iostuff {
-        //float:left;
-        //padding: 5px;
-        //margin-top: -10px;
-    }
+
     .iostuffselect {
         width:100%
     }
@@ -183,6 +180,24 @@
         top:50px;
         z-index:9999;
     }
+
+    .slides {
+        list-style: none;
+    }
+
+    .slide-placeholder {
+        position: relative;
+    }
+    .slide-placeholder:after {
+        content: " ";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 15px;
+    }
+
+    
 </style>
                     
                     
@@ -449,8 +464,7 @@
     <div id="{{id}}"> 
         <div class="row"  >
             <div class="updowndeleteGlyph col-md-1" >
-                <span class="glyphicon glyphicon-arrow-up" onclick="CurrentStack.moveUp('{{id}}')" style="color:{{MoveUpColor}}"></span>
-                <span class="glyphicon glyphicon-arrow-down" onclick="CurrentStack.moveDown('{{id}}')"style="color:{{MoveDownColor}}"></span>
+                <span class="glyphicon glyphicon-resize-vertical"  title="Drag Up/Down" onMouseDown="var x=$(this).parent().parent().parent().parent();x.css('margin','4px').css('padding-top','5px').css('padding-bottom','5px')" onMouseUp="var x=$(this).parent().parent().parent().parent();x.css('margin','6px').css('padding-top','4px').css('padding-bottom','4px');"></span>
                 <span class="glyphicon glyphicon-remove-circle" onclick="CurrentStack.remove('{{id}}')"></span>
             </div>
 
@@ -503,8 +517,7 @@
         </div>
         <div class="row">
             <div class="updowndeleteGlyph col-md-1" >
-                <span class="glyphicon glyphicon-arrow-up" onclick="CurrentStack.moveUp('{{id}}')" style="color:{{MoveUpColor}}"></span>
-                <span class="glyphicon glyphicon-arrow-down" onclick="CurrentStack.moveDown('{{id}}')" style="color:{{MoveDownColor}}"></span>
+                <span class="glyphicon glyphicon-resize-vertical"  title="Drag Up/Down" onMouseDown="var x=$(this).parent().parent().parent().parent();x.css('margin','4px').css('padding-top','5px').css('padding-bottom','5px')" onMouseUp="var x=$(this).parent().parent().parent().parent();x.css('margin','6px').css('padding-top','4px').css('padding-bottom','4px');"></span>
                 <span class="glyphicon glyphicon-remove-circle" onclick="CurrentStack.remove('{{id}}')"></span>
                 <span class="glyphicon glyphicon-resize-small" onclick="$(this).hide();$(this).next().show();$(this).parent().parent().next().hide(350);CurrentStack.get('{{id}}').setMinimised(true);" style="display:{{showCanMinimise}}"></span>
                 <span class="glyphicon glyphicon-resize-full" onclick="$(this).hide();$(this).prev().show();$(this).parent().parent().next().show(350);CurrentStack.get('{{id}}').setMinimised(false);" style="display:{{showCanMaximise}}"></span>
@@ -543,10 +556,11 @@
                 {{/io}}
             </div>        
         </div>
+        <div style="display:none;" id="{{id}}_details">
+            {{{renderDescription}}}
+        </div>
     </div>    
-    <div style="display:none;" id="{{id}}_details">
-        {{{renderDescription}}}
-    </div>
+
 
 </script>
 
@@ -586,8 +600,7 @@
     <div id="{{id}}">
         <div class="row">
             <div class="updowndeleteGlyph col-md-1" >
-                <span class="glyphicon glyphicon-arrow-up" onclick="CurrentStack.moveUp('{{id}}')" style="color:{{MoveUpColor}}"></span>
-                <span class="glyphicon glyphicon-arrow-down" onclick="CurrentStack.moveDown('{{id}}')" style="color:{{MoveDownColor}}"></span>
+                <span class="glyphicon glyphicon-resize-vertical"  title="Drag Up/Down" onMouseDown="var x=$(this).parent().parent().parent().parent();x.css('margin','4px').css('padding-top','5px').css('padding-bottom','5px')" onMouseUp="var x=$(this).parent().parent().parent().parent();x.css('margin','6px').css('padding-top','4px').css('padding-bottom','4px');"></span>
                 <span class="glyphicon glyphicon-remove-circle" onclick="CurrentStack.remove('{{id}}')"></span>
                 <span class="glyphicon glyphicon-resize-small" onclick="$(this).hide();$(this).next().show();$(this).parent().parent().next().hide(350);CurrentStack.get('{{id}}').setMinimised(true);" style="display:{{showCanMinimise}}"></span>
                 <span class="glyphicon glyphicon-resize-full" onclick="$(this).hide();$(this).prev().show();$(this).parent().parent().next().show(350);CurrentStack.get('{{id}}').setMinimised(false);" style="display:{{showCanMaximise}}"></span>
@@ -644,12 +657,14 @@
 
 
 <script type="x-tmpl-mustache" id="StackTemplate">
-    <div id="CurrentStackName" class="row" style="text-align:center;color:gray">{{name}}</div>
-    {{#elements}}
-        <div class="box" style="padding-left: 20px;">
-            {{{render}}}
-        </div>
-    {{/elements}}
+    <div id="CurrentStackDivId" class="row" style="text-align:center;color:gray">{{name}}</div>
+    <div class="slides">
+        {{#elements}}
+            <div class="box slide" style="padding-left: 20px;" stackElementId="{{id}}">
+                {{{render}}}
+            </div>
+        {{/elements}}
+    </div>
     <div class="row flexrow" style="display:{{showSubmenu}};text-align:center;">
         <div class="flexcol"  style="display:none">
             <a onclick="CurrentStack.renderPrint();" class="glyphicon glyphicon-print">&nbsp;Print</a>
@@ -691,7 +706,6 @@ setLanguage = function(lang){
     Equations.render();
     Materials.render();
 }    
-
 
 function init(){
 
@@ -757,6 +771,10 @@ function init(){
         $(this).dequeue();
     }).fadeIn(750);
     
+    
+
+    
+
 }
 
 </script>

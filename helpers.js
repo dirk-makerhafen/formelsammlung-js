@@ -48,6 +48,7 @@ mathjaxCache = function(){
         this.ids.push(targetId);
         return '<div class="'+targetId+'" ></div>';
     }
+
 }
 
 var mathjaxCache = new mathjaxCache();

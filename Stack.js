@@ -74,8 +74,14 @@ function Stack(){
     this.render = function(){
         var r = Mustache.render($('#StackTemplate').html(), this);
         $('#Stack').animate({'opacity': 0.4}, 60, function(){
-            $(this).html(r).animate({'opacity': 1}, 150);    
-        });        
+            $(this).html(r).animate({'opacity': 1}, 150).queue(
+                    function () {
+                        CurrentStack.loadDragDrop();
+                        $(this).dequeue();
+                    }
+                );            
+            });    
+                
         Equations.render();
     }   
     
@@ -163,6 +169,64 @@ function Stack(){
         }
         this.render();
     }
+    
+    this.loadDragDrop = function(){
+        $(".slides").sortable({
+            placeholder: 'slide-placeholder',
+            axis: "y",
+            revert: 150,
+            handle: '.glyphicon-resize-vertical',
+            start: function(e, ui){
+                placeholderHeight = ui.item.outerHeight();
+                ui.placeholder.height(placeholderHeight + 15);
+                $('<div class="slide-placeholder-animator" data-height="' + placeholderHeight + '"></div>').insertAfter(ui.placeholder);
+            },
+            change: function(event, ui) {
+                
+                ui.placeholder.stop().height(0).animate({
+                    height: ui.item.outerHeight() + 15
+                }, 300);
+                
+                placeholderAnimatorHeight = parseInt($(".slide-placeholder-animator").attr("data-height"));
+                
+                $(".slide-placeholder-animator").stop().height(placeholderAnimatorHeight + 15).animate({
+                    height: 0
+                }, 300, function() {
+                    $(this).remove();
+                    placeholderHeight = ui.item.outerHeight();
+                    $('<div class="slide-placeholder-animator" data-height="' + placeholderHeight + '"></div>').insertAfter(ui.placeholder);
+                });
+                
+            },
+            stop: function(e, ui) {
+                
+                $(".slide-placeholder-animator").remove();
+                
+                var x = $(".slides")[0].children;
+                var index = 0;
+                
+                for(var i=0;i<x.length;i++){
+                    var divid = x[i].getAttribute("stackelementid");
+                    if(divid != null ){
+                        if(divid!=CurrentStack.elements[index].id){
+                            for(var y=0;y<CurrentStack.elements.length;y++){
+                                if(CurrentStack.elements[y].id == divid){
+                                    var tmp = CurrentStack.elements[index];
+                                    CurrentStack.elements[index] = CurrentStack.elements[y];
+                                    CurrentStack.elements[y] = tmp;
+                                    break;
+                                }
+                            }
+                        }
+                        index++;
+                    }
+                }
+                CurrentStack.render();  
+            },
+        });    
+    }
+
+  
 }
 
 CurrentStack = new Stack();
@@ -192,7 +256,7 @@ SavedStack = function(savedStack,name,description){
         this.name = name;
         if(CurrentStack.savedStack == this){
             CurrentStack.name = name;
-            $("#CurrentStackName")[0].innerHTML = CurrentStack.name;
+            $("#CurrentStackDivId")[0].innerHTML = CurrentStack.name;
         }
     }
     
@@ -243,6 +307,8 @@ Stacks = function(){
         }
         this.elements.splice(i, 1);
         this.toLocalStorage();
+        this.filteredstacks = this.elements;
+
         this.render();
         if(CurrentStack.savedStack==undefined){
             $(".saveStackChanges").hide();
@@ -251,10 +317,9 @@ Stacks = function(){
             $(".saveStackChanges").show();
             $(".saveStack").hide();        
         }
-        if($("#CurrentStackName")[0] != undefined){
-            $("#CurrentStackName")[0].innerHTML = CurrentStack.name;
+        if($("#CurrentStackDivId")[0] != undefined){
+            $("#CurrentStackDivId")[0].innerHTML = CurrentStack.name;
         } 
-        this.filteredstacks = this.elements;
     }
   
     this.setFilter = function(filter){
@@ -304,7 +369,7 @@ Stacks = function(){
         $(".saveStack").hide();
         $(".saveStackChanges").show();
         $("#StacksPagination").children().eq(1).stop().animate({ borderColor: "green" }, 600).delay(1000).animate({ borderColor: "#ddd" }, 1200);
-        $("#CurrentStackName")[0].innerHTML = CurrentStack.name;
+        $("#CurrentStackDivId")[0].innerHTML = CurrentStack.name;
     }
     
     this.loadCurrentStack = function(elementId){
@@ -342,14 +407,8 @@ Stacks = function(){
     
     this.init = function(){
         this.fromLocalStorage();
-        this.render();
-        if(this.elements.length == 0){
-            $("#MyStacksTab").hide();
-        }else{
-            $("#MyStacksTab").show();
-        }
         this.filteredstacks = this.elements;
-       
+        this.render();
     }
     
     this.download = function(){
@@ -439,18 +498,18 @@ Stacks = function(){
     this.render = function(){
         var r = Mustache.render($('#StacksTemplate').html(), this);
         document.getElementById(this.targetdiv).innerHTML = r;
-        var x = $(".variableTextArea")
-        for(var i=0;i<x.length;i++){
-            var o = x[i];
-            o.style.height = "1px";
-            o.style.height = (12+o.scrollHeight)+"px";
-        }
+
         if(this.elements.length>0){
             $("#EmptyStackLoadExamples").hide();
         }else{
             $("#EmptyStackLoadExamples").show();
         }
-        
+        var x = $(".variableTextArea");
+        for(var i=0;i<x.length;i++){
+            var l = x[i].value.split(/\r*\n/).length * 22;
+            x[i].style.height = l + "px";
+            
+        }
     }   
     
 }

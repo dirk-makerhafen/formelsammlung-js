@@ -50,12 +50,7 @@ function Quantity(name,description,unit){
         if(this.cantranslate()){ return this.translations[LANGUAGE].description;}
         return this.description;
     }
-
-    this.displayTranslateMe = function(){
-        if(this.cantranslate() || LANGUAGE == "EN"){ return "None"; }
-        return "";
-    }    
-    
+   
     // scale value from this. to TargetQuantity
     this.convertValue = function(value,TargetQuantity){
         var u1= this.unit.toString();
@@ -102,6 +97,7 @@ function Quantities(){
     this.filteredquantities = this.allquantities;
         
     this.paginationPage = 1;
+    
     this.paginationElementsPerPage = 7;
     
     this.loadMarkdown = function(markdown){
@@ -299,7 +295,6 @@ function StackQuantity(stack,quantity){
     this.showConverter = "None";
     
     this.mappedto = []
-
     
     this.addMappedTo = function(StackEquationIo){
         if(this.mappedto.indexOf(StackEquationIo) == -1){
@@ -384,6 +379,7 @@ function StackQuantity(stack,quantity){
         }
         return "black";
     }
+    
     this.MoveDownColor = function(){ 
         if (CurrentStack.elements[CurrentStack.elements.length-1].id == this.id){
             return "lightgray";
@@ -422,6 +418,7 @@ function StackQuantity(stack,quantity){
         var r = Mustache.render($('#StackQuantityTemplate').html(),this);
         return r;
     }   
+    
     this.renderPrint = function(){  
         var equation = " $$"+this.name.replace(" ","_")+"=" + this.value + "\\qquad ( " + this.quantity.unitTex + " ) \\qquad "+this.quantity.name+" $$ ";;
         var r = Mustache.render($('#StackQuantityPrintTemplate').html(),{

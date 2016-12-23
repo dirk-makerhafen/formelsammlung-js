@@ -457,7 +457,7 @@ The total power used by humans worldwide is commonly measured in terawatts (see 
 The average lightning strike peaks at 1 terawatt, but these strikes only last for 30 microseconds.
 
 -------------
-| Petawatt | PW | 10^15 Watt | Petawatt |  |  | 
+| Petawatt | PW | 10^15 Watt | Terawatt |  |  | 
 |---|---|---|---|---|---|
 
 Based on the average total solar irradiance[15] of 1.366 kW/m2, the total power of sunlight striking Earth's atmosphere is estimated at 174 Petawatt

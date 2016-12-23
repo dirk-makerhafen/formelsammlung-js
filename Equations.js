@@ -28,11 +28,6 @@ function Equation(){
         return this.description;
     }
 
-    this.displayTranslateMe = function(){
-        if(this.cantranslate() || LANGUAGE == "EN"){ return "None"; }
-        return "";
-    }    
-    
     this.getMappableIoIndexes = function(){
         var wouldmap = [] // prevent doublicate io mapping
         var indexes = []
@@ -229,11 +224,6 @@ function EquationIO(){
         return this.description;
     }
 
-    this.displayTranslateMe = function(){
-        if(this.cantranslate() || LANGUAGE == "EN"){ return "None"; }
-        return "";
-    } 
-    
     // test if this io can be mapped to a stack element
     this.canMap = function(stackElement){
         if(stackElement.constructorName == "StackQuantity"){
@@ -783,7 +773,7 @@ function StackEquation(stack, equation){
     }  
     
     this.render = function(){
-        if(this.getIndexOfIOByMapping("UNMAPPED").length > 0 || this.getIndexOfIOByMapping("OUTPUT").length != 1){
+        if(this.getIndexOfIOByMapping("UNMAPPED").length > 0 || this.getIndexOfIOByMapping("OUTPUT").length != 1 || true){
             var cntoutput = 0;
             for(var i=0;i<this.io.length;i++){
                 this.io[i].autoMapStackElements(true); 
@@ -863,7 +853,6 @@ function StackEquationIO(stackequation,equationio){
             }else{
                 element.selected = "";
             }
-            
             if (this.equationio.canMap(element)){
                 selectableStackElements.push(element);
             }
@@ -880,6 +869,12 @@ function StackEquationIO(stackequation,equationio){
 
         if(key == "OUTPUT"){
             this.parentStackEquation.resultScaler = undefined;
+            for(var i=0;i<this.parentStackEquation.io.length;i++){
+                var io = this.parentStackEquation.io[i];
+                if(io!=this && io.mappedto=="OUTPUT"){
+                    io.setMappedTo("UNMAPPED",true);
+                }
+            }
         }
         this.mappedto = key;
         var e = CurrentStack.get(this.mappedto)
@@ -913,8 +908,8 @@ function StackEquationIO(stackequation,equationio){
     }
     
     this.autoMapStackElements = function(noDoubleMapping){
+        var mapableElements = this.mapableStackElements(); 
         if(this.mappedto == "UNMAPPED"){
-            var mapableElements = this.mapableStackElements(); 
             if(mapableElements.length > 0){  
                 for(var i=0;i < mapableElements.length;i++){   // for each mappable element
                     var mapableElement = mapableElements[i];    
@@ -930,6 +925,19 @@ function StackEquationIO(stackequation,equationio){
                         this.setMappedTo(mapableElement.id,true);
                         break;
                     }
+                }
+            }
+        }else{
+            var exists = false;
+            if(this.mappedto!="OUTPUT" && this.mappedto!="UNMAPPED"){
+                for(var i=0;i < mapableElements.length;i++){   // for each mappable element
+                    if(this.mappedto == mapableElements[i].id){
+                        exists = true;
+                        break;
+                    }
+                }
+                if(exists == false){ //remove non existing mapped elements
+                    this.setMappedTo("UNMAPPED",true);
                 }
             }
         }

@@ -21,12 +21,6 @@ function Material(name,description,properties){
         if(this.cantranslate()){return this.translations[LANGUAGE].description;}
         return this.description;
     }
-
-    this.displayTranslateMe = function(){
-        if(this.cantranslate() || LANGUAGE == "EN"){ return "None"; }
-        return "";
-    } 
-    
            
     this.renderDescription = function(){
         return markdown.toHTML(this.description_translation());    
