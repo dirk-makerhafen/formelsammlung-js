@@ -461,13 +461,13 @@ Vo = ( 1 + ( R2 / R1 ) ) * Vi
 
 __IO__:
 
-* __Vi__ [ _Volt_ ] |  ( R1 * V ) / ( R1 + R2 )   
+* __Vi__ [ _Volt_ ] |  Vo / ( 1 + ( R2 / R1 ) )  
 Input Voltage
-* __Vo__ [ _Volt_ ] |   ( 1 + ( R2 / R1 ) ) * Vi  
+* __Vo__ [ _Volt_ ] |  ( 1 + ( R2 / R1 ) ) * Vi  
 Output Voltage
-* __R1__ [ _Ohm_ ] |  ( Vi * R2 ) / ( Vo - Vi )  
+* __R1__ [ _Ohm_ ] |  R2 / ((Vo / Vi) -1)  
 R1
-* __R2__ [ _Ohm_ ] |  Vi * R1 * ( Vo - Vi)  
+* __R2__ [ _Ohm_ ] |  ((Vo / Vi) -1) * R1
 R2
 
    
@@ -482,18 +482,159 @@ https://en.wikipedia.org/wiki/Operational_amplifier_applications#Inverting_ampli
 ![Image of URI](https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Op-Amp_Inverting_Amplifier.svg/450px-Op-Amp_Inverting_Amplifier.svg.png)
 __Equation__:
 
-Vo = -1 * ( Rf / Ri ) * Vi
+__IO__:
+
+* __Vi__ [ _Volt_ ] |  -1 * (Vo / ( Rf / Ri ))  
+Input Voltage
+* __Vo__ [ _Volt_ ] |  -1 * ( Rf / Ri ) * Vi  
+Output Voltage
+* __Rf__ [ _Ohm_ ] | (Vo / (-1 * Vi)) * Ri  
+Rf
+* __Ri__ [ _Ohm_ ] |  Rf / ( Vo / ( -1 * Vi ))  
+Ri input resistance
+
+   
+--------
+
+__Name__: Op-Amp Differential 
+
+__Description__:
+
+https://en.wikipedia.org/wiki/Operational_amplifier_applications
+
+In order for this circuit to produce a signal proportional to the voltage difference of the input terminals, the coefficient of the Vcom term (the common-mode gain) must be zero, or R1/Rf = R2/Rg
+
+![Image of URI](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Op-Amp_Differential_Amplifier.svg/450px-Op-Amp_Differential_Amplifier.svg.png)
+
+__Equation__:
 
 __IO__:
 
-* __Vi__ [ _Volt_ ] |  -1 * (( Vo * R ) / Rf )
-Input Voltage
-* __Vo__ [ _Volt_ ] |  -1 * (( Rf / Ri ) * Vi ) 
-Output Voltage
-* __Rf__ [ _Ohm_ ] |  Vi * Vo * Ri
+* __V1__ [ _Volt_ ] | ( (V2 * Rg * (R1 + Rf)) - ( R1 * Vo * (R2 + Rg))) / ( Rf * ( R2 + Rg))   
+Input Voltage 1
+* __V2__ [ _Volt_ ] | ( (R2 + Rg ) * ((V1 * Rf) + (R1*Vo))) / (Rg * ( R1+Rf))  
+Input Voltage 2
+* __R1__ [ _Ohm_ ] |  ( Rf * (V1 *(R2+Rg) - (V2*Rg) ) ) / ((V2*Rg)- (Vo*(R2+Rg)))  
+Input resistor 1
+* __R2__ [ _Ohm_ ] |  ( Rg * ( ( -1 * V1 * Rf ) + ( V2 * ( R1 + Rf ) ) - ( R1 * Vo ) ) ) / ( ( V1 * Rf ) + ( R1 * Vo ) )  
+Input resistor 2
+* __Rf__ [ _Ohm_ ] |  ( R1 * ( ( V2 * Rg ) - ( Vo * ( R2 + Rg ) ) ) ) / ( ( V1 * ( R2 + Rg ) ) - ( V2 * Rg ) )  
 Rf
-* __Ri__ [ _Ohm_ ] |  -1 * (( Vo * Rf ) / Vo )
-Ri input resistance
+* __Rg__ [ _Ohm_ ] |  ( R2 * ( ( V1 * Rf ) + ( R1 * Vo ) ) ) / ( ( V1 * Rf ) - ( V2 * ( R1 + Rf ) ) + ( R1 * Vo ) )  
+Rg
+* __Vo__ [ _Volt_ ] |  ( ( ( ( Rf + R1 ) * Rg) /  ( ( Rg + R2 ) * R1) ) * V2 ) - (( Rf / R1 ) * V1 )
+Output Voltage
+
+
+--------
+
+__Name__: Acceleration 1
+
+__Description__:
+
+From some speed Vi with acceleration a to distance d in time t
+
+http://www.physicsclassroom.com/class/1DKin/Lesson-6/Kinematic-Equations-and-Free-Fall
+
+
+__Equation__:
+
+12
+
+__IO__:
+
+* __d__ [ _Meter_ ] |  vi * t + 1/2 * a * t^2   
+Displacement
+* __t__ [ _Second_ ] | ( sqrt( ( 2 * a * d ) + vi^2) - vi ) / a
+Time
+* __a__ [ _Meter per second square_ ] | (d - ( vi * t )) / (1/2 * t^2)  
+Acceleration
+* __vi__ [ _Meter per second_ ] | (d - 1/2 * a * t^2) / t  
+Initial velocity
+ 
+ 
+--------
+
+__Name__: Acceleration 2
+
+__Description__:
+
+From some speed Vi to some other speed Vf with acceleration a in distance d
+
+http://www.physicsclassroom.com/class/1DKin/Lesson-6/Kinematic-Equations-and-Free-Fall
+
+
+![Image of URI](http://www.physicsclassroom.com/Class/1DKin/U1L6b1.gif)
+
+__Equation__:
+
+23
+
+__IO__:
+
+* __d__ [ _Meter_ ] |  ( vf^2 - vi^2 ) / ( 2  * a )  
+Displacement
+* __a__ [ _Meter per second square_ ] |  ( vf^2 - vi^2 ) / (2  * d )  
+Acceleration
+* __vi__ [ _Meter per second_ ] |  sqrt( vf^2 - ( 2 * a * d  ) )  
+Initial velocity
+* __vf__ [ _Meter per second_ ] | sqrt((2 * a * d ) + vi^2 )  
+Final velocity
+
+
+--------
+
+__Name__: Acceleration 3
+
+__Description__:
+
+From some speed Vi to some other speed Vf with acceleration a in time t.
+
+http://www.physicsclassroom.com/class/1DKin/Lesson-6/Kinematic-Equations-and-Free-Fall
+
+![Image of URI](http://www.physicsclassroom.com/Class/1DKin/U1L6b3.gif)
+
+__Equation__:
+
+42
+
+__IO__:
+
+* __t__ [ _Second_ ] |  (vf - vi) / a  
+Time
+* __a__ [ _Meter per second square_ ] |  (vf - vi) / t  
+Acceleration
+* __vi__ [ _Meter per second_ ] |  vf - a * t  
+Initial velocity
+* __vf__ [ _Meter per second_ ] |  vi + a * t  
+Final velocity
+
+
+--------
+
+__Name__: Acceleration 4
+
+__Description__:
+
+From some speed Vi to some other speed Vf in distance d and time t.
+
+http://www.physicsclassroom.com/class/1DKin/Lesson-6/Kinematic-Equations-and-Free-Fall
+
+
+__Equation__:
+
+452
+
+__IO__:
+
+* __d__ [ _Meter_ ] |  (( vi + vf ) / 2 ) * t  
+Displacement
+* __t__ [ _Second_ ] |  ( 2 * d ) / ( vf + vi )  
+Time
+* __vi__ [ _Meter per second_ ] |  (( 2 * d ) / t ) - vf  
+Initial velocity
+* __vf__ [ _Meter per second_ ] |  ( ( 2 * d ) / t ) - vi  
+Final velocity
 
    
 --------
