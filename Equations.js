@@ -531,6 +531,10 @@ function StackEquation(stack, equation){
     this.mappedto = []
     this.minimised = false;
     
+    this.resultValueTrimmed = function(){
+        return this.resultValue().toFixed(4);
+    }
+    
     this.MoveUpColor = function(){ 
         if (CurrentStack.elements[0].id == this.id){
             return "lightgray";
