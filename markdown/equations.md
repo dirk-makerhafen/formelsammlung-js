@@ -639,6 +639,28 @@ Final velocity
    
 --------
 
+__Name__: Capacitive reactance
+
+__Description__:
+
+the resistance of a capacitor at some frequency
+
+
+__Equation__:
+
+452
+
+__IO__:
+
+* __f__ [ _Hertz_ ] |  ( 1 / Xc ) / ( 2 * pi * C )  
+Frequency
+* __C__ [ _Farad_ ] |  ( 1 / Xc ) / ( 2 * pi * f )  
+Capacitance
+* __Xc__ [ _Ohm_ ] |  1 / ( 2 * pi * f * C)  
+Resistance
+   
+--------
+
 
             
    
