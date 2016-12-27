@@ -1,7 +1,22 @@
 var globalCounter = 0; // for uniq variable names
-function getUniqNumber(){
+getUniqNumber = function (){
     globalCounter++;
     return globalCounter;
+}
+
+
+getStackName = function(prefix){
+    var highestNumber = 0;
+    for(var i=0;i<CurrentStack.elements.length;i++){
+        if(CurrentStack.elements[i].name.indexOf(prefix) == 0){
+            var nr = parseInt(CurrentStack.elements[i].name.substring(prefix.length));
+            if(nr>highestNumber){
+                highestNumber = nr;
+            }
+        }
+    }
+    return prefix + (highestNumber+1);
+    
 }
 
 mathjaxCache = function(){

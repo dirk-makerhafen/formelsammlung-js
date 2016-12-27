@@ -101,7 +101,9 @@ function Equation(){
         try {
             result = outPutEquation.eval(valuemapping);
         }catch(e){
-            console.log("failed eval of" + this.getIoBySymbol(solveto).equationString) + "   " + e;
+            console.log(e);
+            console.log(valuemapping)
+            console.log("failed eval of " + this.getIoBySymbol(solveto).equationString) + "   " + e;
         }
         
         return result;
@@ -516,7 +518,7 @@ function StackEquation(stack, equation){
     this.equation = equation;
     this.id = "SE_" + getUniqNumber();
 
-    this.name = "result " + getUniqNumber();
+    this.name =  getStackName("result ");
     this.showConverter = "None";
 
     this.resultScaler = undefined;

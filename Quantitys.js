@@ -53,11 +53,14 @@ function Quantity(name,description,unit){
    
     // scale value from this. to TargetQuantity
     this.convertValue = function(value,TargetQuantity){
+        if (isNaN(value)){
+            return value;
+        }
         var u1= this.unit.toString();
         var u2= TargetQuantity.unit.toString();
         if(u1==""){u1="m^0";}// todo better handing of stuff without unit
         if(u2==""){u2="m^0";}
-        return +math.unit(value,u1).toNumber(u2).toFixed(4);
+        return math.unit(value,u1).toNumber(u2).toFixed(4);
     }
     
     //after all quantity/equations are loaded from markdown, call this to init 
@@ -291,7 +294,7 @@ function StackQuantity(stack,quantity){
     
     this.value = 1;
     
-    this.name = "var " + getUniqNumber();
+    this.name =  getStackName("var ");
     this.showConverter = "None";
     
     this.mappedto = []

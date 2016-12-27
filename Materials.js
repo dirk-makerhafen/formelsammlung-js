@@ -159,7 +159,7 @@ function StackMaterial(stack,material){
     this.material = material;
     this.id = "SM_" + getUniqNumber();
 
-    this.name = "material " + getUniqNumber();
+    this.name = getStackName("material ");
     this.color = "#eee";
     
     this.mappedto = []
