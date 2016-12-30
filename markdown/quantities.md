@@ -625,7 +625,11 @@ acceleration
 velocity  fill me
 
 -------------     
-  
- 
- 
+| Relative Dielectric Constant | Er |  |  |  |  | 
+|---|---|---|---|---|---|
+
+for example of pcb material 
+
+-------------     
+
  

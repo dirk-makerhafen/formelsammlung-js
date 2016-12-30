@@ -1,20 +1,3 @@
-* Electric 
-  * URI
-  * PUI
-  * Cap
-  * RC
-  * RL
-  * CL
-  * RCL 
-  * coils
-* Engineering
-  * second moment area of
-  * Deflection
-  * Eigenbiegung
-  * Torsion
-* Fluids/Hydraulic
-  
-  
 --------
 __Name__: URI
 
@@ -23,10 +6,6 @@ __Description__:
 Relation of **Voltage**, **Current** and **Resistance** 
 
 ![Image of URI](http://www.elektronik-kompendium.de/sites/grd/schalt/15050611.gif)
-
-__Equation__:
-
-R * I - U = 0
 
 __IO__:
 
@@ -46,10 +25,6 @@ __Description__:
 
 Relation of **Voltage**, **Current** and **POWER** 
 
-__Equation__:
-
-U * I - P = 0
-
 __IO__:
 
 * __P__ [ _Watt_ ] | U * I  
@@ -68,10 +43,6 @@ __Description__:
 
 Relation of Motor RPM, Power and Torque
 
-__Equation__:
-
-(9.5488 * P / RPM) - T = 0
-
 __IO__:
 
 * __P__ [ _Watt_ ] | T /  9.5488 * RPM  
@@ -88,10 +59,6 @@ __Name__: Wire resistance
 __Description__:
 
 Relation of wire length, wire area, specific material resistance and total wire resistance. 
-
-__Equation__:
-
-(Rs * L  / A ) - R
 
 __IO__:
 
@@ -112,10 +79,6 @@ __Description__:
 
 Add me
 
-__Equation__:
-
-C * C - F = 0
-
 __IO__:
 
 * __C__ [ _Meter_ ] | sqrt(F)  
@@ -130,10 +93,6 @@ __Name__: Power/Flow/Pressure guestimation
 __Description__:
 
 Some hydraulic Power/Flow/Pressure guestimation
-
-__Equation__:
-
-(Power * 0.6 / Pressure) - Flow
 
 __IO__:
 
@@ -152,10 +111,6 @@ __Description__:
 
 It is the time required to charge the capacitor, through the resistor, by ≈ 63.2 percent of the difference between the initial value and final value or discharge the capacitor to ≈36.8 percent.
 
-__Equation__:
-
-R * C - TAO = 0
-
 __IO__:
 
 * __TAO__ [ _Second_ ] | R * C  
@@ -173,11 +128,6 @@ __Description__:
 
 In physics and electrical engineering, a cutoff frequency, corner frequency, or break frequency is a boundary in a system's frequency response at which energy flowing through the system begins to be reduced (attenuated or reflected) rather than passing through.
 
-__Equation__:
-
-1 / (2 * PI * R * C)  = F
-
-
 __IO__:
 
 * __F__ [ _Hertz_ ] | 1 / (2 * PI * R * C)  
@@ -194,14 +144,10 @@ __Name__: Second moment of area of Circle
 __Description__:
 
 
-https://en.wikipedia.org/wiki/List_of_second_moments_of_area
+<https://en.wikipedia.org/wiki/List_of_second_moments_of_area>
 
 
 ![Image of URI](https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Moment_of_area_of_an_annulus.svg/345px-Moment_of_area_of_an_annulus.svg.png)
-
-__Equation__:
-
-Ix = Iy = (PI / 4) * ( r2^4 - r1^4 )
 
 __IO__:
 
@@ -239,10 +185,6 @@ __Description__:
 
 Capacitor Charge/Discharge
 
-__Equation__:
-
-
-Vc = Vs + ( (Vi - Vs) * e**(-T/R*C) )  
 
 __IO__:
 
@@ -268,9 +210,6 @@ __Description__:
 
  Milling stuff
 
-__Equation__:
-
-S / (PI * Dt / 1000) - RPM = 0
 
 __IO__:
 
@@ -291,9 +230,7 @@ __Description__:
 
  Milling stuff
 
-__Equation__:
 
-RPM =  FR / ( n * CL/1000 ) 
 __IO__:
 
 * __n__ [ _Number of_ ] | FR / ( CL/1000 * RPM)  
@@ -311,15 +248,11 @@ __Name__: Cantilever beam deflection, End-loaded
 
 __Description__:
 
-https://en.wikipedia.org/wiki/Deflection_(engineering)
+<https://en.wikipedia.org/wiki/Deflection_(engineering)>
 
 ![Image of URI](https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Cantilever_with_end_load.svg/330px-Cantilever_with_end_load.svg.png)
 ![Image of URI](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Cantilever_beam_deflection.svg/330px-Cantilever_beam_deflection.svg.png)
  
-__Equation__:
-
-f = (F * L^3) / (3 * E * I * 10^4)
-
 __IO__:
 
 * __f__ [ _Millimeter_ ] |  (F * L^3) / (3 * E * I * 10^4)  
@@ -343,10 +276,6 @@ __Description__:
 
 ![Image of URI](https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Cantilever_with_uniform_distributed_load.svg/330px-Cantilever_with_uniform_distributed_load.svg.png)
 
-
-__Equation__:
-
-f = (Fg * L^4) / (8 * E * I * 10^4)
 
 __IO__:
 
@@ -372,10 +301,6 @@ Robotunits-Profile-Durchbiegung-Torsion-Berechnungsschema%20(1).pdf
 ![Image of URI](https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Simple_beam_with_center_load.svg/564px-Simple_beam_with_center_load.svg.png)
 ![Image of URI](https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Simple_beam_deflection.svg/330px-Simple_beam_deflection.svg.png)
 
-__Equation__:
-
-f = (F * L^3) / (48 * E * I * 10^4)
-
 __IO__:
 
 * __f__ [ _Millimeter_ ] |  ( F * L^3 ) / ( 48 * E * I * 10^4)  
@@ -395,13 +320,9 @@ __Name__: Simply-supported beam deflection, Off-center-loaded
 
 __Description__:
 
-https://en.wikipedia.org/wiki/Deflection_(engineering)
+<https://en.wikipedia.org/wiki/Deflection_(engineering)>
 
 ![Image of URI](https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Simple_beam_with_offset_load.svg/330px-Simple_beam_with_offset_load.svg.png)
-
-__Equation__:
-
-f = (F * d * ( L^2 - d^2 )^(3/2)) /  ( 9 * L * E * I * sqrt(3) )
 
 __IO__:
 
@@ -428,10 +349,6 @@ __Description__:
 
 ![Image of URI](https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Simple_beam_with_uniform_distributed_load.svg/330px-Simple_beam_with_uniform_distributed_load.svg.png)
 
-__Equation__:
-
-f = (5 * Fg * L^4) / (384 * E * l)
-
 __IO__:
 
 * __f__ [ _Millimeter_ ] |  ( 5 * Fg * L^4 ) / ( 384 * E * I )  
@@ -451,13 +368,9 @@ __Name__: Op-Amp Non-Inverting
 
 __Description__:
 
-https://en.wikipedia.org/wiki/Operational_amplifier_applications#Non-inverting_amplifier
+<https://en.wikipedia.org/wiki/Operational_amplifier_applications#Non-inverting_amplifier>
 
 ![Image of URI](https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Op-Amp_Non-Inverting_Amplifier.svg/450px-Op-Amp_Non-Inverting_Amplifier.svg.png)
-
-__Equation__:
-
-Vo = ( 1 + ( R2 / R1 ) ) * Vi
 
 __IO__:
 
@@ -477,10 +390,9 @@ __Name__: Op-Amp Inverting
 
 __Description__:
 
-https://en.wikipedia.org/wiki/Operational_amplifier_applications#Inverting_amplifier
+<https://en.wikipedia.org/wiki/Operational_amplifier_applications#Inverting_amplifier>
 
 ![Image of URI](https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Op-Amp_Inverting_Amplifier.svg/450px-Op-Amp_Inverting_Amplifier.svg.png)
-__Equation__:
 
 __IO__:
 
@@ -500,13 +412,12 @@ __Name__: Op-Amp Differential
 
 __Description__:
 
-https://en.wikipedia.org/wiki/Operational_amplifier_applications
+<https://en.wikipedia.org/wiki/Operational_amplifier_applications>
 
 In order for this circuit to produce a signal proportional to the voltage difference of the input terminals, the coefficient of the Vcom term (the common-mode gain) must be zero, or R1/Rf = R2/Rg
 
 ![Image of URI](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Op-Amp_Differential_Amplifier.svg/450px-Op-Amp_Differential_Amplifier.svg.png)
 
-__Equation__:
 
 __IO__:
 
@@ -534,12 +445,8 @@ __Description__:
 
 From some speed Vi with acceleration a to distance d in time t
 
-http://www.physicsclassroom.com/class/1DKin/Lesson-6/Kinematic-Equations-and-Free-Fall
+<http://www.physicsclassroom.com/class/1DKin/Lesson-6/Kinematic-Equations-and-Free-Fall>
 
-
-__Equation__:
-
-12
 
 __IO__:
 
@@ -561,14 +468,11 @@ __Description__:
 
 From some speed Vi to some other speed Vf with acceleration a in distance d
 
-http://www.physicsclassroom.com/class/1DKin/Lesson-6/Kinematic-Equations-and-Free-Fall
+<http://www.physicsclassroom.com/class/1DKin/Lesson-6/Kinematic-Equations-and-Free-Fall>
 
 
 ![Image of URI](http://www.physicsclassroom.com/Class/1DKin/U1L6b1.gif)
 
-__Equation__:
-
-23
 
 __IO__:
 
@@ -590,13 +494,10 @@ __Description__:
 
 From some speed Vi to some other speed Vf with acceleration a in time t.
 
-http://www.physicsclassroom.com/class/1DKin/Lesson-6/Kinematic-Equations-and-Free-Fall
+<http://www.physicsclassroom.com/class/1DKin/Lesson-6/Kinematic-Equations-and-Free-Fall>
 
 ![Image of URI](http://www.physicsclassroom.com/Class/1DKin/U1L6b3.gif)
 
-__Equation__:
-
-42
 
 __IO__:
 
@@ -618,12 +519,8 @@ __Description__:
 
 From some speed Vi to some other speed Vf in distance d and time t.
 
-http://www.physicsclassroom.com/class/1DKin/Lesson-6/Kinematic-Equations-and-Free-Fall
+<http://www.physicsclassroom.com/class/1DKin/Lesson-6/Kinematic-Equations-and-Free-Fall>
 
-
-__Equation__:
-
-452
 
 __IO__:
 
@@ -646,9 +543,6 @@ __Description__:
 the resistance of a capacitor at some frequency
 
 
-__Equation__:
-
-452
 
 __IO__:
 
@@ -661,7 +555,56 @@ Resistance
    
 --------
 
+__Name__: Coplanar Waveguide With Ground Characteristic Impedance
 
-            
+__Description__:
+
+The original formulas are in Transmission Line Design Handbook by Brian C Wadell, Artech House 1991 page 79. The formulas use "a" for the track width and "b" for the sum of the track width plus the gaps either side.
+
+
+<http://chemandy.com/calculators/coplanar-waveguide-with-ground-calculator.htm>
+
+__IO__:
+
+* __Er__ [ _Relative Dielectric Constant_ ] |  
+Material Property of PCB
+* __Wt__ [ _Meter_ ] |  
+Width of the track
+* __Wg__ [ _Meter_ ] |  
+Width of the gap
+* __h__ [ _Meter_ ] |  
+Height of the dielectric
+* __Z__ [ _Ohm_ ] |  ( 60 * PI / sqrt(Eeff) ) * ( 1 / ( ( K(k) / K(ka) ) + ( K(kl) / K(kla) ) ) )  
+    | b  = Wt + 2 * Wg  
+    | k  = Wt / b  
+    | ka = sqrt(1 - k^2)  
+    | kl = tanh( PI * Wt / ( 4 * h ) ) / tanh( PI * b / ( 4 * h ) )  
+    | kla = sqrt( 1 - kl^2 )  
+    | Eeff = (1 + ( ( Er * K(ka) * K(kl) ) / ( K(k) * K(kla) ) ) ) / ( 1 + ( ( K(ka) * K(kl) ) / ( K(k) * K(kla) ) ) )  
+Characteristic Impedance
+
+__Function__:
+* __K__ :  These recursive equations were originally given for use in calculating the inductance of helical coils and are taken from Miller, H Craig, "Inductance Formula for a Single-Layer Circular Coil" Proceedings of the IEEE, Vol. 75, No 2, February 1987, pp. 256-257.
+
+<http://chemandy.com/calculators/elliptical-integrals-of-the-first-kind-calculator.htm>
+
+```
+function(k){ 
+    var a = 1;
+    var b = math.sqrt(1 - k**2);
+    var c = k;
+    var ka = math.PI/2;
+    // Refine the value of K(k') in a loop from n=1 to n=7
+    for(var i =0;i<7;i++){
+        var d = a;
+        var e = b;
+        a = (d+e)/2;
+        b = math.sqrt(d * e);
+        c = (d-e)/2;
+        ka = math.PI / (2 * a);
+    }
+    return ka;
+}
+```
    
-   
+--------
