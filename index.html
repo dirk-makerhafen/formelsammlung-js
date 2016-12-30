@@ -278,7 +278,7 @@
                 {{#io}}
                     <div class="row"  style="">
                         <div class="col-md-1" onclick='$(this.parentNode).next().slideToggle();' style="text-align:center;padding-right:0px">
-                            <a>{{{renderSymbolTex}}}</a>
+                            <{{showEquationDetailLink}}>{{{renderSymbolTex}}}</{{showEquationDetailLink}}>
                         </div>
                         <div class="col-md-3" style="text-align:center;padding-left:0px;padding-right:0px">
                             {{quantity.name}}
@@ -292,7 +292,7 @@
                        </div>
                        <div class="col-md-11">
                            <div style="display:block;">{{{renderEquationTex}}}</div>
-                           <div style="display:none;"><pre><code>{{symbol}} = {{equationString}}</pre></code></div>                           
+                           <div style="display:none;"><pre><code>{{equationString}}</pre></code></div>                           
                            <div style="display:none;"><pre><code>{{equationTex}}</pre></code></div>
                            <div style="display:none;"><pre><code>{{{equationJavascript}}}</pre></code></div>                           
                            <span style="line-height: 40px;">
@@ -301,8 +301,6 @@
                                <a onclick='selectOutputRendering(this,1);' >raw</a> 
                                 - 
                                <a onclick='selectOutputRendering(this,2);' >LaTEX</a>
-                               -
-                               <a onclick='selectOutputRendering(this,3);' >JS</a>
 
                             </span>
                        </div>
