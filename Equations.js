@@ -295,7 +295,7 @@ function EquationIO(){
         for(var i=1;i<tmp.length;i++){
             var x= tmp[i].trim();
             if(x.indexOf("|")==0){
-                var y = x.replace("|","");
+                var y = x.replace("|","").trim();
                 eq.push(y);
             }else{
                 description += "\n" + x;
@@ -305,15 +305,12 @@ function EquationIO(){
 
         eq.push(symbolequationString);
         
-        //this.description =  markdownString.split("_ ]")[1].split("\n")[1].trim();
-        //this.equationString = markdownString.split("_ ]")[1].split("|")[1].split("\n")[0].trim();
         this.description  = description;
-        this.equationString = eq.join(" ; ");
-        
+        this.equationString = eq.join("\n"); 
         if(this.equationString != ""){
             try{
                 this.equation = math.parse(this.equationString);
-                this.equationTex = this.equation.toTex().replace(new RegExp(';\\\\;\\\\;', 'g'), "\\\\");
+                this.equationTex = this.equation.toTex().replace(new RegExp('\\\\;\\\\;\n ', 'g'), "\\\\\n");
             }catch(e){
                 console.log("failed to parse equation for io: " + this.equation + "  " + e);
             }
