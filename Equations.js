@@ -310,7 +310,7 @@ function EquationIO(){
         if(this.equationString != ""){
             try{
                 this.equation = math.parse(this.equationString);
-                this.equationTex = this.equation.toTex().replace(new RegExp('\\\\;\\\\;\n ', 'g'), "\\\\\n");
+                this.equationTex = this.equation.toTex().replace(new RegExp('\\\\;\\\\;', 'g'), "\\\\").replace(new RegExp('\n ', 'g'), "\n");
             }catch(e){
                 console.log("failed to parse equation for io: " + this.equation + "  " + e);
             }

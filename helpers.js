@@ -121,14 +121,14 @@ stripArray = function(valuesString){
 
 selectOutputRendering = function(node,number){
     var x=$(node.parentNode.parentNode).children(); 
-    for(var i=0;i<4;i++ ){
+    for(var i=0;i<3;i++ ){
         if(i==number){continue;}
         x.eq(i).hide(150);
     }
     x.eq(number).show(150);
      
     var y=$(node.parentNode).children(); 
-    for(var i=0;i<4;i++ ){
+    for(var i=0;i<3;i++ ){
         if(i==number){
             y.eq(i).css("font-weight","bold");
         }else{
