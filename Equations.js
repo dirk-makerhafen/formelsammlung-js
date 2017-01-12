@@ -113,7 +113,7 @@ function Equation(){
             console.log("failed eval of " + this.getIoBySymbol(solveto).equationString) + "   " + e;
         }
         if(result.hasOwnProperty("entries")){
-            result = result["entries"][0];
+            result = result["entries"][result["entries"].length-1];
         }
         return result;
     }

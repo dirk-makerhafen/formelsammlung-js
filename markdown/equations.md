@@ -580,7 +580,7 @@ Height of the dielectric
     | ka = sqrt(1 - k^2)  
     | kl = tanh( PI * Wt / ( 4 * h ) ) / tanh( PI * b / ( 4 * h ) )  
     | kla = sqrt( 1 - kl^2 )  
-    | Eeff = (1 + ( ( Er * K(ka) * K(kl) ) / ( K(k) * K(kla) ) ) ) / ( 1 + ( ( K(ka) * K(kl) ) / ( K(k) * K(kla) ) ) )  
+    | Eeff = (1 + (  Er * ( ( K(ka) * K(kl) ) / ( K(k) * K(kla) ) ) ) ) / ( 1 + ( ( K(ka) * K(kl) ) / ( K(k) * K(kla) ) ) )  
 Characteristic Impedance
 
 __Function__:
