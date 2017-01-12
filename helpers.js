@@ -144,8 +144,11 @@ textAreaAdjust = function(target) {
 
 
 create_link = function(type,target){
-    pathArray = location.href.split( '/' );
-    url = pathArray[0] + '//' + pathArray[2] + "/?link=" + type + ":" + encodeURIComponent(target);;
+    var host = location.hostname;
+    if(location.port != ""){
+        host += ":" + location.port;
+    }
+    url =  location.protocol + '//' + host + location.pathname + "?link=" + type + ":" + encodeURIComponent(target);
     jQuery("#shareLinkModalURL")[0].value = url;
 }
 
