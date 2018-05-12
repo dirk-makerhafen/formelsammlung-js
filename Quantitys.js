@@ -131,7 +131,7 @@ function Quantities(){
                 
                 if(isNaN(factor)){
                     if(unitstring==""){
-                        unit = math.unit("m^0");
+                        unit = math.createUnit(shortnames[0]);
                     }else{
                         unit = math.unit(unitstring);
                     }

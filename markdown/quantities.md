@@ -144,7 +144,12 @@ fill me now!
 #### <a name="other-area"></a>  Other Area ####
 
 -------------
+| American Wire Gauge | AWG |  |  |  |  | 
+|---|---|---|---|---|---|
 
+its awg https://wikipedia.org/wiki/American_wire_gauge
+
+-------------
 
 
 -------------

@@ -608,3 +608,19 @@ function(k){
 ```
    
 --------
+__Name__: Awg to mm2
+
+__Description__:
+
+From AWG to mm^2 and back
+
+
+__IO__:
+
+* __n__ [ _American Wire Gauge_ ] | -39 * log( ( ( sqrt( a / PI ) * 2 ) / 0.127 ) , 92 ) + 36 
+AWG
+* __a__ [ _Square Millimeter_ ] | ( ( 0.127 * ( 92^( ( 36 - n ) / 39 ) ) ) / 2 )^2 * PI
+Square Millimeter
+
+ 
+--------
