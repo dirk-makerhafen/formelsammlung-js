@@ -76,9 +76,9 @@ io_display_name
 - quantity  
     uniq name of a quantity
 - equation  
-    the actual equation transformed to 'letter'. Format is as nice a you can, with spaces, many brackets, no shortcuts.
+    the actual equation transformed to 'letter'. Format it as nice as you can, with spaces, many brackets, no shortcuts.
 - io_display_name  
-    a short name that should be display near the letter. may just be the quantity name, but thinks like "Initial velocity" and "Final velocity" may be useful
+    a short name that should be display near the letter. may just be the quantity name, but things like "Initial velocity" and "Final velocity" may be useful
     
 
 ## Translation:
@@ -143,7 +143,7 @@ translated_io_display_name
 ## Advanced:
 
 Therer are some things that can not be expressed with mathjs yet. For example the equation used in  "Coplanar Waveguide With Ground Characteristic Impedance"
-In that case you can add arbitary javascript functions to equations like in the example below. Note how 'K' is used in the equation for 'Z' and defined the the function block at the end.
+In that case you can add arbitary javascript functions to equations like in the example below. Note how 'K' is used in the equation for 'Z' and defined in the function block at the end.
 
 
 ### Example function usage
