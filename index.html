@@ -133,11 +133,7 @@
     .glyphicon:before{
         font-family:'Glyphicons Halflings';
     }
-    .description {
-        margin-left: 10px;
-        margin-right: 10px;
-        margin-top: 5px;
-    }
+
     .ui-slider-tabs-list {
         width : 100% !important;
     }
@@ -205,93 +201,143 @@
 <script type="x-tmpl-mustache" id="QuantityTemplate">
     <div class="box">
         <div class="row">
-            <div class="col-md-10">
-                <div class="col-md-1" style="padding-left:5px;">
-                    <span style="color:green;cursor: pointer;" class="glyphicon glyphicon-plus" onclick="CurrentStack.add(Quantities.get('{{name}}'))">use</span>
-                </div>
-                <div class="col-md-11">
-                    <div class="col-md-4" style="text-align:left;" >
-                        <b>{{name_translation}}</b>{{aliasnames_translation}}
+            <div class="col-xs-9 col-md-10">
+                <div class="row">
+                    <div class="col-xs-2 col-sm-1">
+                        <span style="color:green;cursor: pointer;" class="glyphicon glyphicon-plus" onclick="CurrentStack.add(Quantities.get('{{name}}'))">use</span>
                     </div>
-                    <div class="col-md-4" >{{{renderUnitTex}}}</div>
-                    <div class="col-md-4"></div>
+                    <div class="col-xs-10 col-sm-11">
+                        <div class="row">
+                            <div class="col-xs-8" style="text-align:left;" >
+                                <b>{{name_translation}}</b>{{aliasnames_translation}}
+                            </div>
+                            <div class="col-xs-4" >{{{renderUnitTex}}}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            
-            <div class="col-md-2">
-                <div class="col-md-4">
-                    <a onclick="create_link('quantity','{{name}}')" style="font-size:0.8em;" data-toggle="modal" data-target="#shareLinkModal" class="glyphicon glyphicon-link">&nbsp;Link</a>
-                </div>
-                <div class="col-md-8">
-                    <a onclick="load_disqus_modal(Quantities.get('{{name}}'),'{{name}}')" style="font-size:0.8em;" class="glyphicon glyphicon-comment"  data-toggle="modal" data-target="#disqusModal">&nbsp;Discussion</a>
+            <div class="col-xs-3 col-md-2">
+                <div class="row">
+                    <div class="col-xs-12 col-md-4">
+                        <a onclick="create_link('quantity','{{name}}')" style="font-size:0.8em;" data-toggle="modal" data-target="#shareLinkModal" class="glyphicon glyphicon-link">&nbsp;Link</a>
+                    </div>
+                    <div class="col-xs-12 col-md-8">
+                        <a onclick="load_disqus_modal(Quantities.get('{{name}}'),'{{name}}')" style="font-size:0.8em;" class="glyphicon glyphicon-comment"  data-toggle="modal" data-target="#disqusModal">&nbsp;Discussion</a>
+                    </div>
                 </div>
             </div>
         </div>
-        <div id="quantityDescription_{{name}}" class="row description">
-            {{{renderDescription}}}
+        <div class="row" id="quantityDescription_{{name}}" >
+            <div class="col-xs-12">
+                {{{renderDescription}}}
+            </div>
         </div>
     </div>
 </script>
 
 <script type="x-tmpl-mustache" id="EquationTemplate">
     <div class="box">
-    
-    
         <div class="row">
-            <div class="col-md-10">
-                <div class="col-md-1" style="padding-left:5px;">
-                    <span style="color:{{color}};cursor: pointer;" class="glyphicon glyphicon-plus" onclick="CurrentStack.add(Equations.get('{{name}}'))">use</span>
-                </div>
-                <div class="col-md-11">
-                    <div class="col-md-12" style="text-align:left;" >
-                        <b>{{name_translation}}</b>
-                        
-                        {{nrOfMappableIos}}/{{io.length}}
-                    
-                        <span style="display:no{{outputName}}ne;">Could calculate: </span><b>{{outputName}}</b>
+            <div class="col-xs-9 col-md-10">
+                <div class="row">
+                    <div class="col-xs-2 col-sm-1">
+                        <span style="color:{{color}};cursor: pointer;" class="glyphicon glyphicon-plus" onclick="CurrentStack.add(Equations.get('{{name}}'))">use</span>
                     </div>
+                    <div class="col-xs-10 col-sm-11">
+                        <div class="row">
+                            <div class="col-md-12" style="text-align:left;" >
+                                <b>{{name_translation}}</b>
+                                
+                                {{nrOfMappableIos}}/{{io.length}}
+                            
+                                <span style="display:no{{outputName}}ne;">Could calculate: </span><b>{{outputName}}</b>
+                            </div>
+                        </div>
+                    </div>                
                 </div>                
             </div>                
-            <div class="col-md-2">
-                <div class="col-md-4">
-                    <a onclick="create_link('equation','{{name}}')" style="font-size:0.8em;" data-toggle="modal" data-target="#shareLinkModal" class="glyphicon glyphicon-link">&nbsp;Link</a>
-                </div>
-                <div class="col-md-8">
-                    <a onclick="load_disqus_modal(Equations.get('{{name}}'),'{{name}}')" style="font-size:0.8em;"  class="glyphicon glyphicon-comment"   data-toggle="modal" data-target="#disqusModal">&nbsp;Discussion </a>
+                       
+            <div class="col-xs-3 col-md-2">
+                <div class="row">
+                    <div class="col-xs-12 col-md-4">
+                        <a onclick="create_link('equation','{{name}}')" style="font-size:0.8em;" data-toggle="modal" data-target="#shareLinkModal" class="glyphicon glyphicon-link">&nbsp;Link</a>
+                    </div>
+                    <div class="col-xs-12 col-md-8">
+                        <a onclick="load_disqus_modal(Equations.get('{{name}}'),'{{name}}')" style="font-size:0.8em;"  class="glyphicon glyphicon-comment"   data-toggle="modal" data-target="#disqusModal">&nbsp;Discussion </a>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="row description">            
-            {{{renderDescription}}}
+        <div class="row">      
+            <div class="col-xs-12">        
+                {{{renderDescription}}}
+            </div>
         </div>
     </div>
 </script>
 
+<script type="x-tmpl-mustache" id="MaterialTemplate">
+    <div class="box">
+        <div class="row">            
+            <div class="col-xs-9 col-md-10">
+                <div class="row">
+                    <div class="col-xs-2 col-sm-1">
+                        <span style="color:green;cursor: pointer;" class="glyphicon glyphicon-plus" onclick="CurrentStack.add(Materials.get('{{name}}'))">use</span>
+                    </div>
+                    <div class="col-xs-10 col-sm-11">
+                        <b>{{name_translation}}</b>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-2">
+                <div class="row">
+                    <div class="col-xs-12 col-md-4">
+                        <a onclick="create_link('material','{{name}}')" style="font-size:0.8em;" data-toggle="modal" data-target="#shareLinkModal" class="glyphicon glyphicon-link">&nbsp;Link</a>
+                    </div>
+                    <div class="col-xs-12 col-md-8">
+                        <a onclick="load_disqus_modal(Materials.get('{{name}}'),'{{name}}')" style="font-size:0.8em;"  class="glyphicon glyphicon-comment"   data-toggle="modal" data-target="#disqusModal">&nbsp;Discussion </a>
+                    </div>
+                </div>
+            </div>    
+        </div>
+        <div class="row">            
+            <div class="col-xs-12">        
+                {{{renderDescription}}}
+            </div>
+        </div>
+    </div>
+</script>
 
 <script type="x-tmpl-mustache" id="EquationDescriptionTemplate">
-  <div id="equationDescription_{{identifier}}">
-    <div class="row">
-        <div class="col-md-8" style="margin-top:10px;" >
-            <div class="col-md-12" style="margin-top:10px;" >
+    <div id="equationDescription_{{identifier}}">
+        <div class="row">
+            <div class="col-xs-12 col-md-8">
                 {{{description}}}
             </div>
-            <div class="col-md-12" id="equationDescriptionIO_{{identifier}}" style="margin-top:10px;" >
+            <div  class="col-xs-6 col-md-4"  id="equationDescriptionImages_{{name}}">
+                {{#images}}
+                    <img style="max-width:100%;max-height:100%" src="{{.}}"></img>      
+                {{/images}}
+            </div>
+        </div>
+        <div class="row">   
+            <div class="col-xs-12" id="equationDescriptionIO_{{identifier}}" style="margin-top:10px;" >
                 {{#io}}
                     <div class="row"  style="">
-                        <div class="col-md-1" onclick='$(this.parentNode).next().slideToggle();' style="text-align:center;padding-right:0px">
+                        <div class="col-xs-offset-1 col-xs-1" onclick='$(this.parentNode).next().slideToggle();' style="text-align:center;padding-right:0px">
                             <{{showEquationDetailLink}}>{{{renderSymbolTex}}}</{{showEquationDetailLink}}>
                         </div>
-                        <div class="col-md-3" style="text-align:center;padding-left:0px;padding-right:0px">
+                        <div class="col-xs-3" style="text-align:center;padding-left:0px;padding-right:0px">
                             {{quantity.name}}
                         </div>
-                        <div class="col-md-8" style=";padding-left:0px;padding-right:0px" >
+                        <div class="col-xs-7" style=";padding-left:0px;padding-right:0px" >
                             {{description}}
                         </div>
                     </div>
                     <div class="row" style='margin-top:10px;margin-bottom:20px;display:none'>
-                       <div class="col-md-1">
+                       <div class="col-xs-1">
                        </div>
-                       <div class="col-md-11">
+                       <div class="col-xs-11">
                            <div style="display:block;">{{{renderEquationTex}}}</div>
                            <div style="display:none;"><pre><code>{{equationString}}</pre></code></div>                           
                            <div style="display:none;"><pre><code>{{equationTex}}</pre></code></div>
@@ -309,41 +355,10 @@
                 {{/io}}
             </div>            
         </div>
-        <div  class="col-md-4"  id="equationDescriptionImages_{{name}}">
-            {{#images}}
-                    <img style="max-width:175px;max-height:175px" src="{{.}}"></img>      
-            {{/images}}
-        </div>
     </div>
-  </div>
 </script>
     
-<script type="x-tmpl-mustache" id="MaterialTemplate">
-    <div class="box">
-        <div class="row">            
-            <div class="col-md-10">
-                <div class="col-md-1" style="padding-left:5px;">
-                    <span style="color:green;cursor: pointer;" class="glyphicon glyphicon-plus" onclick="CurrentStack.add(Materials.get('{{name}}'))">use</span>
-                </div>
-                <div class="col-md-11">
-                    <b>{{name_translation}}</b>
-                </div>
-            </div>
-            
-            <div class="col-md-2">
-                <div class="col-md-4">
-                    <a onclick="create_link('material','{{name}}')" style="font-size:0.8em;" data-toggle="modal" data-target="#shareLinkModal" class="glyphicon glyphicon-link">&nbsp;Link</a>
-                </div>
-                <div class="col-md-8">
-                    <a onclick="load_disqus_modal(Materials.get('{{name}}'),'{{name}}')" style="font-size:0.8em;"  class="glyphicon glyphicon-comment"   data-toggle="modal" data-target="#disqusModal">&nbsp;Discussion </a>
-                </div>
-            </div>    
-        </div>
-        <div class="row description">            
-        {{{renderDescription}}}
-        </div>
-    </div>
-</script>
+
 
 <script type="x-tmpl-mustache" id="SavedStackTemplate">
     <div class="box">
@@ -369,11 +384,13 @@
                 </div>
             </div>
         </div>
-        <div class="row description">
-            <textarea placeholder="Description" style="border:none;width:80%;resize:vertical;overflow:hidden;" class="row description variableTextArea"  
+        <div class="row">
+            <div class="col-xs-12">
+            <textarea placeholder="Description" style="border:none;width:80%;resize:vertical;overflow:hidden;" class="variableTextArea"  
                 onKeyUp="Stacks.get('{{id}}').setDescription(this.value);textAreaAdjust(this);" 
                 onChange="Stacks.get('{{id}}').setDescription(this.value);textAreaAdjust(this);Stacks.toLocalStorage();"
                 >{{description}}</textarea>
+            </div>
         </div>
     </div>
 </script>
@@ -459,43 +476,37 @@
 
 
 <script type="x-tmpl-mustache" id="StackQuantityTemplate" >
-    <div id="{{id}}"> 
-        <div class="row"  >
-            <div class="updowndeleteGlyph col-md-1" >
-                <span class="glyphicon glyphicon-resize-vertical"  title="Drag Up/Down" onMouseDown="var x=$(this).parent().parent().parent().parent();x.css('margin','4px').css('padding-top','5px').css('padding-bottom','5px')" onMouseUp="var x=$(this).parent().parent().parent().parent();x.css('margin','6px').css('padding-top','4px').css('padding-bottom','4px');"></span>
-                <span class="glyphicon glyphicon-remove-circle" onclick="CurrentStack.remove('{{id}}')"></span>
-            </div>
+    <div id="{{id}}" class="row"  > 
+        <div class="col-xs-1 updowndeleteGlyph" >
+            <span class="glyphicon glyphicon-remove-circle" onclick="CurrentStack.remove('{{id}}')"></span>
+        </div>
 
-            <div class="col-md-2" >
-                <input class="variableNameInput" value="{{name}}" onKeyUp="CurrentStack.get('{{id}}').setName(this.value)" 
-                onclick='flashMappedInputHelper("StackEquationIo_{{id}}");'></input>
-            </div>
-            <div class="col-md-3"> 
-                <div class="row">
-                    <div class="col-md-8">
-                        <input value="{{value}}" onKeyUp="CurrentStack.get('{{id}}').setValue(this.value)" class="valueInput"></input>
-                    </div>
-                    <div class="col-md-3 unitOutput">
-                        {{#quantity}} {{{renderUnitTex}}} {{/quantity}}
-                    </div>
+        <div class="col-xs-2" >
+            <input class="variableNameInput" value="{{name}}" onKeyUp="CurrentStack.get('{{id}}').setName(this.value)" 
+            onclick='flashMappedInputHelper("StackEquationIo_{{id}}");'></input>
+        </div>
+        <div class="col-xs-3"> 
+            <div class="row">
+                <div class="col-xs-8">
+                    <input value="{{value}}" onKeyUp="CurrentStack.get('{{id}}').setValue(this.value)" class="valueInput"></input>
                 </div>
-                <div id="Converter_{{id}}" style="display:{{showConverter}}">
-                    {{{renderConverter}}}
+                <div class="col-xs-3 unitOutput">
+                    {{#quantity}} {{{renderUnitTex}}} {{/quantity}}
                 </div>
             </div>
-            <div class="col-md-1 scapeTransformGlyph">
-                <span style="color:lightgray;color:bla{{displayScaleUp}}ck" class="glyphicon glyphicon-arrow-up" onclick="CurrentStack.get('{{id}}').scaleUp();"></span>
-                <span style="color:lightgray;color:bla{{displayScaleDown}}ck" class="glyphicon glyphicon-arrow-down" onclick="CurrentStack.get('{{id}}').scaleDown();"></span>
-                <span style="color:lightgray;color:bla{{displayShowConvert}}ck"  class="glyphicon glyphicon-random" onclick="CurrentStack.get('{{id}}').toggleShowConverter();"></span>
+            <div id="Converter_{{id}}" style="display:{{showConverter}}">
+                {{{renderConverter}}}
             </div>
-            <div class="col-md-3 scapeTransformGlyph">
-               {{quantity.name}}
-            </div>
-            
-            
+        </div>
+        <div class="col-xs-2 scapeTransformGlyph">
+            <span style="color:lightgray;color:bla{{displayScaleUp}}ck" class="glyphicon glyphicon-arrow-up" onclick="CurrentStack.get('{{id}}').scaleUp();"></span>
+            <span style="color:lightgray;color:bla{{displayScaleDown}}ck" class="glyphicon glyphicon-arrow-down" onclick="CurrentStack.get('{{id}}').scaleDown();"></span>
+            <span style="color:lightgray;color:bla{{displayShowConvert}}ck"  class="glyphicon glyphicon-random" onclick="CurrentStack.get('{{id}}').toggleShowConverter();"></span>
+        </div>
+        <div class="col-xs-3 scapeTransformGlyph">
+           {{quantity.name}}
         </div>
     </div>
-            
 </script>
 
 <script type="x-tmpl-mustache" id="StackQuantityConverterTemplate" >
@@ -514,23 +525,22 @@
             <b>{{#equation}}{{name_translation}}{{/equation}}</b>
         </div>
         <div class="row">
-            <div class="updowndeleteGlyph col-md-1" >
-                <span class="glyphicon glyphicon-resize-vertical"  title="Drag Up/Down" onMouseDown="var x=$(this).parent().parent().parent().parent();x.css('margin','4px').css('padding-top','5px').css('padding-bottom','5px')" onMouseUp="var x=$(this).parent().parent().parent().parent();x.css('margin','6px').css('padding-top','4px').css('padding-bottom','4px');"></span>
+            <div class="col-xs-1 updowndeleteGlyph " >
                 <span class="glyphicon glyphicon-remove-circle" onclick="CurrentStack.remove('{{id}}')"></span>
                 <span class="glyphicon glyphicon-resize-small" onclick="$(this).hide();$(this).next().show();$(this).parent().parent().next().hide(350);CurrentStack.get('{{id}}').setMinimised(true);" style="display:{{showCanMinimise}}"></span>
                 <span class="glyphicon glyphicon-resize-full" onclick="$(this).hide();$(this).prev().show();$(this).parent().parent().next().show(350);CurrentStack.get('{{id}}').setMinimised(false);" style="display:{{showCanMaximise}}"></span>
             </div>    
     
-            <div class="col-md-2">        
+            <div class="col-xs-2">        
                 <input class="variableNameInput" value="{{name}}" onKeyUp="CurrentStack.get('{{id}}').setName(this.value)" 
                 onclick='flashMappedInputHelper("StackEquationIo_{{id}}");'></input>
             </div>
-            <div class="col-md-3"> 
+            <div class="col-xs-3"> 
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-xs-8">
                         <input readonly value="{{resultValueTrimmed}}"  class="valueInput"></input>
                     </div>
-                    <div class="col-md-3 unitOutput">
+                    <div class="col-xs-3 unitOutput">
                         {{#resultQuantity}}{{{renderUnitTex}}}{{/resultQuantity}}
                     </div>
                 </div>
@@ -538,17 +548,17 @@
                     {{{renderConverter}}}
                 </div>
             </div>
-            <div class="col-md-1 scapeTransformGlyph">
+            <div class="col-xs-2 scapeTransformGlyph">
                 <span style="color:lightgray;color:bla{{displayScaleUp}}ck" class="glyphicon glyphicon-arrow-up" onclick="CurrentStack.get('{{id}}').scaleUp();"></span>
                 <span style="color:lightgray;color:bla{{displayScaleDown}}ck" class="glyphicon glyphicon-arrow-down" onclick="CurrentStack.get('{{id}}').scaleDown();"></span>
                 <span style="color:lightgray;color:bla{{displayShowConvert}}ck"  class="glyphicon glyphicon-random" onclick="CurrentStack.get('{{id}}').toggleShowConverter();"></span>
             </div>
-            <div class="col-md-3 scapeTransformGlyph">
+            <div class="col-xs-3 scapeTransformGlyph">
                {{#resultQuantity}}{{{name_translation}}}{{/resultQuantity}}
             </div>            
         </div>
         <div class="row" style="display:{{showCanMinimise}}">
-            <div class="col-md-5 col-md-offset-6">
+            <div class="col-xs-12 col-md-8 col-md-offset-2">
                 {{#io}}
                     {{{render}}}
                 {{/io}}
@@ -565,7 +575,7 @@
 
 <script type="x-tmpl-mustache" id="StackEquationIoTemplate" >
     <div class="row" style="padding-top:5px;">
-        <div class="col-md-4" style=";line-height: 40px;" >
+        <div class="col-xs-4" style=";line-height: 40px;" >
             <select class="iostuff iostuffselect " onchange="CurrentStack.get('{{parentStackEquation.id}}').getIO('{{id}}').setMappedTo(this.value,false)">
                 <option value="OUTPUT">Output</option>
                 {{#mapableStackElements}}
@@ -573,12 +583,12 @@
                 {{/mapableStackElements}}                
             </select>
         </div>
-        <div class="{{selectableDivClass}} col-md-2" style="line-height: 40px;">
+        <div class=" col-xs-2 {{selectableDivClass}}" style="line-height: 40px;">
             {{#equationio}}
                 <b>{{{renderSymbolTex}}}</b>
             {{/equationio}}
         </div>
-        <div class="col-md-6" style="line-height: 40px;">
+        <div class="col-xs-6" style="line-height: 40px;">
             {{#equationio}}
                 <div class="row" style="line-height: 20px;">
                     {{description_translation}}
@@ -597,32 +607,31 @@
 <script type="x-tmpl-mustache" id="StackMaterialTemplate" >
     <div id="{{id}}">
         <div class="row">
-            <div class="updowndeleteGlyph col-md-1" >
-                <span class="glyphicon glyphicon-resize-vertical"  title="Drag Up/Down" onMouseDown="var x=$(this).parent().parent().parent().parent();x.css('margin','4px').css('padding-top','5px').css('padding-bottom','5px')" onMouseUp="var x=$(this).parent().parent().parent().parent();x.css('margin','6px').css('padding-top','4px').css('padding-bottom','4px');"></span>
+            <div class="col-xs-1 updowndeleteGlyph " >
                 <span class="glyphicon glyphicon-remove-circle" onclick="CurrentStack.remove('{{id}}')"></span>
                 <span class="glyphicon glyphicon-resize-small" onclick="$(this).hide();$(this).next().show();$(this).parent().parent().next().hide(350);CurrentStack.get('{{id}}').setMinimised(true);" style="display:{{showCanMinimise}}"></span>
                 <span class="glyphicon glyphicon-resize-full" onclick="$(this).hide();$(this).prev().show();$(this).parent().parent().next().show(350);CurrentStack.get('{{id}}').setMinimised(false);" style="display:{{showCanMaximise}}"></span>
             </div>   
         
-            <div class="col-md-2">        
+            <div class="col-xs-2">        
                 <input class="variableNameInput" value="{{name}}" onKeyUp="CurrentStack.get('{{id}}').setName(this.value)"
                  onclick='flashMappedInputHelper("StackEquationIo_{{id}}");'></input>
             </div>
-            <div class="col-md-2" style="margin-top: 4px;"><b>{{material.name}}</b></div>            
+            <div class="col-xs-2" style="margin-top: 4px;"><b>{{material.name}}</b></div>            
         </div>
         <div class="row" style="display:{{showCanMinimise}}"> 
-            <div class="col-md-8 col-md-offset-3">
+            <div class="col-xs-12 col-md-8 col-md-offset-2">
                 {{#properties}}
-                <div class="row centerrow">
-                    <div style="width:30%;padding-left: 20px;" class="centeredcol">
+                <div class="row">
+                    <div class="col-xs-4">
                         {{#quantity}} 
                             <a onclick='jQuery("#QuantitiesSearchInput").val("{{name_translation}}").trigger("keyup");$("#QuantitiesBoxTabSelect").click()'> {{name_translation}} </a>
                         {{/quantity}}
                     </div>
-                    <div style="width:20%;" class="centeredcol">
+                    <div class="col-xs-3">
                         <input value="{{value}}"  class="valueInput" onKeyUp="CurrentStack.get('{{parentStackMaterial.id}}').getPropertyById('{{id}}').setValue(this.value)" ></input>
                     </div>
-                    <div style="width:20%;padding-left: 20px;" class=" unitOutput centeredcol">
+                    <div class="col-xs-5 unitOutput">
                         {{#quantity}} {{{renderUnitTex}}} {{/quantity}}
                     </div>
                 </div>
@@ -658,8 +667,13 @@
     <div id="CurrentStackDivId" class="row" style="text-align:center;color:gray">{{name}}</div>
     <div class="slides">
         {{#elements}}
-            <div class="box slide" style="padding-left: 20px;" stackElementId="{{id}}">
-                {{{render}}}
+            <div class="box slide " style="padding-left: 20px;display:flex" stackElementId="{{id}}">
+                <div style="width:100%">
+                    {{{render}}}
+                </div>
+                <div class="ui-sortable-handle" style="background-color:#eee;width:16px" onMouseDown="var x=$(this).parent();x.css('margin','4px').css('padding-top','5px').css('padding-bottom','5px')" onMouseUp="var x=$(this).parent();x.css('margin','6px').css('padding-top','4px').css('padding-bottom','4px');">
+                    <span class="glyphicon glyphicon-resize-vertical" style="color:#999;display:block;top:50%;margin: -0.5em auto 0px;"></span>
+                </div>
             </div>
         {{/elements}}
     </div>
@@ -849,7 +863,7 @@ function init(){
         </div>
         
         <div class="box">
-            <a target="blanc" href="https://github.com/dirk-attraktor/formelsammlung-js/"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
+            <a class="hidden-xs hidden-sm hidden-md hidden-lg" target="blanc" href="https://github.com/dirk-attraktor/formelsammlung-js/"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
             <div class="row" style="margin-top: 5px; ">
                 <div style="text-align:center;margin-top: 4px;" class="col-md-3">
                     <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=#Formelsammlung-js">Tweet</a>       
@@ -924,6 +938,7 @@ function init(){
     </div>    
     
     <div id="renderCache" style="display:none"></div>    
+    <div id="renderedCache" style="display:none"></div>    
     <div id="printerCache" style="display:block"></div>    
     
   </body>

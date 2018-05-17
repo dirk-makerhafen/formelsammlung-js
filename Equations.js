@@ -1,42 +1,43 @@
-function Equation(){
-    this.constructorName = "Equation";
+function EquationClass(){
+    var self = this;
+    self.constructorName = "Equation";
 
-    this.identifier = undefined;
+    self.identifier = undefined;
     
-    this.name = undefined;
-    this.description = undefined;
-    this.rawmarkdown = undefined;
+    self.name = undefined;
+    self.description = undefined;
+    self.rawmarkdown = undefined;
         
-    this.images = [];
-    this.description = undefined;
-    this.equationString = undefined;
-    this.io = [];
+    self.images = [];
+    self.description = undefined;
+    self.equationString = undefined;
+    self.io = [];
     
-    this.functions = []; // defined functions
+    self.functions = []; // defined functions
     
-    this.renderDescriptionCache = []
+    self.renderDescriptionCache = []
 
-    this.cantranslate = function(){ 
-        if (LANGUAGE == "EN" || this.translations == undefined || this.translations[LANGUAGE] == undefined){ return false; }else{ return true; } 
+    self.cantranslate = function(){ 
+        if (LANGUAGE == "EN" || self.translations == undefined || self.translations[LANGUAGE] == undefined){ return false; }else{ return true; } 
     }
     
-    this.name_translation = function(){
-        if(this.cantranslate()){return this.translations[LANGUAGE].name;}
-        return this.name;
+    self.name_translation = function(){
+        if(self.cantranslate()){return self.translations[LANGUAGE].name;}
+        return self.name;
     }
     
-    this.description_translation = function(){
-        if(this.cantranslate()){return this.translations[LANGUAGE].description;}
-        return this.description;
+    self.description_translation = function(){
+        if(self.cantranslate()){return self.translations[LANGUAGE].description;}
+        return self.description;
     }
 
-    this.getMappableIoIndexes = function(){
+    self.getMappableIoIndexes = function(){
         var wouldmap = [] // prevent doublicate io mapping
         var indexes = []
         
         
-        for (var index = 0; index < this.io.length; ++index) {
-            var mse = this.io[index].mapableStackElements();
+        for (var index = 0; index < self.io.length; ++index) {
+            var mse = self.io[index].mapableStackElements();
             if(mse.length > 0){
                 for(var i =0;i<mse.length;i++){
                    if(wouldmap.indexOf(mse[i]) == -1){
@@ -52,44 +53,44 @@ function Equation(){
         return indexes;
     }
     
-    this.outputName = function(){
-        var matchindexes = this.getMappableIoIndexes();
-        if((this.io.length - matchindexes.length) == 1){
-            for(var i =0;i<this.io.length;++i){ // search unmatched io, aka output
+    self.outputName = function(){
+        var matchindexes = self.getMappableIoIndexes();
+        if((self.io.length - matchindexes.length) == 1){
+            for(var i =0;i<self.io.length;++i){ // search unmatched io, aka output
                 if(matchindexes.indexOf(i) == -1){
-                    return this.io[i].quantity.name; 
+                    return self.io[i].quantity.name; 
                 }
             }
         }
         return "";
     }   
        
-    this.nrOfMappableIos = function(){
-        return this.getMappableIoIndexes().length;
+    self.nrOfMappableIos = function(){
+        return self.getMappableIoIndexes().length;
     }   
        
-    this.distance = function(){
-        return 100.0 /  this.io.length * this.nrOfMappableIos();            
+    self.distance = function(){
+        return 100.0 /  self.io.length * self.nrOfMappableIos();            
     }    
     
-    this.getIoBySymbol = function(symbol){
-        for(var i =0;i<this.io.length;++i){ // search unmatched io, aka output
-            if(this.io[i].symbol == symbol){
-                return this.io[i];
+    self.getIoBySymbol = function(symbol){
+        for(var i =0;i<self.io.length;++i){ // search unmatched io, aka output
+            if(self.io[i].symbol == symbol){
+                return self.io[i];
             }
         }
         return undefined;
     }
     
-    this.color = function(){
-        if(this.outputName()!=""){
+    self.color = function(){
+        if(self.outputName()!=""){
             return "green";            
         }else{
             return "gray";
         }
     }
     
-    this.solve = function(valuemappingin,solveto){ 
+    self.solve = function(valuemappingin,solveto){ 
         valuemapping = [];
         for (var key in valuemappingin) {
             if ( valuemappingin.hasOwnProperty(key)){
@@ -97,20 +98,20 @@ function Equation(){
                 valuemapping[key] = valuemappingin[key];
             };
         }
-        for (var key in this.functions) {
-            if ( this.functions.hasOwnProperty(key)){
-                valuemapping[key] = this.functions[key];
+        for (var key in self.functions) {
+            if ( self.functions.hasOwnProperty(key)){
+                valuemapping[key] = self.functions[key];
             }
         }
         
-        var outPutEquation = this.getIoBySymbol(solveto).equation;                  
+        var outPutEquation = self.getIoBySymbol(solveto).equation;                  
         var result = "NaN";
         try {
             result = outPutEquation.eval(valuemapping);
         }catch(e){
             console.log(e);
             console.log(valuemapping)
-            console.log("failed eval of " + this.getIoBySymbol(solveto).equationString) + "   " + e;
+            console.log("failed eval of " + self.getIoBySymbol(solveto).equationString) + "   " + e;
         }
         if(result.hasOwnProperty("entries")){
             result = result["entries"][result["entries"].length-1];
@@ -118,68 +119,68 @@ function Equation(){
         return result;
     }
     
-    this.smokeTest = function(){
+    self.smokeTest = function(){
         var valuemapping = []
-        for(var pass=0;pass<this.io.length;++pass){
-            for(var i=0;i<this.io.length;++i){
-                valuemapping[this.io[i].symbol] = Math.floor(Math.random() * 100) + 1;
+        for(var pass=0;pass<self.io.length;++pass){
+            for(var i=0;i<self.io.length;++i){
+                valuemapping[self.io[i].symbol] = Math.floor(Math.random() * 100) + 1;
             }
-            var res = this.solve(valuemapping,this.io[pass].symbol); // calc
-            valuemapping[this.io[pass].symbol] = res; // map first 
+            var res = self.solve(valuemapping,self.io[pass].symbol); // calc
+            valuemapping[self.io[pass].symbol] = res; // map first 
             
-            for(var i=0;i<this.io.length;++i){
+            for(var i=0;i<self.io.length;++i){
                 try{
-                    var rt = this.solve(valuemapping,this.io[i].symbol);
-                    if(rt - valuemapping[this.io[i].symbol] > 0.00001){
-                        console.log("failed smoketest of equation " + this.name + " for output " + this.io[i].symbol);
-                        console.log(rt + " != " + valuemapping[this.io[i].symbol]);
+                    var rt = self.solve(valuemapping,self.io[i].symbol);
+                    if(rt - valuemapping[self.io[i].symbol] > 0.00001){
+                        console.log("failed smoketest of equation " + self.name + " for output " + self.io[i].symbol);
+                        console.log(rt + " != " + valuemapping[self.io[i].symbol]);
                         console.log(valuemapping);
                     }
                 }catch(e){
-                    console.log("failed to test equation " + this.name);
+                    console.log("failed to test equation " + self.name);
                     console.log(e);
-                    var rt = this.solve(valuemapping,this.io[i].symbol);
+                    var rt = self.solve(valuemapping,self.io[i].symbol);
                 }
             }
         }
     }
     
-    this.loadMarkdown = function(markdownString){
-        this.name = markdown_extractValue(markdownString,"__Name__:");
-        this.identifier = this.name.replace(/\W+/g, "");
-        this.description = markdown_extractValue(markdownString,"__Description__:");
-        this.rawmarkdown = markdownString;
+    self.loadMarkdown = function(markdownString){
+        self.name = markdown_extractValue(markdownString,"__Name__:");
+        self.identifier = self.name.replace(/\W+/g, "");
+        self.description = markdown_extractValue(markdownString,"__Description__:");
+        self.rawmarkdown = markdownString;
         
-        this.images = [];
-        var tmpparts = this.description.split("![Image of URI](")
+        self.images = [];
+        var tmpparts = self.description.split("![Image of URI](")
         for(var i=1;i<tmpparts.length;++i){
             var url = tmpparts[i].split(")")[0].trim();
-            if(url.indexOf("http")==0){ this.images.push(url); }
+            if(url.indexOf("http")==0){ self.images.push(url); }
         }
-        this.description = this.description.split("![Image of URI](")[0];  // description is before the images ! 
+        self.description = self.description.split("![Image of URI](")[0];  // description is before the images ! 
                 
-        this.io = []
+        self.io = []
         var ioparts = markdownString.split("__IO__:")[1].split("--------")[0].trim().split("* __");        
         for(var i=0;i<ioparts.length;++i){
             if(ioparts[i].indexOf("__ [ _") == -1){continue;}
-            var eio = new EquationIO();
+            var eio = new EquationIOClass();
             eio = eio.loadMarkdown(ioparts[i]);
             if(eio!=undefined){
-                this.io.push(eio);
+                self.io.push(eio);
             }else{
                 alert("failed to parse EquationIO markdown")
             }
         }
         
-        for (var index = 0; index < this.io.length; ++index) {
-            this.io[index].parentEquation = this;
+        for (var index = 0; index < self.io.length; ++index) {
+            self.io[index].parentEquation = this;
         }
         if(markdownString.indexOf("__Function__") != -1){ 
             
             var tmpfunctions = markdownString.split("__Function__")[1].split("```");
             for(var i=0;i<tmpfunctions.length-1;i=i+2){
                 var functionSymbol = tmpfunctions[i].split("__")[1];
-                var str = "this.functions['"+functionSymbol+"'] = " + tmpfunctions[i+1].trim();
+                var str = "self.functions['"+functionSymbol+"'] = " + tmpfunctions[i+1].trim();
                 eval(str);
             }
         }
@@ -188,35 +189,35 @@ function Equation(){
 
     }
 
-    this.loadTranslationMarkdown = function(language,markdownString){
-        if(this.translations == undefined){ this.translations = {} }
-        if(this.translations[language] == undefined){ this.translations[language] = {} }
+    self.loadTranslationMarkdown = function(language,markdownString){
+        if(self.translations == undefined){ self.translations = {} }
+        if(self.translations[language] == undefined){ self.translations[language] = {} }
         
-        this.translations[language].name = markdown_extractValue(markdownString,"__Name__:");
-        this.translations[language].description = markdown_extractValue(markdownString,"__Description__:");  
+        self.translations[language].name = markdown_extractValue(markdownString,"__Name__:");
+        self.translations[language].description = markdown_extractValue(markdownString,"__Description__:");  
 
         var ioparts = markdownString.split("__IO__:")[1].split("--------")[0].trim().split("* __");
         for(var i=0;i<ioparts.length;++i){
             if(ioparts[i].indexOf("__") == -1){continue;}
             var symbol = ioparts[i].split("__")[0].trim();
-            var io = this.getIoBySymbol(symbol);
+            var io = self.getIoBySymbol(symbol);
             io.loadTranslationMarkdown(language,ioparts[i]);
         }
     }
     
-    this.renderDescription = function(){
+    self.renderDescription = function(){
         var r = Mustache.render($('#EquationDescriptionTemplate').html(), {
-            description  : markdown.toHTML(this.description_translation()),
-            name : this.name,
-            images : this.images,
-            io : this.io,
-            identifier : this.identifier,
+            description  : markdown.toHTML(self.description_translation()),
+            name : self.name,
+            images : self.images,
+            io : self.io,
+            identifier : self.identifier,
         });
         
         return r;    
     }   
         
-    this.render = function(){
+    self.render = function(){
         var r = Mustache.render($('#EquationTemplate').html(), this);
         return r;
     }
@@ -224,29 +225,31 @@ function Equation(){
     
 }
 
-function EquationIO(){
-    this.symbol = undefined;
-    this.symbolTex = undefined;
-    this.description = undefined;
-    this.equation = undefined;
-    this.equationTex = undefined;
-    this.quantity = undefined;
+function EquationIOClass(){
+    var self = this;
 
-    this.parentEquation = undefined; // set by parent on constructor
+    self.symbol = undefined;
+    self.symbolTex = undefined;
+    self.description = undefined;
+    self.equation = undefined;
+    self.equationTex = undefined;
+    self.quantity = undefined;
+
+    self.parentEquation = undefined; // set by parent on constructor
     
-    this.cantranslate = function(){ 
-        if (LANGUAGE == "EN" || this.translations == undefined || this.translations[LANGUAGE] == undefined){ return false; }else{ return true; } 
+    self.cantranslate = function(){ 
+        if (LANGUAGE == "EN" || self.translations == undefined || self.translations[LANGUAGE] == undefined){ return false; }else{ return true; } 
     }
     
-    this.description_translation = function(){
-        if(this.cantranslate()){return this.translations[LANGUAGE].description;}
-        return this.description;
+    self.description_translation = function(){
+        if(self.cantranslate()){return self.translations[LANGUAGE].description;}
+        return self.description;
     }
 
     // test if this io can be mapped to a stack element
-    this.canMap = function(stackElement){
+    self.canMap = function(stackElement){
         if(stackElement.constructorName == "StackQuantity"){
-            if(stackElement.quantity.unit.equals(this.quantity.unit)){
+            if(stackElement.quantity.unit.equals(self.quantity.unit)){
                 return true;
             }
         }
@@ -254,7 +257,7 @@ function EquationIO(){
         if(stackElement.constructorName == "StackEquation"){
             var q = stackElement.resultQuantity();
             if(q!=undefined){
-                if(q.unit.equals(this.quantity.unit)){
+                if(q.unit.equals(self.quantity.unit)){
                     return true;
                 }
             }
@@ -263,7 +266,7 @@ function EquationIO(){
         if(stackElement.constructorName == "StackMaterial"){
             var materialproperties =  stackElement.properties;
             for (var index1 = 0; index1 < materialproperties.length; ++index1) {
-                if(materialproperties[index1].quantity == this.quantity){
+                if(materialproperties[index1].quantity == self.quantity){
                     return true;
                 }   
             }
@@ -272,22 +275,22 @@ function EquationIO(){
         return false;
     } 
 
-    this.mapableStackElements = function(){
+    self.mapableStackElements = function(){
         var selectableStackElements = [];
         for (var index = 0; index < CurrentStack.elements.length; ++index) {
-            if (this.canMap(CurrentStack.elements[index])){
+            if (self.canMap(CurrentStack.elements[index])){
                 selectableStackElements.push(CurrentStack.elements[index]);
             }
         }
         return selectableStackElements;
     }    
     
-    this.loadMarkdown = function(markdownString){
-        this.symbol = markdownString.split("__")[0].trim();
+    self.loadMarkdown = function(markdownString){
+        self.symbol = markdownString.split("__")[0].trim();
         
         var symbolequationString = markdownString.split("_ ]")[1].split("|")[1].split("\n")[0].trim();
-        if(symbolequationString.indexOf(this.symbol) != 0 && symbolequationString!="" ){
-            symbolequationString = this.symbol +  " = " + symbolequationString;
+        if(symbolequationString.indexOf(self.symbol) != 0 && symbolequationString!="" ){
+            symbolequationString = self.symbol +  " = " + symbolequationString;
         }
         var tmp = markdownString.split("_ ]")[1].split("* __")[0].split("\n__")[0].split("\n");
         var eq = [];
@@ -305,84 +308,86 @@ function EquationIO(){
 
         eq.push(symbolequationString);
         
-        this.description  = description;
-        this.equationString = eq.join("\n"); 
-        if(this.equationString != ""){
+        self.description  = description;
+        self.equationString = eq.join("\n"); 
+        if(self.equationString != ""){
             try{
-                this.equation = math.parse(this.equationString);
-                this.equationTex = this.equation.toTex().replace(new RegExp('\\\\;\\\\;', 'g'), "\\\\").replace(new RegExp('\n ', 'g'), "\n");
+                self.equation = math.parse(self.equationString);
+                self.equationTex = self.equation.toTex().replace(new RegExp('\\\\;\\\\;', 'g'), "\\\\").replace(new RegExp('\n ', 'g'), "\n");
             }catch(e){
-                console.log("failed to parse equation for io: " + this.equation + "  " + e);
+                console.log("failed to parse equation for io: " + self.equation + "  " + e);
             }
         }else{
-            this.equation = undefined;
-            this.equationTex = "NaN";
+            self.equation = undefined;
+            self.equationTex = "NaN";
         }
 
-        this.symbolTex = math.parse(this.symbol).toTex();
+        self.symbolTex = math.parse(self.symbol).toTex();
         var quantity =  markdownString.split("[ _")[1].split("_ ]")[0].trim();
         var q = Quantities.get(quantity);
         if (q == undefined){
             alert("Quantity " + quantity + " not found");
             return;
         }
-        this.quantity = q;
+        self.quantity = q;
         return this;
     }
     
-    this.loadTranslationMarkdown = function(language,markdownString){
-        if(this.translations == undefined){ this.translations = {} }
-        if(this.translations[language] == undefined){ this.translations[language] = {} }
-        this.translations[language].description = markdownString.split("__")[1].split("\n")[1].trim();            
+    self.loadTranslationMarkdown = function(language,markdownString){
+        if(self.translations == undefined){ self.translations = {} }
+        if(self.translations[language] == undefined){ self.translations[language] = {} }
+        self.translations[language].description = markdownString.split("__")[1].split("\n")[1].trim();            
     }    
     
    
-    this.showEquationDetailLink = function(){
-        if(this.equation==undefined){
+    self.showEquationDetailLink = function(){
+        if(self.equation==undefined){
             return "span";
         }
         return "a";
     }   
-    this.renderSymbolTex = function(){
-        var targetId = "symbolTexTarget_" + this.parentEquation.identifier + "_" + this.symbol; 
-        return mathjaxCache.add(targetId,this.symbolTex);
+    self.renderSymbolTex = function(){
+        var targetId = "symbolTexTarget_" + self.parentEquation.identifier + "_" + self.symbol; 
+        return mathjaxCache.add(targetId,self.symbolTex);
     }
     
-    this.renderEquationTex = function(){
-        var targetId = "equationTexTarget_" + this.parentEquation.identifier + "_" + this.symbol; 
-        return mathjaxCache.add(targetId,this.equationTex);
+    self.renderEquationTex = function(){
+        var targetId = "equationTexTarget_" + self.parentEquation.identifier + "_" + self.symbol; 
+        return mathjaxCache.add(targetId,self.equationTex);
     }
 }
 
-function Equations(){
-    this.targetdiv = "EquationsList";
-    this.allequations = [];
-    this.filter = "";
-    this.filteredequations = this.allequations;
+function EquationsClass(){
+    var self = this;
     
-    this.paginationPage = 1;
-    this.paginationElementsPerPage = 10;
+    self.targetdiv = "EquationsList";
+    self.allequations = [];
+    self.filter = "";
+    self.filteredequations = self.allequations;
     
-    this.loadMarkdown = function(markdown){
+    self.paginationPage = 1;
+    self.paginationElementsPerPage = 10;
+    
+    self.loadMarkdown = function(markdown){
         var parts = markdown.split("--------");
         for (var partsIndex = 1; partsIndex < parts.length; partsIndex++) {
             if(parts[partsIndex].indexOf("__Name__:") == -1){continue;}
-            var e = new Equation();
+            var e = new EquationClass();
             e = e.loadMarkdown(parts[partsIndex]);
             if(e!=undefined){
-                this.add(e);
+                self.add(e);
             }else{
                 alert("failed to parse Equation markdown");
             }
         }
     }    
     
-    this.loadTranslationMarkdown = function(language,markdown){
+    self.loadTranslationMarkdown = function(language,markdown){
         var parts = markdown.split("--------");
         for (var partsIndex = 1; partsIndex < parts.length; partsIndex++) {
             if(parts[partsIndex].indexOf("__Name__:") == -1){continue;}
             var parentname = markdown_extractValue(parts[partsIndex],"__ParentName__:");
-            var e = this.get(parentname); 
+            var e = self.get(parentname); 
             if(e!=undefined){
                 e.loadTranslationMarkdown(language,parts[partsIndex]);
             }else{
@@ -391,33 +396,33 @@ function Equations(){
         }
     }  
     
-    this.add = function(equation){
-        this.allequations.push(equation);
+    self.add = function(equation){
+        self.allequations.push(equation);
     }
     
-    this.get = function(name){
-        for (var index = 0; index < this.allequations.length; ++index) {
-            if(this.allequations[index].name == name){
-                return this.allequations[index];
+    self.get = function(name){
+        for (var index = 0; index < self.allequations.length; ++index) {
+            if(self.allequations[index].name == name){
+                return self.allequations[index];
             }
         }
         return null;
     }
     
-    this.setFilter = function(filter){
-        this.filter = filter;
-        this.filteredequations = []
-        this.paginationPage = 1;        
+    self.setFilter = function(filter){
+        self.filter = filter;
+        self.filteredequations = []
+        self.paginationPage = 1;        
         if(filter == ""){
-            this.filteredequations = this.allequations;
+            self.filteredequations = self.allequations;
         }else{
         
 
         
-            this.match = function(index,matched){
+            self.match = function(index,matched){
                 if(matched==true){
-                    if(this.filteredequations.indexOf(this.allequations[index]) == -1 ){
-                        this.filteredequations.push(this.allequations[index]);
+                    if(self.filteredequations.indexOf(self.allequations[index]) == -1 ){
+                        self.filteredequations.push(self.allequations[index]);
                     }
                 }
             }
@@ -429,68 +434,68 @@ function Equations(){
                 keys.push("description");
             }
             for (var matchindex = 0; matchindex < keys.length; ++matchindex) {  
-                for (var index = 0; index < this.allequations.length; ++index) {               
-                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allequations[index][keys[matchindex]]+""}else{var mstr = this.allequations[index][keys[matchindex]]()+""}
-                    this.match(index, mstr == this.filter  );}
-                for (var index = 0; index < this.allequations.length; ++index) {            
-                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allequations[index][keys[matchindex]]+""}else{var mstr = this.allequations[index][keys[matchindex]]()+""}
-                    this.match(index, mstr.toLowerCase() == this.filter.toLowerCase()  );}
-                for (var index = 0; index < this.allequations.length; ++index) {            
-                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allequations[index][keys[matchindex]]+""}else{var mstr = this.allequations[index][keys[matchindex]]()+""}
-                    this.match(index, mstr.indexOf(this.filter) ==  0);}
-                for (var index = 0; index < this.allequations.length; ++index) {            
-                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allequations[index][keys[matchindex]]+""}else{var mstr = this.allequations[index][keys[matchindex]]()+""}
-                    this.match(index, mstr.toLowerCase().indexOf(this.filter.toLowerCase()) ==  0);}
-                for (var index = 0; index < this.allequations.length; ++index) {            
-                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allequations[index][keys[matchindex]]+""}else{var mstr = this.allequations[index][keys[matchindex]]()+""}
-                    this.match(index, mstr.indexOf(this.filter) >  0);}
-                for (var index = 0; index < this.allequations.length; ++index) {            
-                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allequations[index][keys[matchindex]]+""}else{var mstr = this.allequations[index][keys[matchindex]]()+""}
-                    this.match(index, mstr.toLowerCase().indexOf(this.filter.toLowerCase()) >  0);}
+                for (var index = 0; index < self.allequations.length; ++index) {               
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = self.allequations[index][keys[matchindex]]+""}else{var mstr = self.allequations[index][keys[matchindex]]()+""}
+                    self.match(index, mstr == self.filter  );}
+                for (var index = 0; index < self.allequations.length; ++index) {            
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = self.allequations[index][keys[matchindex]]+""}else{var mstr = self.allequations[index][keys[matchindex]]()+""}
+                    self.match(index, mstr.toLowerCase() == self.filter.toLowerCase()  );}
+                for (var index = 0; index < self.allequations.length; ++index) {            
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = self.allequations[index][keys[matchindex]]+""}else{var mstr = self.allequations[index][keys[matchindex]]()+""}
+                    self.match(index, mstr.indexOf(self.filter) ==  0);}
+                for (var index = 0; index < self.allequations.length; ++index) {            
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = self.allequations[index][keys[matchindex]]+""}else{var mstr = self.allequations[index][keys[matchindex]]()+""}
+                    self.match(index, mstr.toLowerCase().indexOf(self.filter.toLowerCase()) ==  0);}
+                for (var index = 0; index < self.allequations.length; ++index) {            
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = self.allequations[index][keys[matchindex]]+""}else{var mstr = self.allequations[index][keys[matchindex]]()+""}
+                    self.match(index, mstr.indexOf(self.filter) >  0);}
+                for (var index = 0; index < self.allequations.length; ++index) {            
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = self.allequations[index][keys[matchindex]]+""}else{var mstr = self.allequations[index][keys[matchindex]]()+""}
+                    self.match(index, mstr.toLowerCase().indexOf(self.filter.toLowerCase()) >  0);}
             }
         }
         
-        this.render();
+        self.render();
     }
 
-    this.filteredEquationsPagination = function(){
-        var index = this.paginationElementsPerPage*(this.paginationPage-1);
-        return this.filteredequations.slice(index,index+ this.paginationElementsPerPage);
+    self.filteredEquationsPagination = function(){
+        var index = self.paginationElementsPerPage*(self.paginationPage-1);
+        return self.filteredequations.slice(index,index+ self.paginationElementsPerPage);
     }
     
-    this.paginationMaxPages = function(){
-        return math.ceil(this.filteredequations.length / this.paginationElementsPerPage); 
+    self.paginationMaxPages = function(){
+        return math.ceil(self.filteredequations.length / self.paginationElementsPerPage); 
     }
     
-    this.setPaginationPage = function(newpage){
-        this.paginationPage = newpage;
-        this.render();
+    self.setPaginationPage = function(newpage){
+        self.paginationPage = newpage;
+        self.render();
     }
     
-    this.paginationPageLinks = function(){
+    self.paginationPageLinks = function(){
         var r = []
-        if(this.paginationMaxPages()==1){return [];};
-        for(var i =1;i<this.paginationMaxPages()+1;i++){ 
-            if(i==this.paginationPage){ var selected = "active";}else{ var selected = ""};
+        if(self.paginationMaxPages()==1){return [];};
+        for(var i =1;i<self.paginationMaxPages()+1;i++){ 
+            if(i==self.paginationPage){ var selected = "active";}else{ var selected = ""};
             r.push({"nr":i,"selected":selected});
         }
         return r;
     }
     
-    this.init = function(){
-        this.allequations.sort(function(a, b) {
+    self.init = function(){
+        self.allequations.sort(function(a, b) {
             if( a.name_translation() >  b.name_translation()){ return  1;};
             if( a.name_translation() <  b.name_translation()){ return -1;};
             if( a.name_translation() == b.name_translation()){ return  0;};
         });
-        this.filteredequations = this.allequations;
-        for (var index = 0; index < this.allequations.length; ++index) {               
-            this.allequations[index].smokeTest();
+        self.filteredequations = self.allequations;
+        for (var index = 0; index < self.allequations.length; ++index) {               
+            self.allequations[index].smokeTest();
         }
     }
     
-    this.render = function(){
-        this.filteredequations.sort(function(a, b) {
+    self.render = function(){
+        self.filteredequations.sort(function(a, b) {
             var d = b.distance() - a.distance();
             if(d==0){
                 if( a.name_translation().toLowerCase() >  b.name_translation().toLowerCase()){ return  1;};
@@ -500,142 +505,145 @@ function Equations(){
             return d;
         });
         var r = Mustache.render($('#EquationsTemplate').html(), this);
-        document.getElementById(this.targetdiv).innerHTML = r;
+        document.getElementById(self.targetdiv).innerHTML = r;
         mathjaxCache.render();
         
     }
 
 }
 
-function StackEquation(stack, equation){
-    this.constructorName = "StackEquation";
-
-    this.parentStack = stack;
-    this.equation = equation;
-    this.id = "SE_" + getUniqNumber();
-
-    this.name =  getStackName("result ");
-    this.showConverter = "None";
-
-    this.resultScaler = undefined;
+function StackEquationClass(stack, equation){
     
-    this.io = []
-    for (var index = 0; index < this.equation.io.length; ++index) {
-        this.io.push(new StackEquationIO(this,this.equation.io[index]));
+    var self = this;
+    
+    self.constructorName = "StackEquation";
+
+    self.parentStack = stack;
+    self.equation = equation;
+    self.id = "SE_" + getUniqNumber();
+
+    self.name =  getStackName("result ");
+    self.showConverter = "None";
+
+    self.resultScaler = undefined;
+    
+    self.io = []
+    for (var index = 0; index < self.equation.io.length; ++index) {
+        self.io.push(new StackEquationIOClass(this,self.equation.io[index]));
     }
        
-    this.mappedto = []
-    this.minimised = false;
+    self.mappedto = []
+    self.minimised = false;
     
-    this.resultValueTrimmed = function(){
-        var r = this.resultValue()
+    self.resultValueTrimmed = function(){
+        var r = self.resultValue()
         try{
             r = r.toFixed(4);
         }catch(e){}
         return r;
     }
     
-    this.MoveUpColor = function(){ 
-        if (CurrentStack.elements[0].id == this.id){
+    self.MoveUpColor = function(){ 
+        if (CurrentStack.elements[0].id == self.id){
             return "lightgray";
         }
         return "black";
     }
     
-    this.MoveDownColor = function(){ 
-        if (CurrentStack.elements[CurrentStack.elements.length-1].id == this.id){
+    self.MoveDownColor = function(){ 
+        if (CurrentStack.elements[CurrentStack.elements.length-1].id == self.id){
             return "lightgray";
         }
         return "black";
     }       
     
-    this.addMappedTo = function(StackEquationIo){
-        if(this.mappedto.indexOf(StackEquationIo) == -1){
-            this.mappedto.push(StackEquationIo)
+    self.addMappedTo = function(StackEquationIo){
+        if(self.mappedto.indexOf(StackEquationIo) == -1){
+            self.mappedto.push(StackEquationIo)
         }
     }
     
-    this.removeMappedTo = function(StackEquationIo){
-        var index = this.mappedto.indexOf(StackEquationIo);
+    self.removeMappedTo = function(StackEquationIo){
+        var index = self.mappedto.indexOf(StackEquationIo);
         if(index != -1){
-            this.mappedto.splice(index,1);
+            self.mappedto.splice(index,1);
         }
     }
     
-    this.setMinimised = function(value){
-        this.minimised = value;
+    self.setMinimised = function(value){
+        self.minimised = value;
     }
     
-    this.showCanMinimise = function(){
-        if(this.minimised==true){return "none";}
+    self.showCanMinimise = function(){
+        if(self.minimised==true){return "none";}
         return "";
     }
     
-    this.showCanMaximise = function(){
-        if(this.minimised==false){return "none";}
+    self.showCanMaximise = function(){
+        if(self.minimised==false){return "none";}
         return "";
     } 
     
-    this.dispose = function(){
-        while (this.mappedto.length > 0){
-            this.mappedto[0].setMappedTo("UNMAPPED",true); // unmap elements that map to this result
+    self.dispose = function(){
+        while (self.mappedto.length > 0){
+            self.mappedto[0].setMappedTo("UNMAPPED",true); // unmap elements that map to this result
         }
-        for(var index=0;index<this.io.length;++index){
-            this.io[index].setMappedTo("UNMAPPED",true);
+        for(var index=0;index<self.io.length;++index){
+            self.io[index].setMappedTo("UNMAPPED",true);
         }
     }
        
-    this.setName = function(name){
-        this.name = name;
-        this.parentStack.updateRender(this.id);
+    self.setName = function(name){
+        self.name = name;
+        self.parentStack.updateRender(self.id);
     }
     
-    this.getIO = function(elementId){
-        return this.io[this.getIndexOfIO(elementId)];
+    self.getIO = function(elementId){
+        return self.io[self.getIndexOfIO(elementId)];
     }
     
-    this.getIndexOfIO = function(elementId){
-        for (var index = 0; index < this.io.length; ++index) {
-            if(this.io[index].id == elementId){
+    self.getIndexOfIO = function(elementId){
+        for (var index = 0; index < self.io.length; ++index) {
+            if(self.io[index].id == elementId){
                 return index;
             }
         }
         return -1;
     }
             
-    this.getIndexOfIOByMapping = function(mappedtostring){
+    self.getIndexOfIOByMapping = function(mappedtostring){
         var outputIos = [];
-        for (var index = 0; index < this.io.length; ++index) {
-            if(this.io[index].mappedto == mappedtostring){
+        for (var index = 0; index < self.io.length; ++index) {
+            if(self.io[index].mappedto == mappedtostring){
                 outputIos.push(index);
             }
         }
         return outputIos;
     }
         
-    this.toggleShowConverter = function(){
-        if(this.showConverter == "None"){
-            this.showConverter = "";
-            jQuery("#Converter_"+this.id).toggle('show');
+    self.toggleShowConverter = function(){
+        if(self.showConverter == "None"){
+            self.showConverter = "";
+            jQuery("#Converter_"+self.id).toggle('show');
         }else{
-            this.showConverter = "None";
-            jQuery("#Converter_"+this.id).toggle('show');
+            self.showConverter = "None";
+            jQuery("#Converter_"+self.id).toggle('show');
         }
     }
         
-    this.scaleUp = function(){
-        if(this.resultScaler == undefined){
-            this.resultScaler =  this.resultQuantity().scaleup;
+    self.scaleUp = function(){
+        if(self.resultScaler == undefined){
+            self.resultScaler =  self.resultQuantity().scaleup;
         }else{
-            if(this.resultScaler.scaleup != undefined){
-                this.resultScaler = this.resultScaler.scaleup;
+            if(self.resultScaler.scaleup != undefined){
+                self.resultScaler = self.resultScaler.scaleup;
             }
         }
-        this.updateRender();
+        self.updateRender();
     }
     
-    this.displayScaleUp = function(){
-        var rq = this.resultQuantity();
+    self.displayScaleUp = function(){
+        var rq = self.resultQuantity();
         if (rq == undefined || rq.scaleup==undefined){
             return "None";
         }
@@ -643,123 +651,123 @@ function StackEquation(stack, equation){
         return "";
     }  
     
-    this.scaleDown = function(){
-        if(this.resultScaler == undefined){
-            this.resultScaler = this.resultQuantity().scaledown;
+    self.scaleDown = function(){
+        if(self.resultScaler == undefined){
+            self.resultScaler = self.resultQuantity().scaledown;
         }else{
-            if(this.resultScaler.scaledown != undefined){
-                this.resultScaler = this.resultScaler.scaledown;
+            if(self.resultScaler.scaledown != undefined){
+                self.resultScaler = self.resultScaler.scaledown;
              }
         }
-        this.updateRender();
+        self.updateRender();
     }
     
-    this.displayScaleDown = function(){
-        var rq = this.resultQuantity();
+    self.displayScaleDown = function(){
+        var rq = self.resultQuantity();
         if (rq == undefined ||  rq.scaledown==undefined){
             return "None";
         }
         return "";
     } 
     
-    this.displayShowConvert = function(){
-        var rq = this.resultQuantity();
+    self.displayShowConvert = function(){
+        var rq = self.resultQuantity();
         if(rq == undefined || rq.converter.length==0){
             return "None"
         }
         return "";
     }   
     
-    this.canCalc = function(){
-        if (this.getIndexOfIOByMapping("UNMAPPED").length == 0 && this.getIndexOfIOByMapping("OUTPUT").length == 1){
+    self.canCalc = function(){
+        if (self.getIndexOfIOByMapping("UNMAPPED").length == 0 && self.getIndexOfIOByMapping("OUTPUT").length == 1){
             return true;
         }
         return false;
     }    
   
-    this.resultValue = function(){
-        if(this.canCalc() == true){
+    self.resultValue = function(){
+        if(self.canCalc() == true){
             var valuemapping = [];
             var valuekeys = []
-            for(var i=0;i<this.io.length;i++){
-                if(this.io[i].mappedto == "OUTPUT"){continue;}
-                var mappedto = CurrentStack.get(this.io[i].mappedto)
+            for(var i=0;i<self.io.length;i++){
+                if(self.io[i].mappedto == "OUTPUT"){continue;}
+                var mappedto = CurrentStack.get(self.io[i].mappedto)
                 
                 if (mappedto != undefined){
-                    valuekeys.push(this.io[i].equationio.symbol)
+                    valuekeys.push(self.io[i].equationio.symbol)
                     
                     var v="";
                     if(mappedto.constructorName == "StackQuantity"){
                         v = parseFloat((""+mappedto.value));
-                        v = mappedto.quantity.convertValue(v,this.io[i].equationio.quantity)
+                        v = mappedto.quantity.convertValue(v,self.io[i].equationio.quantity)
                     }
                     if(mappedto.constructorName == "StackEquation"){
                         v = parseFloat((""+mappedto.resultValue()));
                         if(!isNaN(v)){
-                            v = mappedto.resultQuantity().convertValue(v,this.io[i].equationio.quantity);
+                            v = mappedto.resultQuantity().convertValue(v,self.io[i].equationio.quantity);
                         }
                     }
                     if(mappedto.constructorName == "StackMaterial"){
-                        var x = mappedto.getPropertyByQuantity(this.io[i].equationio.quantity);
+                        var x = mappedto.getPropertyByQuantity(self.io[i].equationio.quantity);
                         v=x.value;
                         if(!isNaN(v)){
-                            v = x.quantity.convertValue(v,this.io[i].equationio.quantity);
+                            v = x.quantity.convertValue(v,self.io[i].equationio.quantity);
                         }
                         
                     }
 
-                    valuemapping[this.io[i].equationio.symbol] = v;
+                    valuemapping[self.io[i].equationio.symbol] = v;
                 }else{
-                    this.io[i].mappedto = "UNMAPPED"; // mappedto no longer exists
+                    self.io[i].mappedto = "UNMAPPED"; // mappedto no longer exists
                 }
             }
-            var outputEquationIO = this.io[this.getIndexOfIOByMapping("OUTPUT")[0]].equationio;
+            var outputEquationIO = self.io[self.getIndexOfIOByMapping("OUTPUT")[0]].equationio;
             
-            var value = this.equation.solve(valuemapping,outputEquationIO.symbol)            
+            var value = self.equation.solve(valuemapping,outputEquationIO.symbol)            
             
-            return outputEquationIO.quantity.convertValue(value,this.resultQuantity());
+            return outputEquationIO.quantity.convertValue(value,self.resultQuantity());
         }
         return "Na";    
     }
  
-    this.save = function(){
+    self.save = function(){
         var data = {};
-        data["name"] = this.name;
-        data["id"] = this.id;
-        data["m"] = this.minimised;
+        data["name"] = self.name;
+        data["id"] = self.id;
+        data["m"] = self.minimised;
         data["io"] = {};
-        for (var index = 0; index < this.io.length; ++index) {
-             data["io"][this.io[index].equationio.symbol] = this.io[index].save();
+        for (var index = 0; index < self.io.length; ++index) {
+             data["io"][self.io[index].equationio.symbol] = self.io[index].save();
         }
-        data["eqn"] = this.equation.name;
+        data["eqn"] = self.equation.name;
         return data;
     }
     
-    this.load = function(data){
-        this.name = data["name"];
-        this.id = data["id"];
-        this.minimised = data["m"];
-        for (var index = 0; index < this.io.length; ++index) {
-            this.io[index].load(data["io"][this.io[index].equationio.symbol]);
+    self.load = function(data){
+        self.name = data["name"];
+        self.id = data["id"];
+        self.minimised = data["m"];
+        for (var index = 0; index < self.io.length; ++index) {
+            self.io[index].load(data["io"][self.io[index].equationio.symbol]);
         }
     }
  
-    this.resultQuantity = function(){
-        if(this.canCalc() == true){
-            if(this.resultScaler != undefined){
-                return this.resultScaler;
+    self.resultQuantity = function(){
+        if(self.canCalc() == true){
+            if(self.resultScaler != undefined){
+                return self.resultScaler;
             }
-            var rq = this.io[ this.getIndexOfIOByMapping("OUTPUT")[0]].equationio.quantity;
+            var rq = self.io[ self.getIndexOfIOByMapping("OUTPUT")[0]].equationio.quantity;
             return rq;
         }
         return undefined;
     }
     
-    this.renderPrint = function(){  
-        var resultSymbol =  this.io[this.getIndexOfIOByMapping("OUTPUT")[0]].equationio.symbol;
-        var eqTex = this.equation.getIoBySymbol(resultSymbol).equationTex;
+    self.renderPrint = function(){  
+        var resultSymbol =  self.io[self.getIndexOfIOByMapping("OUTPUT")[0]].equationio.symbol;
+        var eqTex = self.equation.getIoBySymbol(resultSymbol).equationTex;
 
-        var rq = this.resultQuantity()
+        var rq = self.resultQuantity()
         var equation = " $$"+ eqTex + " \\qquad ( " + rq.unitTex + " ) \\qquad "+rq.name+" $$ ";;
         var r = Mustache.render($('#StackEquationPrintTemplate').html(),{
             "equation" : equation,
@@ -767,51 +775,51 @@ function StackEquation(stack, equation){
         return r;
     }
     
-    this.renderDescription = function(){
+    self.renderDescription = function(){
         var r = Mustache.render($('#EquationDescriptionTemplate').html(), {
-            description  : markdown.toHTML(this.equation.description_translation()),
-            name : this.equation.name,
-            images : this.equation.images,
-            io : this.equation.io,
-            identifier : "Stack"+this.identifier,
+            description  : markdown.toHTML(self.equation.description_translation()),
+            name : self.equation.name,
+            images : self.equation.images,
+            io : self.equation.io,
+            identifier : "Stack"+self.identifier,
         });
         return r;    
     }  
     
-    this.render = function(){
-        if(this.getIndexOfIOByMapping("UNMAPPED").length > 0 || this.getIndexOfIOByMapping("OUTPUT").length != 1 || true){
+    self.render = function(){
+        if(self.getIndexOfIOByMapping("UNMAPPED").length > 0 || self.getIndexOfIOByMapping("OUTPUT").length != 1 || true){
             var cntoutput = 0;
-            for(var i=0;i<this.io.length;i++){
-                this.io[i].autoMapStackElements(true); 
-                this.io[i].autoMapStackElements(false); 
-                if(this.io[i].mappedto == "OUTPUT" || this.io[i].mappedto == "UNMAPPED" ){
+            for(var i=0;i<self.io.length;i++){
+                self.io[i].autoMapStackElements(true); 
+                self.io[i].autoMapStackElements(false); 
+                if(self.io[i].mappedto == "OUTPUT" || self.io[i].mappedto == "UNMAPPED" ){
                     cntoutput += 1;
                 }
-                if(cntoutput == 0 && i==this.io.length-2){ // last io becomes output
+                if(cntoutput == 0 && i==self.io.length-2){ // last io becomes output
                     break;
                 }
             }
         }
-        if (this.getIndexOfIOByMapping("UNMAPPED").length == 1 && this.getIndexOfIOByMapping("OUTPUT").length == 0){
-            this.io[this.getIndexOfIOByMapping("UNMAPPED")[0]].setMappedTo("OUTPUT",true);
+        if (self.getIndexOfIOByMapping("UNMAPPED").length == 1 && self.getIndexOfIOByMapping("OUTPUT").length == 0){
+            self.io[self.getIndexOfIOByMapping("UNMAPPED")[0]].setMappedTo("OUTPUT",true);
         } 
         var r = Mustache.render($('#StackEquationTemplate').html(), this);
         return r;
     }   
         
-    this.updateRender = function(){
-        $("#"+this.id).replaceWith(this.render());
+    self.updateRender = function(){
+        $("#"+self.id).replaceWith(self.render());
         mathjaxCache.render();
     }
      
-    this.renderConverter = function(){
+    self.renderConverter = function(){
         var str = "";
-        var rq = this.resultQuantity();
+        var rq = self.resultQuantity();
         if (rq != undefined){
             
             for(var i =0;i<rq.converter.length;++i){ 
                 str += Mustache.render($('#StackQuantityConverterTemplate').html(),{
-                    value : math.unit(this.resultValue(),rq.unit.toString()).toNumber(rq.converter[i].unit.toString()),
+                    value : math.unit(self.resultValue(),rq.unit.toString()).toNumber(rq.converter[i].unit.toString()),
                     quantity : rq.converter[i],
                 }
                 );
@@ -820,25 +828,27 @@ function StackEquation(stack, equation){
         return str;
     }
     
-    this.updateRenderConverter = function(){
-        document.getElementById("Converter_"+this.id).innerHTML = this.renderConverter();
+    self.updateRenderConverter = function(){
+        document.getElementById("Converter_"+self.id).innerHTML = self.renderConverter();
     }
 }
 
-function StackEquationIO(stackequation,equationio){
-    this.parentStackEquation = stackequation;
-    this.equationio = equationio;
-    this.id = "SEIO" + getUniqNumber();
+function StackEquationIOClass(stackequation,equationio){
+    var self = this;
 
-    this.mappedto = "UNMAPPED"; // "OUTPUT" , "UNMAPPED"
+    self.parentStackEquation = stackequation;
+    self.equationio = equationio;
+    self.id = "SEIO" + getUniqNumber();
+
+    self.mappedto = "UNMAPPED"; // "OUTPUT" , "UNMAPPED"
     
-    this.selectableDivClass = function(){
-        if(this.parentStackEquation.canCalc()){
-            if(this.mappedto == "OUTPUT"){
+    self.selectableDivClass = function(){
+        if(self.parentStackEquation.canCalc()){
+            if(self.mappedto == "OUTPUT"){
                 return "StackEquationIoGreen";
             }
         }else{
-            if(this.mappedto == "UNMAPPED" || this.mappedto == "OUTPUT"){
+            if(self.mappedto == "UNMAPPED" || self.mappedto == "OUTPUT"){
                  return "StackEquationIoWarn";
             }
         }
@@ -846,21 +856,21 @@ function StackEquationIO(stackequation,equationio){
     }
 
     
-    this.mapableStackElements = function(){
+    self.mapableStackElements = function(){
         var selectableStackElements = [];
         
-        var myindex = CurrentStack.getIndexOfElement(this.parentStackEquation.id);        
+        var myindex = CurrentStack.getIndexOfElement(self.parentStackEquation.id);        
         if(myindex == -1){
             myindex =  CurrentStack.elements.length; // item does not exist on stack yet
         }    
         for (var index = myindex - 1 ; index >= 0 ; --index) {
             var element = CurrentStack.elements[index];
-            if(element.id == this.mappedto){
+            if(element.id == self.mappedto){
                 element.selected = "selected";
             }else{
                 element.selected = "";
             }
-            if (this.equationio.canMap(element)){
+            if (self.equationio.canMap(element)){
                 selectableStackElements.push(element);
             }
         }
@@ -868,87 +878,87 @@ function StackEquationIO(stackequation,equationio){
         return selectableStackElements;
     }
     
-    this.setMappedTo = function(key,norender){
-        var e = CurrentStack.get(this.mappedto)
+    self.setMappedTo = function(key,norender){
+        var e = CurrentStack.get(self.mappedto)
         if (e!=undefined){
             e.removeMappedTo(this);
         }
 
         if(key == "OUTPUT"){
-            this.parentStackEquation.resultScaler = undefined;
-            for(var i=0;i<this.parentStackEquation.io.length;i++){
-                var io = this.parentStackEquation.io[i];
+            self.parentStackEquation.resultScaler = undefined;
+            for(var i=0;i<self.parentStackEquation.io.length;i++){
+                var io = self.parentStackEquation.io[i];
                 if(io!=this && io.mappedto=="OUTPUT"){
                     io.setMappedTo("UNMAPPED",true);
                 }
             }
         }
-        this.mappedto = key;
-        var e = CurrentStack.get(this.mappedto)
+        self.mappedto = key;
+        var e = CurrentStack.get(self.mappedto)
         if (e!=undefined){
             e.addMappedTo(this);
         }
         if(norender==false){
-            this.updateRender();
-            this.parentStackEquation.updateRender();
-            this.parentStackEquation.parentStack.updateRender(this.parentStackEquation.id);
+            self.updateRender();
+            self.parentStackEquation.updateRender();
+            self.parentStackEquation.parentStack.updateRender(self.parentStackEquation.id);
         }
     }
     
-    this.save = function(){
+    self.save = function(){
         var data = {};
-        data["m"] = this.mappedto;
+        data["m"] = self.mappedto;
         return data;
     }
     
-    this.load = function(data){
-        this.setMappedTo(data["m"],true);
+    self.load = function(data){
+        self.setMappedTo(data["m"],true);
     }
     
-    this.render = function(){
+    self.render = function(){
         r = Mustache.render($('#StackEquationIoTemplate').html(), this);
         return r;
     }   
     
-    this.updateRender = function(){
-        $("#"+this.id).replaceWith(this.render());
+    self.updateRender = function(){
+        $("#"+self.id).replaceWith(self.render());
     }
     
-    this.autoMapStackElements = function(noDoubleMapping){
-        var mapableElements = this.mapableStackElements(); 
-        if(this.mappedto == "UNMAPPED"){
+    self.autoMapStackElements = function(noDoubleMapping){
+        var mapableElements = self.mapableStackElements(); 
+        if(self.mappedto == "UNMAPPED"){
             if(mapableElements.length > 0){  
                 for(var i=0;i < mapableElements.length;i++){   // for each mappable element
                     var mapableElement = mapableElements[i];    
                     if(noDoubleMapping == true && mapableElement.mappedto.length>0){ continue;}
                     var isAlreadyMappedToParentStackEquation = false;
                     for(var j=0;j < mapableElement.mappedto.length;j++){ // for each equationIO this element already maps to 
-                        if(mapableElement.mappedto[j].parentStackEquation == this.parentStackEquation){
+                        if(mapableElement.mappedto[j].parentStackEquation == self.parentStackEquation){
                             isAlreadyMappedToParentStackEquation = true;
                             break;
                         }
                     }
                     if(isAlreadyMappedToParentStackEquation == false){
-                        this.setMappedTo(mapableElement.id,true);
+                        self.setMappedTo(mapableElement.id,true);
                         break;
                     }
                 }
             }
         }else{
             var exists = false;
-            if(this.mappedto!="OUTPUT" && this.mappedto!="UNMAPPED"){
+            if(self.mappedto!="OUTPUT" && self.mappedto!="UNMAPPED"){
                 for(var i=0;i < mapableElements.length;i++){   // for each mappable element
-                    if(this.mappedto == mapableElements[i].id){
+                    if(self.mappedto == mapableElements[i].id){
                         exists = true;
                         break;
                     }
                 }
                 if(exists == false){ //remove non existing mapped elements
-                    this.setMappedTo("UNMAPPED",true);
+                    self.setMappedTo("UNMAPPED",true);
                 }
             }
         }
     }
 }   
 
-var Equations = new Equations();
+var Equations = new EquationsClass();

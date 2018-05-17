@@ -1,101 +1,38 @@
-# formelsammlung-js
+# Formelsammlung-js
 
-## [Interaktive Formelsammlung Online Demo](https://dirk-attraktor.github.io/formelsammlung-js/)
-
-
-
-### How to add stuff
-
-Take a look at the files in markdown/ 
+Lets build a human and machine readable repository of all physical quantities, all commonly used material properties and all equations connecting them. 
 
 
-#### Quantities:
+## Why
 
--------------
-| name, alias name | shortname, alias shortnames | math.js unit | scale down  | scale up | convertable to quantity | 
-|---|---|---|---|---|---|
-
-Description
-
--------------
+Just google "capacitor discharge calculator", click the first few hits and get annoyed by ad overloaded shit websites. Or go to wikipedia, to any site that contains equations and get annoyed that you can't use equations in any way because they are an image. 
 
 
-#### Quantities Translation:
+## How
 
----------
-| parent name | translated name(s) | translated shortname(s) | 
-|---|---|---|
+Formelsammlung-js uses human and machine reachable markdown to define Quantities, Materials and Equations. See their individial documentation for all syntax details, or check the markdown folder for existing data.
 
-Translated description
+### [Online Demo](https://dirk-attraktor.github.io/formelsammlung-js/)
 
----------
-
-
-#### Equations example:
-
---------
-__Name__: A unique name
-
-
-__Description__:
-
-Description Markdown
-
-__Equation__:
-
-A * 23 = B
-
-__IO__:
-
-* __A__ [ _Meter_ ] | B / 23  
-Description of value
-* __B__ [ _Watt_ ] | A * 23  
-Description of value
-
---------
+To get an impression of how this works take this simple example:
+ - Under "Quantities" search and add  "AWG", "Meter" and "Ampere"
+ - Under "Materials" add "Copper"
+ - Then go to "Equations". They should be sorted by usefulness* and your way to "Watt" (Via AWG2mm2, Wire resistance, URI, PUI) should be straight forward.
+ - For the lazy: [Saved Demo Stack](https://dirk-attraktor.github.io/formelsammlung-js/?link=stack:NobwRALmBcYMoEUwBowBMbgG4EMA2ArgKYwDMqAlhrIgPqkpgB2OAtibLgE4AEAjIwCOTGGACC7LhQDGOJjwDqFLkR4BxHAQDmJAL67k4KDSSpq2fMRgAmcmCqi6AFkYt2o7j2tCRsALJEEERcYPqGkI6m6JhguIQcTtaU1PAItACsrmwcsTi8DKjCohIADsF6BkaOfozmzNmirDhBUvj8jA40frQAbIysMBBcxKisvmAAwgD2JWUhqCUwwAC6YVU0AKK1MW45KgDOBHgQ7cmOG7R8AqODw0SUUzsxAyb0oag4z6IA8gCqACoABQBoQMYCIRVgYgA7loeBApjxWKxvGsIptttBwLtRAcjidvGdNpcXDdoEMRvZHliwAAlfZfLq9d50xlgP5AkFggAybOcLLEfIuV1BqAh4yUKh4Bwo%2BwgcmkFXCxngWzMOwasDxxx4BXsKTgwoAnP1bpSKNTwL82Rzgf8WbShSSWQBJPlpTJhcGQsC-WlutEqw2Y7GasDak6k-XnWi2U3ku4PGKAm0Au0s600l6qy4msFurORDKi73jYEB3TLIA)
+ 
+ 
+*actually, number of input variables that can be associated to the stuff you added before. 
 
 
-#### Equation translation example:
+## Syntax documentation
 
---------
-__ParentName__: A unique name  
-__Name__: Ein eindeutiger Name
+#### [Quantities](readme_quanity.md)
+Quantities are all physical entities. (Meter, Miles, Second moment of inertial, Specific resistance..)
 
-__Description__:
+#### [Equation](readme_equation.md)
+Equations connect Quantities
 
-Deutsche Bescheibung.
-
-__IO__:
-
-* __A__   
-Blah zu A in deutsch.
-* __B__   
-Blah zu B in deutsch.
-
---------
-
-
-#### Material
-
--------------
-__Copper__ 
-
-This is the default lorem ipsum you will find in most electric wires
-
-
-* Specific Resistance : 0.017  
-* Another Quantity: 23
-
--------------
-
-#### Material Translation
-
--------------
-__Copper__ 
-__Kupfer__
-
-Normales Kupfer, wie in Stromkabeln.
-
--------------
-
+#### [Material](readme_material.md)
+Materials are materials and their propertiers like "mass" or "specific resistance" 
+where "mass" and "specific resistance" are known quantities.
 

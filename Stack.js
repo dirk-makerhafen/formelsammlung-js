@@ -11,10 +11,10 @@ function Stack(){
     
     this.addNoRender = function(element){
         if(element.constructorName == "Quantity"){
-            this.elements.push(new StackQuantity(this,element));
+            this.elements.push(new StackQuantityClass(this,element));
         }
         if(element.constructorName == "Equation"){
-            this.elements.push(new StackEquation(this,element));
+            this.elements.push(new StackEquationClass(this,element));
         }
         if(element.constructorName == "Material"){
             this.elements.push(new StackMaterial(this,element));

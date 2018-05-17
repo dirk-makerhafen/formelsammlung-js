@@ -1,4 +1,6 @@
-function Material(name,description,properties){
+
+
+function Material(name, description, properties){
     this.constructorName = "Material";
 
     this.name = name;

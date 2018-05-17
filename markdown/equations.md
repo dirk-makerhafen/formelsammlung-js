@@ -561,6 +561,7 @@ __Description__:
 
 The original formulas are in Transmission Line Design Handbook by Brian C Wadell, Artech House 1991 page 79. The formulas use "a" for the track width and "b" for the sum of the track width plus the gaps either side.
 
+! Currently only implemented for Z, if you know how to transform this equation for the other values post a comment or report on github ! 
 
 <http://chemandy.com/calculators/coplanar-waveguide-with-ground-calculator.htm>
 

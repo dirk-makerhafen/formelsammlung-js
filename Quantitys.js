@@ -1,62 +1,65 @@
-function Quantity(name,description,unit){
-    this.constructorName = "Quantity";
+var Quantities = undefined;
 
-    this.name = name;
-    this.identifier =  this.name.replace(/\W+/g, "");
-    this.aliasnames = [];
+function QuantityClass(name,description,unit){
+    var self = this;
+    self.constructorName = "Quantity";
 
-    this.shortname = "";
-    this.aliasshortnames = [];
+    self.name = name;
+    self.identifier =  self.name.replace(/\W+/g, "");
+    self.aliasnames = [];
+
+    self.shortname = "";
+    self.aliasshortnames = [];
     
-    this.description = description;
+    self.description = description;
     if(unit == undefined){
         alter("undefined unit in Quantity " + name);
     }
-    this.unit = unit;
-    this.unitTex = math.parse(unit.toString()).toTex();
+    self.unit = unit;
+    self.unitTex = math.parse(unit.toString()).toTex();
         
-    this.scaleup = undefined;
-    this.scaledown = undefined;
-    this.convertto = [];
+    self.scaleup = undefined;
+    self.scaledown = undefined;
+    self.convertto = [];
   
-    this.converter = [];
-    this.rawmarkdown = "";
+    self.converter = [];
+    self.rawmarkdown = "";
     
-    this.cantranslate = function(){ 
-        if (LANGUAGE == "EN" || this.translations == undefined || this.translations[LANGUAGE] == undefined){ return false; }else{ return true; } 
+    self.cantranslate = function(){ 
+        if (LANGUAGE == "EN" || self.translations == undefined || self.translations[LANGUAGE] == undefined){ return false; }else{ return true; } 
     }
     
-    this.name_translation = function(){
-        if(this.cantranslate()){return this.translations[LANGUAGE].name;}
-        return this.name;
+    self.name_translation = function(){
+        if(self.cantranslate()){return self.translations[LANGUAGE].name;}
+        return self.name;
     }
     
-    this.aliasnames_translation = function(){
-        if(this.cantranslate()){ return this.translations[LANGUAGE].aliasnames;}
-        return this.aliasnames;
+    self.aliasnames_translation = function(){
+        if(self.cantranslate()){ return self.translations[LANGUAGE].aliasnames;}
+        return self.aliasnames;
     }
     
-    this.shortname_translation = function(){
-        if(this.cantranslate()){ return this.translations[LANGUAGE].shortname;}
-        return this.shortname;
+    self.shortname_translation = function(){
+        if(self.cantranslate()){ return self.translations[LANGUAGE].shortname;}
+        return self.shortname;
     }
     
-    this.aliasshortnames_translation = function(){
-        if(this.cantranslate()){ return this.translations[LANGUAGE].aliasshortnames;}
-        return this.aliasshortnames;
+    self.aliasshortnames_translation = function(){
+        if(self.cantranslate()){ return self.translations[LANGUAGE].aliasshortnames;}
+        return self.aliasshortnames;
     }
     
-    this.description_translation = function(){
-        if(this.cantranslate()){ return this.translations[LANGUAGE].description;}
-        return this.description;
+    self.description_translation = function(){
+        if(self.cantranslate()){ return self.translations[LANGUAGE].description;}
+        return self.description;
     }
    
-    // scale value from this. to TargetQuantity
-    this.convertValue = function(value,TargetQuantity){
+    // scale value from self. to TargetQuantity
+    self.convertValue = function(value,TargetQuantity){
         if (isNaN(value)){
             return value;
         }
-        var u1= this.unit.toString();
+        var u1= self.unit.toString();
         var u2= TargetQuantity.unit.toString();
         if(u1==""){u1="m^0";}// todo better handing of stuff without unit
         if(u2==""){u2="m^0";}
@@ -64,46 +67,46 @@ function Quantity(name,description,unit){
     }
     
     //after all quantity/equations are loaded from markdown, call this to init 
-    this.init = function(){
-        for(var i =0;i<this.convertto.length;++i){ 
-            var q = Quantities.get(this.convertto[i]);
+    self.init = function(){
+        for(var i =0;i<self.convertto.length;++i){ 
+            var q = Quantities.get(self.convertto[i]);
             if(q!=undefined){
-                if(this.converter.indexOf(q)==-1){
-                    this.converter.push(q);
+                if(self.converter.indexOf(q)==-1){
+                    self.converter.push(q);
                 }
             } 
         }
-        this.scaleup = Quantities.get(this.scaleup);
-        this.scaledown = Quantities.get(this.scaledown);
+        self.scaleup = Quantities.get(self.scaleup);
+        self.scaledown = Quantities.get(self.scaledown);
     }
     
-    this.renderUnitTex = function(){
-        var targetId = "QuantityUnitTexTarget_" + this.identifier; 
-        return mathjaxCache.add(targetId,this.unitTex);
+    self.renderUnitTex = function(){
+        var targetId = "QuantityUnitTexTarget_" + self.identifier; 
+        return mathjaxCache.add(targetId,self.unitTex);
     }
     
-    this.renderDescription = function(){
-        return markdown.toHTML(this.description_translation());    
+    self.renderDescription = function(){
+        return markdown.toHTML(self.description_translation());    
     }
     
-    this.render = function(){
+    self.render = function(){
         var r = Mustache.render($('#QuantityTemplate').html(),this);
         return r;
     }
 }
 
-function Quantities(){
-
-    this.targetdiv = "QuantitiesList";
-    this.allquantities = [];
-    this.filter = "";
-    this.filteredquantities = this.allquantities;
+function QuantitiesClass(){
+    var self = this;
+    self.targetdiv = "QuantitiesList";
+    self.allquantities = [];
+    self.filter = "";
+    self.filteredquantities = self.allquantities;
         
-    this.paginationPage = 1;
+    self.paginationPage = 1;
     
-    this.paginationElementsPerPage = 7;
+    self.paginationElementsPerPage = 7;
     
-    this.loadMarkdown = function(markdown){
+    self.loadMarkdown = function(markdown){
         try {
             var parts = markdown.split("-------------");
         }catch(err){return;}    
@@ -141,7 +144,7 @@ function Quantities(){
                     unit = math.unit(shortnames[0]);
                 }
             }
-            var q = new Quantity(names.splice(0, 1)[0],description,unit);
+            var q = new QuantityClass(names.splice(0, 1)[0],description,unit);
             
             q.aliasnames = names;
             q.shortname = shortnames.splice(0, 1)[0];            
@@ -155,7 +158,7 @@ function Quantities(){
         }
     }  
     
-    this.loadTranslationMarkdown = function(language,markdown){
+    self.loadTranslationMarkdown = function(language,markdown){
         try{
             var parts = markdown.split("---------");
         }catch(err){
@@ -170,7 +173,7 @@ function Quantities(){
             var names = stripArray(data[2]);
             var shortnames = stripArray(data[3]);
             var description = parseableString.split("|---|---|---|---|")[1].split("---------")[0];
-            var q=this.get(parentname) 
+            var q=self.get(parentname) 
             if(q.translations == undefined){ q.translations = {} }
             if(q.translations[language] == undefined){ q.translations[language] = {} }
             
@@ -182,54 +185,54 @@ function Quantities(){
         }
     }  
     
-    this.filteredQuantitiesPagination = function(){
-        var index = this.paginationElementsPerPage*(this.paginationPage-1);
-        return this.filteredquantities.slice(index,index+ this.paginationElementsPerPage);
+    self.filteredQuantitiesPagination = function(){
+        var index = self.paginationElementsPerPage*(self.paginationPage-1);
+        return self.filteredquantities.slice(index,index+ self.paginationElementsPerPage);
     }
     
-    this.paginationMaxPages = function(){
-        return math.ceil(this.filteredquantities.length / this.paginationElementsPerPage); 
+    self.paginationMaxPages = function(){
+        return math.ceil(self.filteredquantities.length / self.paginationElementsPerPage); 
     }
     
-    this.setPaginationPage = function(newpage){
-        this.paginationPage = newpage;
-        this.render();
+    self.setPaginationPage = function(newpage){
+        self.paginationPage = newpage;
+        self.render();
     }
     
-    this.paginationPageLinks = function(){
+    self.paginationPageLinks = function(){
         var r = []
-        if(this.paginationMaxPages()==1){return [];};
-        for(var i =1;i<this.paginationMaxPages()+1;i++){  
-            if(i==this.paginationPage){ var selected = "active";}else{ var selected = ""};
+        if(self.paginationMaxPages()==1){return [];};
+        for(var i =1;i<self.paginationMaxPages()+1;i++){  
+            if(i==self.paginationPage){ var selected = "active";}else{ var selected = ""};
             r.push({"nr":i,"selected":selected});}
         return r;
     }
     
-    this.add = function(quantity){
-        this.allquantities.push(quantity);
+    self.add = function(quantity){
+        self.allquantities.push(quantity);
     };
     
-    this.get = function(nameOrShortname){   
+    self.get = function(nameOrShortname){   
         if(nameOrShortname == ""){ return undefined;}
-        for (var index = 0; index < this.allquantities.length; ++index) {
-            if(this.allquantities[index].name == nameOrShortname || this.allquantities[index].shortname == nameOrShortname){
-                return this.allquantities[index];
+        for (var index = 0; index < self.allquantities.length; ++index) {
+            if(self.allquantities[index].name == nameOrShortname || self.allquantities[index].shortname == nameOrShortname){
+                return self.allquantities[index];
             }
         }
         return undefined;
     }
     
-    this.setFilter = function(filter){
-        this.filter = filter;
-        this.filteredquantities = []
-        this.paginationPage = 1;
+    self.setFilter = function(filter){
+        self.filter = filter;
+        self.filteredquantities = []
+        self.paginationPage = 1;
         if(filter == ""){
-            this.filteredquantities = this.allquantities;
+            self.filteredquantities = self.allquantities;
         }else{
-            this.match = function(index,matched){
+            self.match = function(index,matched){
                 if(matched==true){
-                    if(this.filteredquantities.indexOf(this.allquantities[index]) == -1 ){
-                        this.filteredquantities.push(this.allquantities[index]);
+                    if(self.filteredquantities.indexOf(self.allquantities[index]) == -1 ){
+                        self.filteredquantities.push(self.allquantities[index]);
                     }
                 }
             }
@@ -241,204 +244,205 @@ function Quantities(){
                 keys.push("description");
             }
             for (var matchindex = 0; matchindex < keys.length; ++matchindex) {  
-                for (var index = 0; index < this.allquantities.length; ++index) {               
-                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
-                    this.match(index, mstr == this.filter  );}
-                for (var index = 0; index < this.allquantities.length; ++index) {            
-                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
-                    this.match(index, mstr.toLowerCase() == this.filter.toLowerCase()  );}
-                for (var index = 0; index < this.allquantities.length; ++index) {            
-                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
-                    this.match(index, mstr.indexOf(this.filter) ==  0);}
-                for (var index = 0; index < this.allquantities.length; ++index) {            
-                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
-                    this.match(index, mstr.toLowerCase().indexOf(this.filter.toLowerCase()) ==  0);}
-                for (var index = 0; index < this.allquantities.length; ++index) {            
-                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
-                    this.match(index, mstr.indexOf(this.filter) >  0);}
-                for (var index = 0; index < this.allquantities.length; ++index) {            
-                    if(keys[matchindex].indexOf("_")==-1){var mstr = this.allquantities[index][keys[matchindex]]+""}else{var mstr = this.allquantities[index][keys[matchindex]]()+""}
-                    this.match(index, mstr.toLowerCase().indexOf(this.filter.toLowerCase()) >  0);}
+                for (var index = 0; index < self.allquantities.length; ++index) {               
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = self.allquantities[index][keys[matchindex]]+""}else{var mstr = self.allquantities[index][keys[matchindex]]()+""}
+                    self.match(index, mstr == self.filter  );}
+                for (var index = 0; index < self.allquantities.length; ++index) {            
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = self.allquantities[index][keys[matchindex]]+""}else{var mstr = self.allquantities[index][keys[matchindex]]()+""}
+                    self.match(index, mstr.toLowerCase() == self.filter.toLowerCase()  );}
+                for (var index = 0; index < self.allquantities.length; ++index) {            
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = self.allquantities[index][keys[matchindex]]+""}else{var mstr = self.allquantities[index][keys[matchindex]]()+""}
+                    self.match(index, mstr.indexOf(self.filter) ==  0);}
+                for (var index = 0; index < self.allquantities.length; ++index) {            
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = self.allquantities[index][keys[matchindex]]+""}else{var mstr = self.allquantities[index][keys[matchindex]]()+""}
+                    self.match(index, mstr.toLowerCase().indexOf(self.filter.toLowerCase()) ==  0);}
+                for (var index = 0; index < self.allquantities.length; ++index) {            
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = self.allquantities[index][keys[matchindex]]+""}else{var mstr = self.allquantities[index][keys[matchindex]]()+""}
+                    self.match(index, mstr.indexOf(self.filter) >  0);}
+                for (var index = 0; index < self.allquantities.length; ++index) {            
+                    if(keys[matchindex].indexOf("_")==-1){var mstr = self.allquantities[index][keys[matchindex]]+""}else{var mstr = self.allquantities[index][keys[matchindex]]()+""}
+                    self.match(index, mstr.toLowerCase().indexOf(self.filter.toLowerCase()) >  0);}
             }
         }
-        this.render();
+        self.render();
     }
     
-    this.init = function(){
-        for (var index = 0; index < this.allquantities.length; ++index) {
-            this.allquantities[index].init();
+    self.init = function(){
+        for (var index = 0; index < self.allquantities.length; ++index) {
+            self.allquantities[index].init();
         }
-        this.allquantities.sort(function(a, b) {
+        self.allquantities.sort(function(a, b) {
             if( a.name_translation().toLowerCase() >  b.name_translation().toLowerCase()){ return  1;};
             if( a.name_translation().toLowerCase() <  b.name_translation().toLowerCase()){ return -1;};
             if( a.name_translation().toLowerCase() == b.name_translation().toLowerCase()){ return  0;};
         });
-        this.filteredquantities = this.allquantities;
+        self.filteredquantities = self.allquantities;
      
     }
     
-    this.render = function(){
+    self.render = function(){
         var r = Mustache.render($('#QuantitiesTemplate').html(), this);
-        document.getElementById(this.targetdiv).innerHTML = r;
+        document.getElementById(self.targetdiv).innerHTML = r;
         mathjaxCache.render();
 
 
     }
 }
 
-function StackQuantity(stack,quantity){
-    this.constructorName = "StackQuantity";
-    this.parentStack = stack;
-    this.quantity = quantity;    
-    this.id = "SQ_" + getUniqNumber();
+function StackQuantityClass(stack,quantity){
+    var self = this;
+    self.constructorName = "StackQuantity";
+    self.parentStack = stack;
+    self.quantity = quantity;    
+    self.id = "SQ_" + getUniqNumber();
     
-    this.value = 1;
+    self.value = 1;
     
-    this.name =  getStackName("var ");
-    this.showConverter = "None";
+    self.name =  getStackName("var ");
+    self.showConverter = "None";
     
-    this.mappedto = []
+    self.mappedto = []
     
-    this.addMappedTo = function(StackEquationIo){
-        if(this.mappedto.indexOf(StackEquationIo) == -1){
-            this.mappedto.push(StackEquationIo)
+    self.addMappedTo = function(StackEquationIo){
+        if(self.mappedto.indexOf(StackEquationIo) == -1){
+            self.mappedto.push(StackEquationIo)
         }
     }
     
-    this.removeMappedTo = function(StackEquationIo){
-        var index = this.mappedto.indexOf(StackEquationIo);
+    self.removeMappedTo = function(StackEquationIo){
+        var index = self.mappedto.indexOf(StackEquationIo);
         if(index != -1){
-            this.mappedto.splice(index,1);
+            self.mappedto.splice(index,1);
         }
     }
     
-    this.dispose = function(){
-        while (this.mappedto.length > 0){
-            this.mappedto[0].setMappedTo("UNMAPPED",true);
+    self.dispose = function(){
+        while (self.mappedto.length > 0){
+            self.mappedto[0].setMappedTo("UNMAPPED",true);
         }
     }
     
-    this.toggleShowConverter = function(){
-        if(this.showConverter == "None"){
-            this.showConverter = "";
-            jQuery("#Converter_"+this.id).toggle('show');
+    self.toggleShowConverter = function(){
+        if(self.showConverter == "None"){
+            self.showConverter = "";
+            jQuery("#Converter_"+self.id).toggle('show');
         }else{
-            this.showConverter = "None";
-            jQuery("#Converter_"+this.id).toggle('show');
+            self.showConverter = "None";
+            jQuery("#Converter_"+self.id).toggle('show');
         }
     }
     
-    this.setValue = function(value){
-        this.value = parseFloat(value.replace(",","."));
-        this.updateRenderConverter();
-        this.parentStack.updateRender(this.id);
+    self.setValue = function(value){
+        self.value = parseFloat(value.replace(",","."));
+        self.updateRenderConverter();
+        self.parentStack.updateRender(self.id);
     }
     
-    this.setName = function(name){
-        this.name = name;
-        this.parentStack.updateRender(this.id);
+    self.setName = function(name){
+        self.name = name;
+        self.parentStack.updateRender(self.id);
     }
     
-    this.scaleUp = function(){
-        if(this.quantity.scaleup!=undefined){
-            this.value =  this.quantity.convertValue(this.value,this.quantity.scaleup);            
-            this.quantity = this.quantity.scaleup;         
+    self.scaleUp = function(){
+        if(self.quantity.scaleup!=undefined){
+            self.value =  self.quantity.convertValue(self.value,self.quantity.scaleup);            
+            self.quantity = self.quantity.scaleup;         
         }
-        this.updateRender();
+        self.updateRender();
     }
     
-    this.displayScaleUp = function(){
-        if(this.quantity.scaleup==undefined){
+    self.displayScaleUp = function(){
+        if(self.quantity.scaleup==undefined){
             return "None"
         }
         return "";
     }
     
-    this.scaleDown = function(){
-        if(this.quantity.scaledown!=undefined){
-            this.value =  this.quantity.convertValue(this.value,this.quantity.scaledown);
-            this.quantity = this.quantity.scaledown;
+    self.scaleDown = function(){
+        if(self.quantity.scaledown!=undefined){
+            self.value =  self.quantity.convertValue(self.value,self.quantity.scaledown);
+            self.quantity = self.quantity.scaledown;
         }
-        this.updateRender();
+        self.updateRender();
     }
     
-    this.displayScaleDown = function(){
-        if(this.quantity.scaledown==undefined){
+    self.displayScaleDown = function(){
+        if(self.quantity.scaledown==undefined){
             return "None"
         }
         return "";
     } 
     
-    this.displayShowConvert = function(){
-        if(this.quantity.converter.length==0){
+    self.displayShowConvert = function(){
+        if(self.quantity.converter.length==0){
             return "None"
         }
         return "";
     }   
     
-    this.MoveUpColor = function(){ 
-        if (CurrentStack.elements[0].id == this.id){
+    self.MoveUpColor = function(){ 
+        if (CurrentStack.elements[0].id == self.id){
             return "lightgray";
         }
         return "black";
     }
     
-    this.MoveDownColor = function(){ 
-        if (CurrentStack.elements[CurrentStack.elements.length-1].id == this.id){
+    self.MoveDownColor = function(){ 
+        if (CurrentStack.elements[CurrentStack.elements.length-1].id == self.id){
             return "lightgray";
         }
         return "black";
     }        
     
-    this.save = function(){
+    self.save = function(){
         var data = {};
-        data["value"] = this.value;
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["qn"] = this.quantity.name;
+        data["value"] = self.value;
+        data["id"] = self.id;
+        data["name"] = self.name;
+        data["qn"] = self.quantity.name;
         return data;
     }
     
-    this.load = function(data){
-        this.value = data["value"];
-        this.name = data["name"];
-        this.id = data["id"];
+    self.load = function(data){
+        self.value = data["value"];
+        self.name = data["name"];
+        self.id = data["id"];
     }
         
-    this.renderConverter = function(){
+    self.renderConverter = function(){
         var str = "";
-        for(var i =0;i<this.quantity.converter.length;++i){ 
+        for(var i =0;i<self.quantity.converter.length;++i){ 
             str += Mustache.render($('#StackQuantityConverterTemplate').html(),{
-                value : this.quantity.convertValue(this.value,this.quantity.converter[i]),
-                quantity : this.quantity.converter[i],
+                value : self.quantity.convertValue(self.value,self.quantity.converter[i]),
+                quantity : self.quantity.converter[i],
             }
             );
         }
         return str;
     }
 
-    this.render = function(){
+    self.render = function(){
         var r = Mustache.render($('#StackQuantityTemplate').html(),this);
         return r;
     }   
     
-    this.renderPrint = function(){  
-        var equation = " $$"+this.name.replace(" ","_")+"=" + this.value + "\\qquad ( " + this.quantity.unitTex + " ) \\qquad "+this.quantity.name+" $$ ";;
+    self.renderPrint = function(){  
+        var equation = " $$"+self.name.replace(" ","_")+"=" + self.value + "\\qquad ( " + self.quantity.unitTex + " ) \\qquad "+self.quantity.name+" $$ ";;
         var r = Mustache.render($('#StackQuantityPrintTemplate').html(),{
             "equation" : equation,
         });
         return r;
     }
     
-    this.updateRender = function(){
-        $("#"+this.id).replaceWith(this.render());
+    self.updateRender = function(){
+        $("#"+self.id).replaceWith(self.render());
         mathjaxCache.render();
     }
     
-    this.updateRenderConverter = function(){
-        document.getElementById("Converter_"+this.id).innerHTML = this.renderConverter();
+    self.updateRenderConverter = function(){
+        document.getElementById("Converter_"+self.id).innerHTML = self.renderConverter();
     }
     
 }
 
-var Quantities = new Quantities();
+Quantities = new QuantitiesClass();

@@ -20,44 +20,46 @@ getStackName = function(prefix){
 }
 
 mathjaxCache = function(){
-    this.ids = [];
-    this.cache = []
     
-    this.renderIds = [];
-    
+    this.renderIds = [];   // ids for this render run
+    this.renderedIds = []; // all cached rendered ids
+
     this.render = function(){
-        MathJax.Hub.Queue(function () { mathjaxCache._prepare(); });
+        //MathJax.Hub.Queue(function () { mathjaxCache._prepare(); });
         MathJax.Hub.Queue(["Typeset",MathJax.Hub,"renderCache"]);
         MathJax.Hub.Queue(function () { mathjaxCache._applyCache(); });
     };
     
-    this._prepare = function(){
-        this.renderIds = this.ids;
-        this.ids = [];
-    }
+    //this._prepare = function(){
+    //}
     
     this._applyCache = function(){
-        var rc =  document.getElementById("renderCache");
+        // move children from renderCache to renderedCache
+        $("#renderCache").children().appendTo($("#renderedCache"));
+        
         for(var i=0;i<this.renderIds.length;++i){
             try{
-                var c = $("#cache_" + this.renderIds[i])[0];
-                var elements = $("." + this.renderIds[i]);
-                elements.replaceWith(c);
-                this.cache[this.renderIds[i]] = c;
+                var cached_element = $("#renderedCache #cache_" + this.renderIds[i]);
+                var target_elements = $("." + this.renderIds[i]);
+                target_elements.empty();
+                cached_element.clone().children().appendTo(target_elements); // just filling innerHTML with the cached html string would be better, but that breaks mathjax view in safari :(
             }catch(e){}
         } 
         this.renderIds = [];
     }
     
     this.add = function(targetId,content){
-        if(this.cache[targetId] != undefined){
+        if(this.renderIds.indexOf(targetId) == -1){
+            this.renderIds.push(targetId);
+        }
+        if(this.renderedIds[targetId] != undefined){
             return '<div class="'+targetId+'" ></div>';
         }
+        this.renderedIds[targetId] = true;
         var div = document.createElement('div');
         div.id = "cache_" + targetId;
         div.innerHTML = '$$'+content+'$$';
         document.getElementById("renderCache").appendChild(div);
-        this.ids.push(targetId);
         return '<div class="'+targetId+'" ></div>';
     }
 
