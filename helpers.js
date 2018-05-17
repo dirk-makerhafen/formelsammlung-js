@@ -21,24 +21,30 @@ getStackName = function(prefix){
 
 mathjaxCache = function(){
     
-    this.renderIds = [];   // ids for this render run
+    this.renderIds = [];  
+    this.tmp_renderIds = [];  
     this.renderedIds = []; // all cached rendered ids
 
     this.render = function(){
+        MathJax.Hub.Queue(function () { mathjaxCache._prepare(); });
         MathJax.Hub.Queue(["Typeset",MathJax.Hub,"renderCache"]);
         MathJax.Hub.Queue(function () { mathjaxCache._applyCache(); });
     };
     
+    this._prepare = function(){
+        this.tmp_renderIds = this.renderIds;
+        this.renderIds = [];
+    }
     this._applyCache = function(){
-        for(var i=0;i<this.renderIds.length;++i){
+        for(var i=0;i<this.tmp_renderIds.length;++i){
             try{
-                var cached_element = $("#renderCache #cache_" + this.renderIds[i]);
-                var target_elements = $("." + this.renderIds[i]);
+                var cached_element = $("#renderCache #cache_" + this.tmp_renderIds[i]);
+                var target_elements = $("." + this.tmp_renderIds[i]);
                 target_elements.empty();
-                cached_element.clone().children().appendTo(target_elements,0); // just filling innerHTML with the cached html string would be better, but that breaks mathjax view in safari :(
+                cached_element.clone().children().appendTo(target_elements); // just filling innerHTML with the cached html string would be better, but that breaks mathjax view in safari :(
             }catch(e){}
         } 
-        this.renderIds = [];
+        this.tmp_renderIds = [];
     }
     
     this.add = function(targetId,content){

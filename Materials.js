@@ -265,7 +265,10 @@ function StackMaterial(stack,material){
     }   
     
     this.updateRender = function(){
-        $("#"+this.id).replaceWith(this.render());
+        //$("#"+this.id).replaceWith(this.render());
+        for (var index = 0; index < this.properties.length; ++index) {
+            $("#" + this.properties[index].id + "_input").val(this.properties[index].value);
+        }
     }
 }
 

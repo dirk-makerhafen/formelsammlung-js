@@ -32,9 +32,8 @@ function EquationClass(){
     }
 
     self.getMappableIoIndexes = function(){
-        var wouldmap = [] // prevent doublicate io mapping
-        var indexes = []
-        
+        var wouldmap = []; // prevent doublicate io mapping
+        var indexes = [];
         
         for (var index = 0; index < self.io.length; ++index) {
             var mse = self.io[index].mapableStackElements();

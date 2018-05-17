@@ -629,7 +629,7 @@
                         {{/quantity}}
                     </div>
                     <div class="col-xs-3">
-                        <input value="{{value}}"  class="valueInput" onKeyUp="CurrentStack.get('{{parentStackMaterial.id}}').getPropertyById('{{id}}').setValue(this.value)" ></input>
+                        <input id="{{id}}_input" value="{{value}}"  class="valueInput" onKeyUp="CurrentStack.get('{{parentStackMaterial.id}}').getPropertyById('{{id}}').setValue(this.value)" ></input>
                     </div>
                     <div class="col-xs-5 unitOutput">
                         {{#quantity}} {{{renderUnitTex}}} {{/quantity}}
