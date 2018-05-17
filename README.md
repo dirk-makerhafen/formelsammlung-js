@@ -26,7 +26,7 @@ To get an impression of how this works take this simple example:
 
 ## Syntax documentation
 
-#### [Quantities](readme_quanity.md)
+#### [Quantities](readme_quantity.md)
 Quantities are all physical entities. (Meter, Miles, Second moment of inertial, Specific resistance..)
 
 #### [Equation](readme_equation.md)
