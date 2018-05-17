@@ -16,7 +16,7 @@ __IO__:
 
 * __d__ [ _Meter_ ] |  vi * t + 1/2 * a * t^2   
 Displacement
-* __t__ [ _Second_ ] | ( sqrt( ( 2 * a * d ) + vi^2) - vi ) / a
+* __t__ [ _Second_ ] | ( sqrt( ( 2 * a * d ) + vi^2) - vi ) / a  
 Time
 * __a__ [ _Meter per second square_ ] | (d - ( vi * t )) / (1/2 * t^2)  
 Acceleration
@@ -41,7 +41,7 @@ __IO__:
 
 * __d__ [ _Meter_ ] |  vi * t + 1/2 * a * t^2   
 Displacement
-* __t__ [ _Second_ ] | ( sqrt( ( 2 * a * d ) + vi^2) - vi ) / a
+* __t__ [ _Second_ ] | ( sqrt( ( 2 * a * d ) + vi^2) - vi ) / a  
 Time
 * __a__ [ _Meter per second square_ ] | (d - ( vi * t )) / (1/2 * t^2)  
 Acceleration
